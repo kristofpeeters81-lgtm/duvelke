@@ -1,0 +1,170 @@
+@import '@fontsource/fredoka/500.css';
+@import '@fontsource/fredoka/700.css';
+@import '@fontsource/nunito/400.css';
+@import '@fontsource/nunito/700.css';
+@import '@fontsource/nunito/800.css';
+
+:root {
+  --bg-deep: #1b0c3a;
+  --bg: #2a1454;
+  --bg-raised: #3a1f6e;
+  --bg-card: #452a80;
+  --line: rgba(255, 255, 255, 0.14);
+  --text: #fff8ff;
+  --text-soft: #d9ccf5;
+  --text-dim: #a996d6;
+  --turquoise: #29d3c4;
+  --turquoise-dark: #11a597;
+  --pink: #ff4fa3;
+  --pink-dark: #d12a7c;
+  --gold: #ffcf3f;
+  --gold-dark: #e0a800;
+  --red: #ef3b4a;
+  --danger: #ff5a6a;
+  --radius: 22px;
+  --radius-sm: 14px;
+  --font-title: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+  --shadow: 0 10px 30px rgba(8, 0, 30, 0.45);
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.45;
+  overscroll-behavior: none;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(41, 211, 196, 0.18), transparent 50%),
+    radial-gradient(ellipse at 110% 30%, rgba(255, 79, 163, 0.16), transparent 45%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+  background-attachment: fixed;
+  min-height: 100dvh;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-title);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 16px calc(40px + env(safe-area-inset-bottom));
+}
+
+.section {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+
+.section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.hint {
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  margin: 2px 0 14px;
+}
+
+.text-input {
+  width: 100%;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--line);
+  background: var(--bg-deep);
+  color: var(--text);
+  outline: none;
+}
+
+.text-input:focus {
+  border-color: var(--turquoise);
+}
+
+.field-label {
+  display: block;
+  font-weight: 800;
+  margin: 12px 0 6px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: var(--bg-deep);
+  color: var(--text-soft);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.chip:active {
+  transform: scale(0.96);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--turquoise);
+  border-color: var(--turquoise);
+  color: #0d2b33;
+}
+
+.chip .emoji {
+  font-size: 1.35rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
