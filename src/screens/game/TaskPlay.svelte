@@ -7,6 +7,7 @@
   import { LOCATIONS } from '../../lib/data/locations';
   import { SUPPLIES } from '../../lib/data/supplies';
   import PhotoButton from '../../components/PhotoButton.svelte';
+  import WindyPopup from '../../components/WindyPopup.svelte';
   import { afterAnnouncement, afterTreasure, finishCurrent } from '../../lib/game';
   import { gemsForStopwatch, marginFor, maxGems, targetFor, treasure, type Outcome } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
@@ -14,11 +15,13 @@
   import { app, recordTaskPlayed, windySays } from '../../lib/store.svelte';
   import { CATEGORY_LABELS } from '../../lib/tasks/labels';
   import { fillVars } from '../../lib/tasks/program';
+  import { hostWording } from '../../lib/tasks/wording';
   import { getTask } from '../../lib/tasks/registry';
   import Briefing from './Briefing.svelte';
   import Dilemma from './Dilemma.svelte';
   import GossipScene from './GossipScene.svelte';
   import QuizRunner from './QuizRunner.svelte';
+  import ReadAloud, { hasAnswers } from './ReadAloud.svelte';
   import ResultPicker from './ResultPicker.svelte';
   import StopwatchRunner from './StopwatchRunner.svelte';
   import TaskTimer from './TaskTimer.svelte';
@@ -28,7 +31,7 @@
   const item = $derived(game ? game.program[game.taskIndex] : undefined);
   const task = $derived(item ? getTask(item.taskId) : undefined);
   const location = $derived(LOCATIONS.find((l) => l.id === item?.location));
-  const explain = $derived(task && item ? fillVars(task.explain, item.vars) : '');
+  const explain = $derived(task && item ? hostWording(fillVars(task.explain, item.vars), task, app.settings.hostName) : '');
   const target = $derived(task && item ? targetFor(task, item) : null);
   const total = $derived(game ? treasure(game.program, game.results, getTask) : { gems: 0, max: 0 });
 
@@ -65,6 +68,27 @@
     }
   });
 
+  // Windy moeit zich tussendoor met de opdracht.
+  let popup = $state<{ id: string; text: string; key: number } | null>(null);
+  let popupKey = 0;
+  function moei(category: 'bemoeien' | 'tijd'): void {
+    const line = untrack(() => windySays(category));
+    if (line) popup = { ...line, key: ++popupKey };
+  }
+
+  // Zonder timer: na een tijdje toch eens komen moeien (niet als Windy vragen voorleest).
+  $effect(() => {
+    const step = current?.step;
+    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || (answersList && !selfRead);
+    if (step !== 'uitleg' || quiet) return;
+    const first = setTimeout(() => moei('bemoeien'), 75000);
+    const second = setTimeout(() => moei('bemoeien'), 180000);
+    return () => {
+      clearTimeout(first);
+      clearTimeout(second);
+    };
+  });
+
   function go(step: NonNullable<typeof current>['step']): void {
     if (current) current.step = step;
     window.scrollTo(0, 0);
@@ -99,6 +123,17 @@
     const s = SUPPLIES.find((x) => x.id === id) ?? game?.settings.customSupplies.find((c) => c.id === id);
     return s ? `${s.emoji} ${s.label}` : id;
   }
+
+  const answersList = $derived(item ? hasAnswers(item.list) : false);
+  let selfRead = $state(false);
+  let readDone = $state(false);
+  let readScore = $state<number | null>(null);
+  $effect(() => {
+    void item?.uid;
+    selfRead = false;
+    readDone = false;
+    readScore = null;
+  });
 
   const listOwner = $derived.by(() => {
     const first = current ? Object.values(current.roles)[0]?.[0] : undefined;
@@ -151,10 +186,21 @@
       {/if}
 
       {#if task.list && item.list.length > 0}
-        {#if task.list.secret}
+        {#if task.list.secret && answersList && !selfRead}
+          <!-- Vragen met antwoorden: Windy leest voor, dan ziet ook een meespelend hulpje de antwoorden niet. -->
           <div class="card">
-            <h3>🤫 {task.list.title}</h3>
-            <p class="hint small">Enkel voor {listOwner ?? 'de spelleider'}! Hou ingedrukt om te lezen.</p>
+            <h3>🔊 {app.settings.hostName} leest voor</h3>
+            {#if readDone}
+              <p class="hint small">Alles voorgelezen: {readScore} van de {item.list.length} juist! Tik op de knop hieronder.</p>
+            {:else}
+              <ReadAloud items={item.list} ondone={(n) => ((readDone = true), (readScore = n))} />
+            {/if}
+            <button type="button" class="link" onclick={() => (selfRead = true)}>🤫 Toch liever zelf stiekem lezen (hulpje speelt niet mee)</button>
+          </div>
+        {:else if task.list.secret}
+          <div class="card">
+            <h3>🤫 {hostWording(task.list.title, task, app.settings.hostName)}</h3>
+            <p class="hint small">Enkel voor {listOwner ?? 'het hulpje'}! Hou ingedrukt om te lezen.</p>
             <div class="secret">
               <HoldToReveal label="Hou ingedrukt">
                 <div class="secret-list">
@@ -167,7 +213,7 @@
           </div>
         {:else}
           <div class="card">
-            <h3>📋 {task.list.title}</h3>
+            <h3>📋 {hostWording(task.list.title, task, app.settings.hostName)}</h3>
             <ul class="open-list">
               {#each item.list as entry, i (i)}<li>{entry}</li>{/each}
             </ul>
@@ -201,7 +247,7 @@
           ondone={(s) => setResult('score', gemsForStopwatch(task, s, target, marginFor(task, item)), Math.round(s * 10) / 10)}
         />
       {:else if current.timer}
-        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} />
+        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'half' ? 'bemoeien' : 'tijd')} />
         <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
           <summary>📜 Uitleg en rollen</summary>
@@ -220,7 +266,7 @@
       {/if}
     </div>
   {:else if current.step === 'resultaat'}
-    <ResultPicker {task} {target} onpick={setResult} />
+    <ResultPicker {task} {target} initial={readScore} onpick={setResult} />
   {:else if current.step === 'schat' && current.pending}
     <div class="stack center">
       <div class="gain" class:none={current.pending.gems === 0}>
@@ -245,6 +291,8 @@
     </div>
   {/if}
 {/if}
+
+<WindyPopup line={popup} />
 
 <style>
   .stack {
@@ -352,13 +400,12 @@
   }
 
   .secret-list {
-    height: 100%;
+    min-height: 100%;
     border-radius: var(--radius);
     background: #fff8e8;
     color: #2a1454;
     border: 4px solid #7a5222;
     padding: 16px 20px;
-    overflow: auto;
     font-size: 1.2rem;
     font-weight: 700;
   }

@@ -56,7 +56,7 @@
       {#if game.phase === 'opdrachten'}
         <span class="progress">Opdracht {game.taskIndex + 1}/{game.program.length}</span>
       {/if}
-      <button type="button" class="menu" aria-label="Spelleidersmenu" onclick={() => (menuOpen = !menuOpen)}>☰</button>
+      <button type="button" class="menu" aria-label="Menu van het hulpje" onclick={() => (menuOpen = !menuOpen)}>☰</button>
     </header>
   {/if}
 

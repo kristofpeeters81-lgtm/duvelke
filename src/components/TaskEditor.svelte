@@ -151,7 +151,7 @@
   {/each}
   <button type="button" class="link" onclick={() => (sabotage = [...sabotage, ''])}>+ nog een tip</button>
 
-  <label class="field-label" for="t-prep">Voorbereiding voor de spelleider (mag leeg)</label>
+  <label class="field-label" for="t-prep">Voorbereiding voor het hulpje (mag leeg)</label>
   <input id="t-prep" class="text-input" bind:value={prep} maxlength="400" placeholder="bv. Verstop 10 knuffels." />
 
   <label class="field-label" for="t-photo">Idee voor een bewijsfoto (mag leeg)</label>

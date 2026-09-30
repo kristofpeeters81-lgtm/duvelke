@@ -3,6 +3,7 @@ import { newId } from '../ids';
 import type { Difficulty, LocationId, Settings } from '../types';
 import { pickRandom, shuffle, type Rng } from '../util';
 import type { TaskDef, VarValue } from './types';
+import { hostWording } from './wording';
 
 export interface ProgramItem {
   uid: string;
@@ -181,7 +182,7 @@ export interface PackingList {
   prep: { title: string; emoji: string; text: string }[];
 }
 
-export function packingList(program: readonly ProgramItem[], tasks: readonly TaskDef[]): PackingList {
+export function packingList(program: readonly ProgramItem[], tasks: readonly TaskDef[], hostName = 'Windy'): PackingList {
   const byId = new Map(tasks.map((t) => [t.id, t]));
   const supplies = new Set<string>();
   const prep: PackingList['prep'] = [];
@@ -189,7 +190,7 @@ export function packingList(program: readonly ProgramItem[], tasks: readonly Tas
     const task = byId.get(item.taskId);
     if (!task) continue;
     task.supplies.forEach((s) => supplies.add(s));
-    if (task.prep) prep.push({ title: task.title, emoji: task.emoji, text: fillVars(task.prep, item.vars) });
+    if (task.prep) prep.push({ title: task.title, emoji: task.emoji, text: hostWording(fillVars(task.prep, item.vars), task, hostName) });
   }
   return { supplies: [...supplies], prep };
 }

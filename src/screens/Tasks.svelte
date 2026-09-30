@@ -15,6 +15,7 @@
   import { fillVars } from '../lib/tasks/program';
   import { allTasks } from '../lib/tasks/registry';
   import type { TaskCategory, TaskDef } from '../lib/tasks/types';
+  import { hostWording } from '../lib/tasks/wording';
   import { CATEGORIES, extractJsonArray, validateTask, type ValidationResult } from '../lib/tasks/validate';
   import type { LocationId } from '../lib/types';
 
@@ -50,7 +51,8 @@
     }),
   );
 
-  const preview = (t: TaskDef): string => fillVars(t.explain, Object.fromEntries(Object.entries(t.vars ?? {}).map(([k, v]) => [k, v.normaal[0] ?? '?'])));
+  const preview = (t: TaskDef): string =>
+    hostWording(fillVars(t.explain, Object.fromEntries(Object.entries(t.vars ?? {}).map(([k, v]) => [k, v.normaal[0] ?? '?']))), t, app.settings.hostName);
   const own = (t: TaskDef): boolean => t.source === 'eigen' || t.source === 'ai';
 
   function removeOpen(): void {
@@ -317,7 +319,7 @@
       <p class="hint">{CATEGORY_LABELS[open.category]} · {open.minutes} min · {open.locations.map((l) => LOCATIONS.find((x) => x.id === l)?.label).join(', ')}</p>
       <p>{preview(open)}</p>
       {#if open.supplies.length > 0}<p class="hint">Nodig: {open.supplies.map(supplyLabel).join(', ')}</p>{/if}
-      {#if open.prep}<p class="hint">📝 {open.prep}</p>{/if}
+      {#if open.prep}<p class="hint">📝 {hostWording(open.prep, open, app.settings.hostName)}</p>{/if}
       <button type="button" class="link" onclick={() => (showSabotage = !showSabotage)}>😈 {showSabotage ? 'Verberg' : 'Toon'} de sabotagetips</button>
       {#if showSabotage}<ul>{#each open.sabotage as s (s)}<li>{s}</li>{/each}</ul>{/if}
       <div class="row">

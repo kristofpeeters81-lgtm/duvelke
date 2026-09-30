@@ -10,6 +10,7 @@
   import { treasure } from '../../lib/gameplay';
   import { gossipSentence } from '../../lib/secrets';
   import { sfx } from '../../lib/sfx';
+  import { speak } from '../../lib/speech';
   import { app, go, windySays } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
   import FinalTest from './FinalTest.svelte';
@@ -36,11 +37,36 @@
     return game?.players.find((p) => p.playerId === id);
   }
 
+  // Windy presenteert de finale.
+  let narration = $state<{ id: string; text: string; playerId?: string } | null>(null);
+  function narrate(category: Parameters<typeof windySays>[0], speler?: string, playerId?: string): void {
+    const line = untrack(() => windySays(category, speler));
+    narration = line ? { ...line, playerId } : null;
+  }
+  function say(text: string): void {
+    void speak(text, $state.snapshot(app.settings.voice));
+  }
+
+  let narratedStep = '';
+  $effect(() => {
+    const step = f?.step;
+    if (!step || step === narratedStep) return;
+    narratedStep = step;
+    narration = null;
+    if (step === 'schat') untrack(() => (total.max > 0 ? narrate(groupWins ? 'schat-gewonnen' : 'schat-verloren') : null));
+  });
+
   function nextUnmask(): void {
     if (!f) return;
     if (f.reveal < innocents.length) {
       sfx.tap();
+      const who = innocents[f.reveal];
       f.reveal += 1;
+      if (who && f.reveal < innocents.length) say(`${who.name}... is géén ${sab}!`);
+      if (f.reveal === innocents.length) {
+        const names = saboteurs.map((s) => s.name).join(' en ');
+        setTimeout(() => narrate('ontmaskerd', names, saboteurs.length === 1 ? saboteurs[0]?.playerId : undefined), 2600);
+      }
       if (f.reveal === innocents.length) {
         sfx.drumroll(1.8);
         setTimeout(() => sfx.unmask(), 1800);
@@ -52,6 +78,11 @@
     if (!f) return;
     if (f.reveal < mainRanks.length) {
       f.reveal += 1;
+      const place = mainRanks.length - f.reveal + 1;
+      const r = mainRanks[place - 1];
+      const p = r ? player(r.playerId) : undefined;
+      if (p && place > 1) say(`Op plaats ${place}: ${p.name}!`);
+      if (p && place === 1) setTimeout(() => narrate('winnaar', p.name, p.playerId), 2200);
       if (f.reveal === mainRanks.length) {
         sfx.drumroll(1.4);
         setTimeout(() => sfx.fanfare(), 1400);
@@ -109,10 +140,11 @@
               <p><strong>{s.earned} van de {s.total} {s.name}</strong>: dat is {s.perPerson} per persoon{s.rest > 0 ? `, en ${s.rest} extra voor de winnaar van De Test` : ''}.</p>
             {/each}
           {:else}
-            <p>De groep verdiende {pct}% van de schat: {shares.map((s) => `${s.earned} ${s.name}`).join(', ')}. Het is aan de spelleider of {sab} de rest krijgt...</p>
+            <p>De groep verdiende {pct}% van de schat: {shares.map((s) => `${s.earned} ${s.name}`).join(', ')}. Het is aan het hulpje of {sab} de rest krijgt...</p>
           {/if}
         </div>
       {/if}
+      {#if narration}{#key narration.id}<WindyBubble text={narration.text} lineId={narration.id} playerId={narration.playerId} mood="geschokt" size={130} />{/key}{/if}
       <BigButton variant="primary" size="large" full onclick={() => start('ontmaskering')}>Wie is {sab}? ▶</BigButton>
     </div>
   {:else if f.step === 'ontmaskering'}
@@ -139,6 +171,7 @@
           <h2>{saboteurs.map((s) => s.name).join(' en ')} {multiple ? 'waren' : 'was'} {sab}!</h2>
         </div>
         <Confetti count={40} />
+        {#if narration}{#key narration.id}<WindyBubble text={narration.text} lineId={narration.id} playerId={narration.playerId} mood="geschokt" size={130} />{/key}{/if}
         <BigButton variant="primary" size="large" full onclick={() => start('ranking')}>Wie wint De Test? ▶</BigButton>
       {/if}
     </div>
@@ -167,6 +200,7 @@
       {:else}
         <Confetti count={90} />
         {#if mainRanks[0]}<p class="champ">🎉 Proficiat {player(mainRanks[0].playerId)?.name}: de beste speurder van vandaag!</p>{/if}
+        {#if narration}{#key narration.id}<WindyBubble text={narration.text} lineId={narration.id} playerId={narration.playerId} mood="geschokt" size={130} />{/key}{/if}
         {#if speurneus && speurneusScore}
           <div class="card">
             <h3>🔍 De Speurneus-medaille</h3>

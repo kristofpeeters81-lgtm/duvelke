@@ -19,6 +19,7 @@
   } from '../lib/tasks/program';
   import { allTasks, getTask } from '../lib/tasks/registry';
   import type { TaskDef } from '../lib/tasks/types';
+  import { hostWording } from '../lib/tasks/wording';
 
   const draft = $derived(app.draft);
   const ctx = $derived<PlanContext | null>(
@@ -147,11 +148,11 @@
             </div>
             {#if open === item.uid}
               <div class="details">
-                <p>{fillVars(task.explain, item.vars)}</p>
+                <p>{hostWording(fillVars(task.explain, item.vars), task, app.settings.hostName)}</p>
                 {#if task.supplies.length > 0}
                   <p class="hint">Nodig: {task.supplies.map(supplyLabel).join(', ')}</p>
                 {/if}
-                {#if task.prep}<p class="hint">📝 Voorbereiding: {fillVars(task.prep, item.vars)}</p>{/if}
+                {#if task.prep}<p class="hint">📝 Voorbereiding: {hostWording(fillVars(task.prep, item.vars), task, app.settings.hostName)}</p>{/if}
               </div>
             {/if}
           </li>

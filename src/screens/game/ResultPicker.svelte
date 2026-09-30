@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
   import BigButton from '../../components/BigButton.svelte';
   import { gemsForCount, gemsForOutcome, maxGems } from '../../lib/gameplay';
   import type { TaskDef } from '../../lib/tasks/types';
@@ -6,12 +7,14 @@
   interface Props {
     task: TaskDef;
     target: number | null;
+    /** Voorgestelde telling (bv. wat Windy bijhield tijdens het voorlezen). */
+    initial?: number | null;
     onpick: (outcome: 'gelukt' | 'bijna' | 'mislukt' | 'score', gems: number, score: number | null) => void;
   }
 
-  let { task, target, onpick }: Props = $props();
+  let { task, target, initial = null, onpick }: Props = $props();
 
-  let count = $state(0);
+  let count = $state(untrack(() => initial ?? 0));
   const unit = $derived(task.scoring.type === 'aantal' ? task.scoring.unit : '');
 </script>
 

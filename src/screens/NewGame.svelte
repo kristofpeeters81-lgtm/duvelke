@@ -43,7 +43,7 @@
   const problem = $derived.by(() => {
     if (chosen.length < MIN_PLAYERS) return `Kies minstens ${MIN_PLAYERS} spelers (nu ${chosen.length}).`;
     if (chosen.length > MAX_PLAYERS) return `Maximum ${MAX_PLAYERS} spelers.`;
-    if (!gmStillValid) return 'Duid aan wie de spelleider is.';
+    if (!gmStillValid) return 'Duid aan wie het hulpje van Windy is.';
     if (!pinOk) return 'De pincode moet uit 4 cijfers bestaan (of leeg laten).';
     return null;
   });
@@ -111,10 +111,9 @@
 
   {#if chosen.length > 0}
     <section class="section">
-      <h2>🎬 Wie is de spelleider?</h2>
+      <h2>🎬 Wie is het hulpje van Windy?</h2>
       <p class="hint">
-        De spelleider leest voor en duidt resultaten aan. Speelt die mee, dan kan die ook {s.saboteurName} zijn en ziet die, net als iedereen, enkel de
-        eigen geheimen.
+        {s.hostName} leidt het spel: zij legt uit, leest voor en brengt de uitslagen. Het hulpje doet wat Windy niet kan: klaarleggen, verstoppen, resultaten aanduiden en foto's nemen. Speelt het hulpje mee, dan kan het ook {s.saboteurName} zijn en ziet het, net als iedereen, enkel de eigen geheimen.
       </p>
       <div class="chips">
         {#each chosen as p (p.id)}
@@ -128,7 +127,7 @@
       </div>
       {#if gameMaster === 'geen'}
         <label class="field-label" for="pin">Pincode voor het rollenoverzicht (niet verplicht)</label>
-        <p class="hint">Met deze 4 cijfers kan de spelleider later stiekem zien wie wat is, bv. als een kind het vergeten is.</p>
+        <p class="hint">Met deze 4 cijfers kan het hulpje later stiekem zien wie wat is, bv. als een kind het vergeten is.</p>
         <input
           id="pin"
           class="text-input pin"

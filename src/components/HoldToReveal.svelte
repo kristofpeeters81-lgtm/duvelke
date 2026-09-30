@@ -118,10 +118,17 @@
     font-size: 1.15rem;
   }
 
+  /* De inhoud bepaalt de hoogte: een lange lijst wordt helemaal getoond (scrollen kan niet terwijl je vasthoudt). */
   .content {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
     animation: open 0.18s ease-out;
+  }
+
+  .content > :global(*) {
+    flex: 1;
   }
 
   @keyframes press {

@@ -32,7 +32,7 @@
   </section>
 
   <section class="section">
-    <h2>🎬 Checklist voor de spelleider</h2>
+    <h2>🎬 Checklist voor het hulpje van {s.hostName}</h2>
     <ul class="checks">
       <li>🔋 Tablet opgeladen (het scherm blijft aan tijdens het spel).</li>
       <li>📶 Open de app één keer met wifi zodat alles offline klaarstaat ("✅ Klaar om zonder internet te spelen" op het beginscherm).</li>
@@ -46,10 +46,10 @@
   <section class="section">
     <h2>💡 Handig om te weten</h2>
     <ul>
-      <li><strong>☰ Spelleidersmenu</strong> (rechtsboven tijdens het spel): rol opnieuw tonen, programma bekijken, een opdracht overslaan of stoppen.</li>
+      <li><strong>☰ Menu van het hulpje</strong> (rechtsboven tijdens het spel): rol opnieuw tonen, programma bekijken, een opdracht overslaan of stoppen.</li>
       <li><strong>Tablet per ongeluk dicht?</strong> Geen probleem: het spel gaat verder waar het was, ook de timer.</li>
       <li><strong>Iemand even weg</strong> bij het doorgeven? Tik op "later": die speler komt achteraan.</li>
-      <li><strong>Speelt de spelleider niet mee?</strong> Stel een pincode in: dan kan de spelleider stiekem alle rollen bekijken.</li>
+      <li><strong>Speelt het hulpje niet mee?</strong> Stel een pincode in: dan kan het hulpje stiekem alle rollen bekijken.</li>
       <li><strong>Zelf inspreken:</strong> bij <strong>{s.hostName} → Uitspraken</strong> kan je bij elke zin 🎤 tikken. Namen spreek je in bij <strong>Spelers</strong>.</li>
       <li><strong>Meer opdrachten:</strong> bij <strong>📚 Opdrachten</strong> kan je zelf opdrachten maken of er laten bedenken door een gratis AI.</li>
       <li><strong>Duimpjes:</strong> na elke opdracht 👍 of 👎. Leuke opdrachten komen vaker terug.</li>

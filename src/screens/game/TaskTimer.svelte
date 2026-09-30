@@ -6,9 +6,13 @@
   interface Props {
     timer: { total: number; remainingMs: number; endsAt: number | null };
     ondone: () => void;
+    /** Momenten om Windy te laten moeien: halverwege en als de tijd bijna om is. */
+    onmoment?: (kind: 'half' | 'bijna') => void;
   }
 
-  let { timer, ondone }: Props = $props();
+  let { timer, ondone, onmoment }: Props = $props();
+  let firedHalf = false;
+  let firedBijna = false;
 
   let now = $state(Date.now());
   let rang = false;
@@ -30,6 +34,17 @@
         lastSecond = s;
         if (s > 0 && s <= 5) sfx.urgent();
         else if (s > 0 && s <= 10) sfx.tick();
+      }
+      if (running && left > 0) {
+        const totalMs = timer.total * 1000;
+        if (!firedHalf && totalMs >= 60000 && left <= totalMs / 2 && left > Math.min(30000, totalMs / 4) + 5000) {
+          firedHalf = true;
+          onmoment?.('half');
+        }
+        if (!firedBijna && totalMs >= 45000 && left <= Math.min(30000, totalMs / 4)) {
+          firedBijna = true;
+          onmoment?.('bijna');
+        }
       }
       if (running && left <= 0 && !rang) {
         rang = true;

@@ -15,7 +15,13 @@ export type LineCategory =
   | 'roddel'
   | 'zoon'
   | 'wijsheid'
-  | 'einde';
+  | 'einde'
+  | 'tijd'
+  | 'bemoeien'
+  | 'schat-gewonnen'
+  | 'schat-verloren'
+  | 'ontmaskerd'
+  | 'winnaar';
 
 export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; hint: string }[] = [
   { id: 'intro', label: 'Begin van het spel', emoji: '👋', hint: 'Als Windy binnenstormt.' },
@@ -28,6 +34,12 @@ export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; 
   { id: 'zoon', label: 'Over haar zoon', emoji: '🧢', hint: 'Klagen over {zoon}.' },
   { id: 'wijsheid', label: 'Levenswijsheden', emoji: '🧠', hint: 'Tussendoor, zomaar.' },
   { id: 'einde', label: 'Einde van het spel', emoji: '🏁', hint: 'Voor de test en de onthulling.' },
+  { id: 'bemoeien', label: 'Tussendoor moeien', emoji: '🙋', hint: 'Terwijl de groep met een opdracht bezig is.' },
+  { id: 'tijd', label: 'De tijd is bijna om', emoji: '⏰', hint: 'Als de timer bijna afloopt.' },
+  { id: 'schat-gewonnen', label: 'Schat gewonnen', emoji: '💎', hint: 'De groep haalde minstens de helft.' },
+  { id: 'schat-verloren', label: 'Schat verloren', emoji: '😈', hint: "Minder dan de helft: 't Duvelke wint de schat." },
+  { id: 'ontmaskerd', label: 'De ontmaskering', emoji: '🎭', hint: '{speler} = wie het Duvelke was.' },
+  { id: 'winnaar', label: 'De winnaar', emoji: '🏆', hint: '{speler} = de winnaar van De Test.' },
 ];
 
 export interface BuiltInLine {
@@ -104,7 +116,46 @@ const lines: [LineCategory, string][] = [
   ['einde', 'Het moment van de waarheid! Ik sta hier te bibberen in mijn trui.'],
   ['einde', 'Wat een dag, wat een dag. Ik ga seffens efkes platliggen.'],
   ['einde', 'Straks weten we het. Wie is {saboteur}? Ik heb zo mijn vermoedens. Maar ik zeg niks.'],
+  // Tussendoor moeien
+  ['bemoeien', 'Komaan hé zeg, da kan onzen {zoon} zelfs beter!'],
+  ['bemoeien', 'Ik zou het anders doen. Maar ik zeg niks hé. Echt niet. Oké, toch een beetje.'],
+  ['bemoeien', 'Amai, wat een chaos! Moet ik komen helpen? Nee? Ik kom toch!'],
+  ['bemoeien', 'Wie heeft er hier nu weer niet goed geluisterd? Ik kijk naar niemand. Naar iedereen.'],
+  ['bemoeien', 'Pas op hé! Ik zag {saboteur} daar net iets raars doen...'],
+  ['bemoeien', 'Allee, samenwerken hé! Niet allemaal tegelijk roepen, ik word er zot van.'],
+  ['bemoeien', 'Zo een goed team! Bijna zo goed als ik vroeger. Bijna.'],
+  ['bemoeien', 'Mijn pruik staat recht van de spanning!'],
+  ['bemoeien', 'Niet zeuren, gewoon doen! Dat zeg ik tegen onzen {zoon} ook altijd. Helpt niks.'],
+  ['bemoeien', 'Hmm, ik ruik hier sabotage. Of is het de soep? Nee, sabotage!'],
+
+  // De tijd is bijna om
+  ['tijd', 'Allee mannekes, de tijd is bijna om hé!'],
+  ['tijd', 'Rap rap rap! Nog efkes en het is gedaan!'],
+  ['tijd', 'Tik tak, tik tak... ik word er zenuwachtig van, schatjes!'],
+  ['tijd', 'Komaan, nog een klein beetje! Onzen {zoon} zou nu al lang opgegeven hebben.'],
+  ['tijd', 'Oei oei, de klok! Ik zeg niks, maar... de klok!'],
+
+  // Schat gewonnen
+  ['schat-gewonnen', 'Amai, amai! Meer dan de helft van de schat! {saboteur} heeft verloren, en ik ben zo trots dat mijn pruik ervan wiebelt!'],
+  ['schat-gewonnen', 'Hoera! De schatkist zit goed vol! Dat vieren we straks met een pannenkoek.'],
+  ['schat-gewonnen', "Da's schoon! {saboteur} heeft alles geprobeerd, maar jullie waren slimmer!"],
+
+  // Schat verloren
+  ['schat-verloren', 'Oei oei oei... niet eens de helft. {saboteur} lacht zich een bult!'],
+  ['schat-verloren', 'Ocharme, de schatkist is bijna leeg. {saboteur} heeft goed gewerkt, en dat vind ik NIET plezant!'],
+  ['schat-verloren', 'Allee zeg! {saboteur} wint de schat. Maar wie was het toch?'],
+
+  // De ontmaskering
+  ['ontmaskerd', 'Ik wist het! Ik wist het! {speler}! Ik zei het nog tegen de buurvrouw!'],
+  ['ontmaskerd', 'Wat?! {speler}?! Dat had ik nooit gedacht. Oké, een klein beetje wel.'],
+  ['ontmaskerd', '{speler}! Stiekemerd! Ge moogt u schamen. Maar goed gespeeld hé!'],
+
+  // De winnaar
+  ['winnaar', 'Proficiat {speler}! De beste speurder van vandaag! Ik ben zo trots, ik moet ervan wenen.'],
+  ['winnaar', 'Hoera voor {speler}! Zo slim, dat hebt ge zeker van mij geleerd.'],
+  ['winnaar', '{speler} wint! Dat verdient een dikke knuffel van {windy}. Kom hier!'],
 ];
+
 
 export const BUILTIN_LINES: BuiltInLine[] = lines.map(([category, text], i) => ({
   id: `w${String(i + 1).padStart(3, '0')}`,

@@ -11,7 +11,7 @@
   import { allTasks } from '../lib/tasks/registry';
 
   const draft = $derived(app.draft);
-  const list = $derived(draft ? packingList(draft.program, allTasks()) : { supplies: [], prep: [] });
+  const list = $derived(draft ? packingList(draft.program, allTasks(), app.settings.hostName) : { supplies: [], prep: [] });
 
   let ticked = $state<string[]>([]);
   let recordFor = $state<{ id: string; name: string } | null>(null);

@@ -29,7 +29,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 
 1. **▶ Nieuw spel**:
    - vink aan wie meespeelt (3 tot 16);
-   - kies de spelleider. Speelt die niet mee, dan kan je een pincode instellen.
+   - kies **het hulpje van Windy**. Windy leidt het spel (uitleggen, voorlezen, uitslagen); het hulpje doet wat Windy niet kan: klaarleggen, verstoppen, resultaten aanduiden en foto's nemen. Speelt het hulpje niet mee, dan kan je een pincode instellen.
 2. **Het programma**: de app stelt opdrachten voor die passen bij de plek, de spullen, de moeilijkheid en de tijd.
    - 🔄 wisselt een opdracht, ✕ schrapt ze, ▲▼ verandert de volgorde, en je kan er toevoegen.
 3. **Paklijst**: leg alles klaar en doe de voorbereiding (bv. wasknijpers verstoppen). Ontbreken er ingesproken namen, dan zie je dat hier.
@@ -44,13 +44,13 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 | **Roddel** | Vanaf de 2e opdracht: 👀 wat Windy zelf zag (altijd waar) of 🗣️ wat de buurvrouw hoorde (soms gelogen). |
 | **Aankondiging** | Windy kondigt de opdracht aan. |
 | **Geheime briefing** | De tablet gaat rond: iedereen krijgt een geheime tip. 't Duvelke krijgt een sabotagetip. Wie een Kijk-joker heeft, kan die hier inzetten. |
-| **Uitleg** | Windy leest voor. Rollen, geheime woorden en lijsten staan op het scherm. |
-| **Timer / quiz / klok** | De opdracht wordt gespeeld. 📸 voor een bewijsfoto. |
+| **Uitleg** | Windy leest voor. Rollen, geheime woorden en lijsten staan op het scherm. Bij vragen, raadsels en weetjes leest Windy ze één voor één voor en zegt ze pas daarna het antwoord, zodat ook een meespelend hulpje niets verklapt. |
+| **Timer / quiz / klok** | De opdracht wordt gespeeld. Windy moeit zich tussendoor ("Allee mannekes, de tijd is bijna om hé!"). 📸 voor een bewijsfoto. |
 | **Resultaat** | Gelukt / bijna / mislukt of tellen: dat levert edelstenen op. |
 | **Dilemma** (soms) | Edelstenen houden, of een deel ruilen voor een Kijk-joker. |
 | **Duimpje** | 👍 of 👎: leuke opdrachten komen vaker terug. |
 
-**☰ rechtsboven** is het spelleidersmenu:
+**☰ rechtsboven** is het menu van het hulpje:
 - rol opnieuw tonen;
 - programma bekijken;
 - opdracht overslaan;

@@ -70,7 +70,7 @@
   {#if view === 'hub'}
     <div class="hub">
       {#if onclose}
-        <h2 class="done">🎬 Spelleidersmenu</h2>
+        <h2 class="done">🎬 Menu van het hulpje</h2>
       {:else}
         <h2 class="done">🗂️ Alle geheime dossiers zijn uitgedeeld!</h2>
         {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} />{/if}
@@ -93,7 +93,7 @@
         {#if game.phase === 'opdrachten' && game.current}<BigButton variant="ghost" full onclick={() => (view = 'overslaan')}>⏭ Deze opdracht overslaan</BigButton>{/if}
         {#if game.phase === 'opdrachten' || game.phase === 'einde'}<BigButton variant="ghost" full onclick={() => (view = 'afwezig')}>🚪 Wie is er weg?{game.absent.length > 0 ? ` (${game.absent.length})` : ''}</BigButton>{/if}
         {#if game.pin}
-          <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht spelleider</BigButton>
+          <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht (pincode)</BigButton>
         {/if}
         <BigButton variant="ghost" full onclick={() => go('home')}>🏠 Naar het beginscherm</BigButton>
         <BigButton variant="danger" full onclick={() => (view = 'stoppen')}>⏹ Spel stoppen</BigButton>
@@ -134,7 +134,7 @@
   {:else if view === 'pin'}
     <div class="panel center">
       <h2>🔐 Pincode</h2>
-      <p class="hint">Enkel voor de spelleider die niet meespeelt.</p>
+      <p class="hint">Enkel voor het hulpje dat niet meespeelt.</p>
       <input
         class="text-input pin"
         type="password"
