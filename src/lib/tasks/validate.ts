@@ -67,7 +67,12 @@ function varOptions(v: unknown): VarOptions | null {
 }
 
 /** Woorden die op iets onveiligs of vies wijzen: zulke opdrachten weigeren we. */
-const UNSAFE = /\b(mes(sen)?|vuur|aansteker|lucifer|zwemmen|water gooien|nat maken|modder|brandnetel|oversteken zonder|rijweg op|duwen|slaan|schoppen|tackel|klimmen op het dak|vreemden)\b/i;
+const UNSAFE = /\b(mes(sen)?|vuur|aansteker|lucifers?|zwemmen|water gooien|nat maken|modder|brandnetels?|duwen|slaan|schoppen|tackelen|klimmen op het dak|vreemden)\b/i;
+
+/** Veiligheidsregels zoals "niet duwen" of "geen vreemden aanspreken" zijn net goed: die niet meetellen. */
+function withoutNegations(text: string): string {
+  return text.replace(/\b(niet|nooit|geen|zonder|verboden)\b(\s+[\wé']+){0,3}/gi, ' ');
+}
 
 export function validateTask(
   raw: unknown,
@@ -154,7 +159,7 @@ export function validateTask(
     : [];
 
   const allText = [title, explain, ...sabotage, str(raw.prep, 400)].join(' ');
-  if (UNSAFE.test(allText)) errors.push('Deze opdracht lijkt niet veilig genoeg voor kinderen.');
+  if (UNSAFE.test(withoutNegations(allText))) errors.push('Deze opdracht lijkt niet veilig genoeg voor kinderen.');
 
   if (errors.length > 0) return { task: null, errors, warnings };
 

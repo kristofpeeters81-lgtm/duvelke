@@ -82,7 +82,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
     list: {
       title: 'Bingokaart',
       items: {
-        makkelijk: ['een dennenappel', 'een blad', 'een steentje', 'een takje', 'iets geels', 'een eikel of kastanje', 'iets zachts', 'iets ronds'],
+        makkelijk: ['een dennenappel', 'een blad', 'een steentje', 'een takje', 'iets geels', 'een eikel of kastanje', 'iets zachts', 'iets ronds', 'iets bruins', 'een veer'],
         normaal: ['een dennenappel', 'een blad groter dan je hand', 'een helemaal rond steentje', 'een Y-vormig takje', 'een veer', 'iets dat lekker ruikt', 'drie verschillende bladeren', 'een eikel of kastanje', 'iets dat rood is', 'mos'],
         pittig: ['een blad met gekartelde rand', 'een steentje met een streep', 'een takje exact zo lang als je arm', 'een veer', 'vijf verschillende bladeren', 'iets dat een dier gegeten heeft', 'een platte steen', 'een dennenappel die nog dicht is', 'iets dat van een mens komt (afval)', 'mos'],
       },

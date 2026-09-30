@@ -1,9 +1,13 @@
-import { BUILTIN_TASKS } from './library';
+import { BUILTIN_TASKS as BASIS } from './library';
+import { TASKS_NATUUR } from './library-natuur';
+import { TASKS_OVERAL } from './library-overal';
+import { TASKS_TUIN } from './library-tuin';
 import type { TaskDef } from './types';
 
-/**
- * Alle opdrachten die de app kent. Eigen en AI-opdrachten (stap 5) komen hier later bij.
- */
+/** Alle ingebouwde opdrachten: de basisset plus de uitbreidingen per plek. */
+export const ALL_BUILTIN: TaskDef[] = [...BASIS, ...TASKS_TUIN, ...TASKS_NATUUR, ...TASKS_OVERAL];
+
+/** Eigen en AI-opdrachten komen hier bij. */
 let extraTasks: TaskDef[] = [];
 
 export function setExtraTasks(tasks: TaskDef[]): void {
@@ -11,9 +15,9 @@ export function setExtraTasks(tasks: TaskDef[]): void {
 }
 
 export function allTasks(): TaskDef[] {
-  return [...BUILTIN_TASKS, ...extraTasks];
+  return [...ALL_BUILTIN, ...extraTasks];
 }
 
 export function getTask(id: string): TaskDef | undefined {
-  return BUILTIN_TASKS.find((t) => t.id === id) ?? extraTasks.find((t) => t.id === id);
+  return ALL_BUILTIN.find((t) => t.id === id) ?? extraTasks.find((t) => t.id === id);
 }
