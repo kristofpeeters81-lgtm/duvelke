@@ -48,6 +48,8 @@ export interface Settings {
   /** De zoon over wie Windy altijd klaagt. */
   sonName: string;
   voice: VoiceSettings;
+  /** Geluidseffecten (timer, edelstenen, fanfare). */
+  soundEnabled: boolean;
   durationMinutes: number;
   difficulty: Difficulty;
   locations: LocationId[];

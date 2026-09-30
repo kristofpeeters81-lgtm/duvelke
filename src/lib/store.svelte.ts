@@ -4,7 +4,8 @@ import { sortPlayers } from './players';
 import { defaultSettings, normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import type { Player, Settings } from './types';
-import { emptyLineState, normalizeLineState, type LineContext, type WindyLineState } from './windy';
+import type { LineCategory } from './data/windyLines';
+import { emptyLineState, normalizeLineState, pickLine, rememberLine, type LineContext, type WindyLineState } from './windy';
 
 export type Screen =
   | 'home'
@@ -38,6 +39,8 @@ export const app = $state({
   recordedLineIds: [] as string[],
   /** Een spel in voorbereiding (spelers, programma), nog niet gestart. */
   draft: null as GameDraft | null,
+  /** Duimpjes per opdracht en de recent gespeelde opdrachten (over alle spellen heen). */
+  taskStats: { ratings: {} as Record<string, number>, recent: [] as string[] },
 });
 
 export const toast = $state({ message: '', kind: 'info' as 'info' | 'error', id: 0 });
@@ -134,13 +137,15 @@ export function startFromHome(screen: Screen): void {
 }
 export async function loadAll(): Promise<void> {
   try {
-    const [players, rawSettings, rawLines, rawGame, recorded] = await Promise.all([
+    const [players, rawSettings, rawLines, rawGame, recorded, rawStats] = await Promise.all([
       db.getAllPlayers(),
       db.getValue('settings'),
       db.getValue('windyLines'),
       db.getValue('game'),
       db.listRecordingIds(),
+      db.getValue('taskStats'),
     ]);
+    app.taskStats = normalizeTaskStats(rawStats);
     app.recordedLineIds = recorded;
     app.players = sortPlayers(players);
     app.settings = normalizeSettings(rawSettings);
@@ -185,7 +190,7 @@ export async function deletePlayer(id: string): Promise<boolean> {
   }
 }
 
-export type PersistKey = 'settings' | 'windyLines' | 'game';
+export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats';
 
 const lastSaved = new Map<PersistKey, string>();
 /** Per sleutel één wachtrij, zodat een oudere versie nooit een nieuwere overschrijft. */
@@ -200,7 +205,7 @@ export function persistValue(key: PersistKey, value: unknown): Promise<void> {
       await db.setValue(key, JSON.parse(json));
       lastSaved.set(key, json);
     } catch (err) {
-      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel' }[key];
+      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes' }[key];
       showToast(`Opslaan van ${what} is mislukt.`, 'error');
       console.error(err);
     }
@@ -216,6 +221,7 @@ export function persistAllNow(): void {
   void persistValue('settings', $state.snapshot(app.settings));
   void persistValue('windyLines', $state.snapshot(app.windyLines));
   void persistValue('game', $state.snapshot(app.game));
+  void persistValue('taskStats', $state.snapshot(app.taskStats));
 }
 
 export function resetSettings(): void {
@@ -246,4 +252,26 @@ export async function deleteRecording(lineId: string): Promise<boolean> {
     console.error(err);
     return false;
   }
+}
+function normalizeTaskStats(raw: unknown): { ratings: Record<string, number>; recent: string[] } {
+  const stats = { ratings: {} as Record<string, number>, recent: [] as string[] };
+  if (typeof raw !== 'object' || raw === null) return stats;
+  const r = raw as Record<string, unknown>;
+  if (typeof r.ratings === 'object' && r.ratings !== null) {
+    for (const [k, v] of Object.entries(r.ratings)) if (typeof v === 'number' && Number.isFinite(v)) stats.ratings[k] = Math.max(-10, Math.min(10, v));
+  }
+  if (Array.isArray(r.recent)) stats.recent = r.recent.filter((x): x is string => typeof x === 'string').slice(0, 30);
+  return stats;
+}
+
+/** Duimpje en "recent gespeeld" bijhouden voor de keuze van volgende programma's. */
+export function recordTaskPlayed(taskId: string, rating: 1 | -1 | 0): void {
+  if (rating !== 0) app.taskStats.ratings[taskId] = (app.taskStats.ratings[taskId] ?? 0) + rating;
+  app.taskStats.recent = [taskId, ...app.taskStats.recent.filter((id) => id !== taskId)].slice(0, 30);
+}
+/** Kiest een uitspraak van Windy tijdens het spel en onthoudt ze, zodat ze niet meteen terugkomt. */
+export function windySays(category: LineCategory, speler?: string): { id: string; text: string } | null {
+  const line = pickLine(category, app.windyLines, lineContext(speler), app.game?.recentLines ?? []);
+  if (line && app.game) app.game.recentLines = rememberLine(app.game.recentLines, line.id);
+  return line;
 }

@@ -3,6 +3,7 @@
   import Duvelke from './components/Duvelke.svelte';
   import Toast from './components/Toast.svelte';
   import { requestPersistentStorage } from './lib/db';
+  import { setSoundEnabled } from './lib/sfx';
   import { warmUp } from './lib/speech';
   import { app, initNavigation, loadAll, persistAllNow, persistValue, type PersistKey } from './lib/store.svelte';
   import GameScreen from './screens/Game.svelte';
@@ -39,6 +40,9 @@
   autosave('settings', () => $state.snapshot(app.settings), 400);
   autosave('windyLines', () => $state.snapshot(app.windyLines), 400);
   autosave('game', () => $state.snapshot(app.game), 0);
+  autosave('taskStats', () => $state.snapshot(app.taskStats), 300);
+
+  $effect(() => setSoundEnabled(app.settings.soundEnabled));
 
   onMount(() => {
     const flush = (): void => {

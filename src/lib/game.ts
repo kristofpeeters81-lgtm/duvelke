@@ -3,6 +3,7 @@ import { newId } from './ids';
 import { normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import { getTask } from './tasks/registry';
+import { assignTaskRoles, pickQuiz, timerSeconds, type Outcome, type TaskResult } from './gameplay';
 import type { Player, Settings } from './types';
 import { isRecord, shuffle, type Rng } from './util';
 
@@ -10,7 +11,23 @@ export const MIN_PLAYERS = 3;
 export const MAX_PLAYERS = 16;
 
 export type Role = 'saboteur' | 'speurder';
-export type GamePhase = 'intro' | 'rollen' | 'klaar';
+/** 'klaar' = rollen verdeeld zonder programma (oudere spellen); 'opdrachten' = het spel loopt; 'einde' = eindtest. */
+export type GamePhase = 'intro' | 'rollen' | 'klaar' | 'opdrachten' | 'einde';
+
+export type TaskStep = 'aankondiging' | 'uitleg' | 'bezig' | 'resultaat' | 'schat' | 'duim';
+
+export interface CurrentTask {
+  uid: string;
+  step: TaskStep;
+  roles: Record<string, string[]>;
+  /** Indexen van de quizvragen (enkel bij een quiz). */
+  quiz: number[];
+  quizAnswers: (number | null)[];
+  timer: { total: number; remainingMs: number; endsAt: number | null } | null;
+  stopwatch: { startedAt: number | null; elapsedMs: number | null };
+  /** Het gekozen resultaat, nog voor het duimpje. */
+  pending: Omit<TaskResult, 'rating'> | null;
+}
 
 export interface GamePlayer {
   playerId: string;
@@ -45,6 +62,10 @@ export interface Game {
   program: ProgramItem[];
   /** Welke opdracht nu aan de beurt is (index in program). */
   taskIndex: number;
+  current: CurrentTask | null;
+  results: TaskResult[];
+  /** Al gestelde quizvragen, zodat ze niet terugkomen. */
+  askedQuiz: number[];
 }
 
 /**
@@ -130,6 +151,9 @@ export function createGame(
     recentLines: [],
     program: structuredClone(program),
     taskIndex: 0,
+    current: null,
+    results: [],
+    askedQuiz: [],
   };
 }
 
@@ -153,7 +177,7 @@ export function multipleSaboteursPossible(playerCount: number): boolean {
 export function normalizeGame(raw: unknown): Game | null {
   if (!isRecord(raw) || raw.version !== 1 || typeof raw.id !== 'string') return null;
   if (!Array.isArray(raw.players) || raw.players.length < MIN_PLAYERS) return null;
-  const phases: GamePhase[] = ['intro', 'rollen', 'klaar'];
+  const phases: GamePhase[] = ['intro', 'rollen', 'klaar', 'opdrachten', 'einde'];
   if (!phases.includes(raw.phase as GamePhase)) return null;
 
   const players: GamePlayer[] = [];
@@ -188,7 +212,8 @@ export function normalizeGame(raw: unknown): Game | null {
   const program = normalizeProgram(raw.program);
   const revealIndex = typeof raw.revealIndex === 'number' ? Math.min(players.length, Math.max(0, Math.floor(raw.revealIndex))) : 0;
 
-  return {
+  const taskIndex = typeof raw.taskIndex === 'number' ? Math.min(program.length, Math.max(0, Math.floor(raw.taskIndex))) : 0;
+  const game: Game = {
     version: 1,
     id: raw.id,
     createdAt: typeof raw.createdAt === 'number' ? raw.createdAt : Date.now(),
@@ -201,8 +226,16 @@ export function normalizeGame(raw: unknown): Game | null {
     revealIndex,
     recentLines: Array.isArray(raw.recentLines) ? raw.recentLines.filter((l): l is string => typeof l === 'string').slice(0, 25) : [],
     program,
-    taskIndex: typeof raw.taskIndex === 'number' ? Math.min(program.length, Math.max(0, Math.floor(raw.taskIndex))) : 0,
+    taskIndex,
+    current: null,
+    results: normalizeResults(raw.results),
+    askedQuiz: Array.isArray(raw.askedQuiz) ? raw.askedQuiz.filter((q): q is number => typeof q === 'number') : [],
   };
+  if (game.phase === 'opdrachten') {
+    if (game.taskIndex >= game.program.length) game.phase = 'einde';
+    else game.current = normalizeCurrent(raw.current, game) ?? newCurrent(game);
+  }
+  return game;
 }
 
 /** Programma-items van onbekende opdrachten (bv. een gewiste eigen opdracht) worden weggelaten. */
@@ -224,4 +257,130 @@ export function normalizeProgram(raw: unknown): ProgramItem[] {
     });
   }
   return items;
+}
+// --- Verloop van de opdrachten ------------------------------------------------
+
+/** Een verse "huidige opdracht" voor de opdracht op taskIndex. */
+export function newCurrent(game: Game, rng: Rng = Math.random): CurrentTask | null {
+  const item = game.program[game.taskIndex];
+  const task = item ? getTask(item.taskId) : undefined;
+  if (!item || !task) return null;
+  const quiz = task.scoring.type === 'quiz' ? pickQuiz(game.settings.difficulty, task.scoring.questions, game.askedQuiz, rng) : [];
+  const seconds = timerSeconds(task, item, game.settings.difficulty);
+  return {
+    uid: item.uid,
+    step: 'aankondiging',
+    roles: assignTaskRoles(task, game.players.map((p) => p.playerId), game.results, rng),
+    quiz,
+    quizAnswers: quiz.map(() => null),
+    timer: seconds === null ? null : { total: seconds, remainingMs: seconds * 1000, endsAt: null },
+    stopwatch: { startedAt: null, elapsedMs: null },
+    pending: null,
+  };
+}
+
+/** Na het uitdelen van de rollen: naar de eerste opdracht (of het oude overzicht zonder programma). */
+export function startTasks(game: Game): void {
+  if (game.program.length === 0) {
+    game.phase = 'klaar';
+    return;
+  }
+  game.phase = 'opdrachten';
+  game.taskIndex = 0;
+  game.current = newCurrent(game);
+}
+
+function nextTask(game: Game): void {
+  game.taskIndex += 1;
+  if (game.taskIndex >= game.program.length) {
+    game.phase = 'einde';
+    game.current = null;
+  } else {
+    game.current = newCurrent(game);
+  }
+}
+
+/** Resultaat bewaren (met duimpje) en door naar de volgende opdracht. */
+export function finishCurrent(game: Game, rating: 1 | -1 | 0): TaskResult | null {
+  const pending = game.current?.pending;
+  if (!pending) return null;
+  const result: TaskResult = { ...pending, rating };
+  game.results = [...game.results.filter((r) => r.uid !== result.uid), result];
+  if (game.current) game.askedQuiz = [...game.askedQuiz, ...game.current.quiz];
+  nextTask(game);
+  return result;
+}
+
+/** De huidige opdracht overslaan: telt niet mee voor de schat. */
+export function skipCurrent(game: Game): void {
+  const item = game.program[game.taskIndex];
+  if (!item || !game.current) return;
+  game.results = [
+    ...game.results.filter((r) => r.uid !== item.uid),
+    { uid: item.uid, taskId: item.taskId, outcome: 'overgeslagen', score: null, target: null, gems: 0, maxGems: 0, roles: game.current.roles, rating: 0 },
+  ];
+  nextTask(game);
+}
+
+const OUTCOMES: Outcome[] = ['gelukt', 'bijna', 'mislukt', 'score', 'overgeslagen'];
+
+function normalizeRoles(raw: unknown): Record<string, string[]> {
+  const roles: Record<string, string[]> = {};
+  if (!isRecord(raw)) return roles;
+  for (const [k, v] of Object.entries(raw)) if (Array.isArray(v)) roles[k] = v.filter((x): x is string => typeof x === 'string');
+  return roles;
+}
+
+function num(v: unknown): number | null {
+  return typeof v === 'number' && Number.isFinite(v) ? v : null;
+}
+
+export function normalizeResults(raw: unknown): TaskResult[] {
+  if (!Array.isArray(raw)) return [];
+  const out: TaskResult[] = [];
+  for (const r of raw) {
+    if (!isRecord(r) || typeof r.uid !== 'string' || typeof r.taskId !== 'string') continue;
+    if (!OUTCOMES.includes(r.outcome as Outcome)) continue;
+    out.push({
+      uid: r.uid,
+      taskId: r.taskId,
+      outcome: r.outcome as Outcome,
+      score: num(r.score),
+      target: num(r.target),
+      gems: Math.max(0, num(r.gems) ?? 0),
+      maxGems: Math.max(0, num(r.maxGems) ?? 0),
+      roles: normalizeRoles(r.roles),
+      rating: r.rating === 1 || r.rating === -1 ? r.rating : 0,
+    });
+  }
+  return out;
+}
+
+const STEPS: TaskStep[] = ['aankondiging', 'uitleg', 'bezig', 'resultaat', 'schat', 'duim'];
+
+function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
+  const item = game.program[game.taskIndex];
+  if (!isRecord(raw) || !item || raw.uid !== item.uid || !STEPS.includes(raw.step as TaskStep)) return null;
+  const timer = isRecord(raw.timer) && num(raw.timer.total) !== null
+    ? { total: num(raw.timer.total)!, remainingMs: num(raw.timer.remainingMs) ?? 0, endsAt: num(raw.timer.endsAt) }
+    : null;
+  const sw = isRecord(raw.stopwatch) ? raw.stopwatch : {};
+  const pendingRaw = isRecord(raw.pending) ? normalizeResults([{ ...raw.pending, rating: 0 }])[0] : undefined;
+  const quiz = Array.isArray(raw.quiz) ? raw.quiz.filter((q): q is number => typeof q === 'number') : [];
+  const answers = Array.isArray(raw.quizAnswers) ? raw.quizAnswers.map((a) => (typeof a === 'number' ? a : null)) : [];
+  let pending: Omit<TaskResult, 'rating'> | null = null;
+  if (pendingRaw) {
+    const { rating: _rating, ...rest } = pendingRaw;
+    pending = rest;
+  }
+  return {
+    uid: item.uid,
+    step: raw.step as TaskStep,
+    roles: normalizeRoles(raw.roles),
+    quiz,
+    quizAnswers: quiz.map((_, i) => answers[i] ?? null),
+    timer,
+    stopwatch: { startedAt: num(sw.startedAt), elapsedMs: num(sw.elapsedMs) },
+    pending,
+  };
 }

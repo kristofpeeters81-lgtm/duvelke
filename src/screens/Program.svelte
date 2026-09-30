@@ -22,7 +22,9 @@
 
   const draft = $derived(app.draft);
   const ctx = $derived<PlanContext | null>(
-    draft ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks() } : null,
+    draft
+      ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent }
+      : null,
   );
   const minutes = $derived(draft && ctx ? programMinutes(draft.program, ctx) : 0);
   const target = $derived(draft?.settings.durationMinutes ?? 0);

@@ -5,6 +5,7 @@
   import HoldToReveal from '../../components/HoldToReveal.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { PROFILE_QUESTIONS } from '../../lib/data/profile';
+  import { startTasks } from '../../lib/game';
   import { app, lineContext } from '../../lib/store.svelte';
   import { pickLine, rememberLine } from '../../lib/windy';
 
@@ -62,7 +63,7 @@
     app.game.revealIndex += 1;
     step = 'geef';
     if (app.game.revealIndex >= app.game.revealOrder.length) {
-      app.game.phase = 'klaar';
+      startTasks(app.game);
     }
   }
 

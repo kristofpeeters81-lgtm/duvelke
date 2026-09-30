@@ -4,11 +4,19 @@
   import Dossier from '../../components/Dossier.svelte';
   import HoldToReveal from '../../components/HoldToReveal.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
-  import type { GamePlayer } from '../../lib/game';
+  import { skipCurrent, type GamePlayer } from '../../lib/game';
+  import { getTask } from '../../lib/tasks/registry';
   import { app, go, lineContext, showToast } from '../../lib/store.svelte';
   import { pickLine, rememberLine } from '../../lib/windy';
 
-  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen';
+  interface Props {
+    /** Als menu tijdens het spel: sluitknop tonen. */
+    onclose?: () => void;
+  }
+
+  let { onclose }: Props = $props();
+
+  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma';
 
   let view = $state<View>('hub');
   let chosen = $state<GamePlayer | null>(null);
@@ -17,7 +25,7 @@
   const game = $derived(app.game);
 
   const hubLine = untrack(() => {
-    if (!app.game) return null;
+    if (!app.game || onclose) return null;
     const line = pickLine('zoon', app.windyLines, lineContext(), app.game.recentLines);
     if (line) app.game.recentLines = rememberLine(app.game.recentLines, line.id);
     return line;
@@ -42,6 +50,11 @@
     go('home');
   }
 
+  function skip(): void {
+    if (app.game) skipCurrent(app.game);
+    onclose?.();
+  }
+
   function back(): void {
     view = 'hub';
     chosen = null;
@@ -51,9 +64,14 @@
 {#if game}
   {#if view === 'hub'}
     <div class="hub">
-      <h2 class="done">🗂️ Alle geheime dossiers zijn uitgedeeld!</h2>
-      {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} />{/if}
+      {#if onclose}
+        <h2 class="done">🎬 Spelleidersmenu</h2>
+      {:else}
+        <h2 class="done">🗂️ Alle geheime dossiers zijn uitgedeeld!</h2>
+        {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} />{/if}
+      {/if}
 
+      {#if game.phase === 'klaar'}
       <div class="soon">
         <span class="em">🎯</span>
         <div>
@@ -61,9 +79,13 @@
           <p>Nu kan je al testen hoe de rollen verdeeld worden en hoe de tablet rondgaat.</p>
         </div>
       </div>
+      {/if}
 
       <div class="actions">
+        {#if onclose}<BigButton variant="gold" full onclick={onclose}>▶ Terug naar het spel</BigButton>{/if}
         <BigButton variant="secondary" full onclick={() => (view = 'kies')}>🆘 Toon mijn rol opnieuw</BigButton>
+        {#if game.program.length > 0}<BigButton variant="ghost" full onclick={() => (view = 'programma')}>📋 Programma bekijken</BigButton>{/if}
+        {#if game.phase === 'opdrachten' && game.current}<BigButton variant="ghost" full onclick={() => (view = 'overslaan')}>⏭ Deze opdracht overslaan</BigButton>{/if}
         {#if game.pin}
           <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht spelleider</BigButton>
         {/if}
@@ -134,6 +156,28 @@
       </ul>
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
     </div>
+  {:else if view === 'overslaan'}
+    <div class="panel center">
+      <h2>Opdracht overslaan?</h2>
+      <p class="hint">Deze opdracht telt dan niet mee voor de schat. Handig als iets niet lukt of het begint te regenen.</p>
+      <BigButton variant="danger" full onclick={skip}>Ja, overslaan</BigButton>
+      <BigButton variant="ghost" full onclick={back}>Nee, terug</BigButton>
+    </div>
+  {:else if view === 'programma'}
+    <div class="panel">
+      <h2>📋 Programma</h2>
+      <ol class="prog">
+        {#each game.program as item, i (item.uid)}
+          {@const task = getTask(item.taskId)}
+          {@const result = game.results.find((r) => r.uid === item.uid)}
+          <li class:now={game.phase === 'opdrachten' && i === game.taskIndex} class:done={!!result}>
+            <span>{task?.emoji} {task?.title}</span>
+            <span class="st">{result ? (result.outcome === 'overgeslagen' ? '⏭ overgeslagen' : `💎 ${result.gems}/${result.maxGems}`) : i === game.taskIndex ? '▶ nu' : ''}</span>
+          </li>
+        {/each}
+      </ol>
+      <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
+    </div>
   {:else if view === 'stoppen'}
     <div class="panel center">
       <h2>Spel stoppen?</h2>
@@ -157,6 +201,37 @@
   .done {
     text-align: center;
     font-size: clamp(1.5rem, 4.5vw, 2rem);
+  }
+
+  .prog {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .prog li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: var(--bg-raised);
+    font-weight: 700;
+  }
+
+  .prog li.now {
+    border: 2px solid var(--gold);
+  }
+
+  .prog li.done {
+    opacity: 0.7;
+  }
+
+  .st {
+    color: var(--text-dim);
+    white-space: nowrap;
   }
 
   .center {

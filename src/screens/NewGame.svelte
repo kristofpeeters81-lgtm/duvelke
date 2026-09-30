@@ -73,7 +73,7 @@
       previous !== null &&
       JSON.stringify(previous.playerIds) === JSON.stringify(playerIds) &&
       JSON.stringify(previous.settings) === JSON.stringify(settings);
-    const program = same && previous ? previous.program : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks() });
+    const program = same && previous ? previous.program : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent });
     app.draft = { playerIds, gameMasterId: gm, pin: gm === null && pin !== '' ? pin : null, settings, program };
     go('programma');
   }

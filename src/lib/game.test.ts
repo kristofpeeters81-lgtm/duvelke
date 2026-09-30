@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { assignRoles, createGame, normalizeGame, saboteurCount } from './game';
+import { assignRoles, createGame, finishCurrent, normalizeGame, saboteurCount, skipCurrent, startTasks } from './game';
 import { defaultSettings } from './settings';
+import type { ProgramItem } from './tasks/program';
 import type { Player } from './types';
 
 /** Voorspelbare "random" voor tests (mulberry32). */
@@ -108,6 +109,71 @@ describe('createGame', () => {
   it('bewaart geen pincode als de spelleider meespeelt', () => {
     expect(createGame(players(5), defaultSettings(), 'p2', '1234').pin).toBeNull();
     expect(createGame(players(5), defaultSettings(), null, '1234').pin).toBe('1234');
+  });
+});
+
+describe('verloop van de opdrachten', () => {
+  const program: ProgramItem[] = [
+    { uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+    { uid: 'u2', taskId: 'windy-quiz', location: 'binnen', vars: { aantal: 8 }, list: [] },
+    { uid: 'u3', taskId: 'blinde-piloot', location: 'binnen', vars: {}, list: [] },
+  ];
+
+  function started() {
+    const game = createGame(players(5), defaultSettings(), null, null, program, seeded(1));
+    startTasks(game);
+    return game;
+  }
+
+  it('start bij de eerste opdracht met een aankondiging', () => {
+    const game = started();
+    expect(game.phase).toBe('opdrachten');
+    expect(game.current?.uid).toBe('u1');
+    expect(game.current?.step).toBe('aankondiging');
+    expect(game.current?.timer?.total).toBe(180);
+  });
+
+  it('bewaart het resultaat en gaat naar de volgende opdracht, met quizvragen', () => {
+    const game = started();
+    game.current!.pending = { uid: 'u1', taskId: 'bekertoren', outcome: 'gelukt', score: null, target: null, gems: 10, maxGems: 10, roles: {} };
+    finishCurrent(game, 1);
+    expect(game.results).toHaveLength(1);
+    expect(game.results[0]!.rating).toBe(1);
+    expect(game.current?.uid).toBe('u2');
+    expect(game.current?.quiz).toHaveLength(8);
+  });
+
+  it('deelt rollen uit bij opdrachten met rollen', () => {
+    const game = started();
+    skipCurrent(game);
+    skipCurrent(game);
+    expect(game.current?.roles['Piloot']).toHaveLength(1);
+  });
+
+  it('gaat naar het einde na de laatste opdracht', () => {
+    const game = started();
+    skipCurrent(game);
+    skipCurrent(game);
+    skipCurrent(game);
+    expect(game.phase).toBe('einde');
+    expect(game.current).toBeNull();
+    expect(game.results.every((r) => r.outcome === 'overgeslagen')).toBe(true);
+  });
+
+  it('gaat na herladen verder op exact dezelfde stap', () => {
+    const game = started();
+    game.current!.step = 'bezig';
+    game.current!.timer!.remainingMs = 42000;
+    const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
+    expect(back.current?.step).toBe('bezig');
+    expect(back.current?.timer?.remainingMs).toBe(42000);
+    expect(back.current?.roles).toEqual(game.current!.roles);
+  });
+
+  it('maakt een nieuwe huidige opdracht als de opgeslagen kapot is', () => {
+    const game = started();
+    const raw = { ...JSON.parse(JSON.stringify(game)), current: { uid: 'verkeerd', step: 'zweven' } };
+    expect(normalizeGame(raw)?.current?.uid).toBe('u1');
   });
 });
 
