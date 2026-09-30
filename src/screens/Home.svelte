@@ -52,6 +52,7 @@
         🎒 Benodigdheden <span class="count">{app.settings.supplies.length}</span>
       </BigButton>
     </div>
+    <BigButton variant="ghost" full onclick={() => go('opdrachten')}>📚 Opdrachten</BigButton>
     <div class="grid">
       <BigButton variant="ghost" full onclick={() => go('windy')}>🎙️ {app.settings.hostName}</BigButton>
       <BigButton variant="ghost" full onclick={() => go('instellingen')}>⚙️ Instellingen</BigButton>

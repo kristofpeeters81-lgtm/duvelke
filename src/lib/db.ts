@@ -79,6 +79,18 @@ export async function removeRecording(lineId: string): Promise<void> {
   await (await db()).delete('recordings', lineId);
 }
 
+export async function getAllRecordings(): Promise<Recording[]> {
+  return (await db()).getAll('recordings');
+}
+
+/** Alle spelers vervangen (bij het terugzetten van een back-up). */
+export async function replacePlayers(players: Player[]): Promise<void> {
+  const tx = (await db()).transaction('players', 'readwrite');
+  await tx.store.clear();
+  for (const p of players) await tx.store.put(p);
+  await tx.done;
+}
+
 export async function listRecordingIds(): Promise<string[]> {
   return (await db()).getAllKeys('recordings');
 }

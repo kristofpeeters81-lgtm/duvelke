@@ -14,6 +14,7 @@
   import Players from './screens/Players.svelte';
   import Settings from './screens/Settings.svelte';
   import Supplies from './screens/Supplies.svelte';
+  import Tasks from './screens/Tasks.svelte';
   import VoiceTest from './screens/VoiceTest.svelte';
   import WindyScreen from './screens/WindyScreen.svelte';
 
@@ -43,6 +44,8 @@
   autosave('windyLines', () => $state.snapshot(app.windyLines), 400);
   autosave('game', () => $state.snapshot(app.game), 0);
   autosave('taskStats', () => $state.snapshot(app.taskStats), 300);
+  autosave('customTasks', () => $state.snapshot(app.customTasks), 300);
+  autosave('ai', () => $state.snapshot(app.ai), 300);
 
   $effect(() => setSoundEnabled(app.settings.soundEnabled));
 
@@ -71,6 +74,8 @@
   <WindyScreen />
 {:else if app.screen === 'stemtest'}
   <VoiceTest />
+{:else if app.screen === 'opdrachten'}
+  <Tasks />
 {:else if app.screen === 'nieuw-spel'}
   <NewGame />
 {:else if app.screen === 'programma'}

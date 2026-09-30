@@ -3,6 +3,9 @@ import { normalizeGame, type Game } from './game';
 import { sortPlayers } from './players';
 import { defaultSettings, normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
+import { setExtraTasks } from './tasks/registry';
+import type { TaskDef } from './tasks/types';
+import { validateTask } from './tasks/validate';
 import type { Player, Settings } from './types';
 import type { LineCategory } from './data/windyLines';
 import { emptyLineState, normalizeLineState, pickLine, rememberLine, type LineContext, type WindyLineState } from './windy';
@@ -14,6 +17,7 @@ export type Screen =
   | 'benodigdheden'
   | 'windy'
   | 'stemtest'
+  | 'opdrachten'
   | 'nieuw-spel'
   | 'programma'
   | 'paklijst'
@@ -41,6 +45,10 @@ export const app = $state({
   draft: null as GameDraft | null,
   /** Duimpjes per opdracht en de recent gespeelde opdrachten (over alle spellen heen). */
   taskStats: { ratings: {} as Record<string, number>, recent: [] as string[] },
+  /** Zelf gemaakte en door AI bedachte opdrachten. */
+  customTasks: [] as TaskDef[],
+  /** Gemini-sleutel: blijft op dit toestel, nooit in een back-up. */
+  ai: { geminiKey: '', model: '' },
 });
 
 export const toast = $state({ message: '', kind: 'info' as 'info' | 'error', id: 0 });
@@ -57,7 +65,7 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);
@@ -137,14 +145,22 @@ export function startFromHome(screen: Screen): void {
 }
 export async function loadAll(): Promise<void> {
   try {
-    const [players, rawSettings, rawLines, rawGame, recorded, rawStats] = await Promise.all([
+    const [players, rawSettings, rawLines, rawGame, recorded, rawStats, rawCustom, rawAi] = await Promise.all([
       db.getAllPlayers(),
       db.getValue('settings'),
       db.getValue('windyLines'),
       db.getValue('game'),
       db.listRecordingIds(),
       db.getValue('taskStats'),
+      db.getValue('customTasks'),
+      db.getValue('ai'),
     ]);
+    app.customTasks = normalizeCustomTasks(rawCustom, app.settings.customSupplies);
+    setExtraTasks(app.customTasks);
+    if (rawAi && typeof rawAi === 'object') {
+      const a = rawAi as Record<string, unknown>;
+      app.ai = { geminiKey: typeof a.geminiKey === 'string' ? a.geminiKey : '', model: typeof a.model === 'string' ? a.model : '' };
+    }
     app.taskStats = normalizeTaskStats(rawStats);
     app.recordedLineIds = recorded;
     app.players = sortPlayers(players);
@@ -190,7 +206,7 @@ export async function deletePlayer(id: string): Promise<boolean> {
   }
 }
 
-export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats';
+export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats' | 'customTasks' | 'ai';
 
 const lastSaved = new Map<PersistKey, string>();
 /** Per sleutel één wachtrij, zodat een oudere versie nooit een nieuwere overschrijft. */
@@ -205,7 +221,7 @@ export function persistValue(key: PersistKey, value: unknown): Promise<void> {
       await db.setValue(key, JSON.parse(json));
       lastSaved.set(key, json);
     } catch (err) {
-      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes' }[key];
+      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes', customTasks: 'de eigen opdrachten', ai: 'de AI-sleutel' }[key];
       showToast(`Opslaan van ${what} is mislukt.`, 'error');
       console.error(err);
     }
@@ -222,6 +238,8 @@ export function persistAllNow(): void {
   void persistValue('windyLines', $state.snapshot(app.windyLines));
   void persistValue('game', $state.snapshot(app.game));
   void persistValue('taskStats', $state.snapshot(app.taskStats));
+  void persistValue('customTasks', $state.snapshot(app.customTasks));
+  void persistValue('ai', $state.snapshot(app.ai));
 }
 
 export function resetSettings(): void {
@@ -274,4 +292,63 @@ export function windySays(category: LineCategory, speler?: string): { id: string
   const line = pickLine(category, app.windyLines, lineContext(speler), app.game?.recentLines ?? []);
   if (line && app.game) app.game.recentLines = rememberLine(app.game.recentLines, line.id);
   return line;
+}
+/** Opgeslagen eigen opdrachten opnieuw controleren: een kapotte opdracht mag het spel niet breken. */
+function normalizeCustomTasks(raw: unknown, customSupplies: import('./types').CustomSupply[]): TaskDef[] {
+  if (!Array.isArray(raw)) return [];
+  const out: TaskDef[] = [];
+  for (const t of raw) {
+    const source = typeof t === 'object' && t !== null && (t as TaskDef).source === 'ai' ? 'ai' : 'eigen';
+    const r = validateTask(t, { customSupplies, source, keepId: true });
+    if (r.task && !out.some((x) => x.id === r.task!.id)) out.push(r.task);
+  }
+  return out;
+}
+
+export function saveCustomTask(task: TaskDef): void {
+  app.customTasks = [...app.customTasks.filter((t) => t.id !== task.id), task];
+  setExtraTasks($state.snapshot(app.customTasks));
+}
+
+export function deleteCustomTask(id: string): void {
+  app.customTasks = app.customTasks.filter((t) => t.id !== id);
+  setExtraTasks($state.snapshot(app.customTasks));
+}
+/** Maakt een back-upbestand van alles behalve het lopende spel, de foto's en de AI-sleutel. */
+export async function exportBackup(): Promise<File> {
+  const { makeBackup } = await import('./backup');
+  const backup = await makeBackup(
+    {
+      players: $state.snapshot(app.players),
+      settings: $state.snapshot(app.settings),
+      windyLines: $state.snapshot(app.windyLines),
+      customTasks: $state.snapshot(app.customTasks),
+      taskStats: $state.snapshot(app.taskStats),
+    },
+    await db.getAllRecordings(),
+  );
+  const date = new Date().toISOString().slice(0, 10);
+  return new File([JSON.stringify(backup)], `duvelke-backup-${date}.json`, { type: 'application/json' });
+}
+
+/** Zet een back-up terug. Vervangt spelers, instellingen, uitspraken, eigen opdrachten en opnames. */
+export async function importBackup(file: File): Promise<string> {
+  const { readBackup } = await import('./backup');
+  let raw: unknown;
+  try {
+    raw = JSON.parse(await file.text());
+  } catch {
+    throw new Error('Dit bestand kan ik niet lezen.');
+  }
+  const data = readBackup(raw);
+  await db.replacePlayers(data.players);
+  for (const r of data.recordings) await db.putRecording(r);
+  app.players = data.players;
+  app.settings = data.settings;
+  app.windyLines = data.windyLines;
+  app.customTasks = data.customTasks;
+  setExtraTasks(data.customTasks);
+  app.taskStats = data.taskStats;
+  app.recordedLineIds = await db.listRecordingIds();
+  return `${data.players.length} spelers, ${data.customTasks.length} eigen opdrachten en ${data.recordings.length} opnames teruggezet.`;
 }
