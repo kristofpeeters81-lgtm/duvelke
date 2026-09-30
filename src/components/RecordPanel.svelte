@@ -53,8 +53,11 @@
     });
   });
 
+  let destroyed = false;
+
   onMount(() => {
     return () => {
+      destroyed = true;
       clearInterval(tick);
       active?.cancel();
       stopPiper();
@@ -76,7 +79,13 @@
           }
         }, 700);
       });
-      active = await startRecording(() => void finish());
+      const started = await startRecording(() => void finish());
+      // Paneel intussen gesloten (bv. terwijl Chrome om toestemming vroeg)? Meteen de microfoon dicht.
+      if (destroyed) {
+        started.cancel();
+        return;
+      }
+      active = started;
       phase = 'opnemen';
       elapsed = 0;
       const startedAt = performance.now();

@@ -5,7 +5,7 @@
  * 3. de voorleesstem van het toestel.
  */
 import { getRecording } from './db';
-import { BrokenVoiceError, piperSupported, playWav, stopPiper, storedVoices, synthesize } from './piper';
+import { BrokenVoiceError, piperSupported, playWav, StaleSpeechError, stopPiper, storedVoices, synthesize } from './piper';
 import type { VoiceSettings } from './types';
 import { speak as speakDevice, stopSpeaking } from './voice';
 import { nameRecordingId, recordingParts } from './windy';
@@ -86,21 +86,25 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
     chosen = (await piperReady(wanted)) ? wanted : { ...v, piperPitch: v.piperPitch * 0.85, pitch: v.pitch * 0.85 };
   }
 
-  if (await piperReady(chosen)) {
+  const ready = await piperReady(chosen);
+  if (mine !== token) return;
+  if (ready) {
     try {
-      const wav = await synthesize(text, chosen.piperVoice);
+      const wav = await synthesize(text, chosen.piperVoice, () => mine !== token);
       if (mine !== token) return; // intussen al een nieuwere zin gevraagd
       options.onStart?.();
       await playWav(wav, chosen.piperPitch);
       return;
     } catch (err) {
+      if (err instanceof StaleSpeechError) return;
       if (err instanceof BrokenVoiceError) invalidateStoredVoices();
       console.warn('AI-stem mislukt, terugvallen op de toestelstem', err);
       if (mine !== token) return;
     }
   }
+  if (mine !== token) return;
   options.onStart?.();
-  await speakDevice(text, chosen);
+  await speakDevice(text, chosen, () => mine !== token);
 }
 
 export function stopAll(): void {
@@ -123,10 +127,10 @@ export async function warmUp(v: VoiceSettings): Promise<void> {
  * Een zin alvast klaarmaken (bv. de uitleg van de volgende opdracht), zodat ze meteen klinkt
  * als ze nodig is. Stil: fouten negeren we, voorlezen valt dan gewoon terug op het normale pad.
  */
-export async function prefetch(text: string, v: VoiceSettings): Promise<void> {
+export async function prefetch(text: string, v: VoiceSettings, isStale?: () => boolean): Promise<void> {
   if (!v.enabled || !text.trim() || !(await piperReady(v))) return;
   try {
-    await synthesize(text, v.piperVoice);
+    await synthesize(text, v.piperVoice, isStale);
   } catch {
     /* niet erg */
   }

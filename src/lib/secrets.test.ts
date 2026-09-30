@@ -100,6 +100,18 @@ describe('makeGossip', () => {
   });
 });
 
+describe('roddels bij meerdere Duvelkes', () => {
+  it('herhaalt nooit een onderwerp, zodat niet opvalt dat er twee zijn', () => {
+    const two = players.map((p) => (p.playerId === 'x' ? { ...p, role: 'saboteur' as const, profile: profile({ eten: 'frietjes' }) } : p));
+    const used: Gossip[] = [];
+    for (let i = 0; i < 8; i++) {
+      const g = makeGossip(two, used, { neighbourGossip: false }, seeded(i + 11));
+      if (g) used.push(g);
+    }
+    expect(new Set(used.map((g) => g.questionId)).size).toBe(used.length);
+  });
+});
+
 describe('gossipSentence', () => {
   it('maakt voor elke vraag en elk antwoord een zin zonder rare codes', () => {
     for (const q of PROFILE_QUESTIONS) {

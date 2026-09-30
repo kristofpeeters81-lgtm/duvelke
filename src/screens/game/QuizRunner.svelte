@@ -18,8 +18,9 @@
 
   // Na herladen verder bij de eerste onbeantwoorde vraag.
   const firstOpen = untrack(() => answers.findIndex((a) => a === null));
-  let index = $state(firstOpen === -1 ? 0 : firstOpen);
-  let revealed = $state(false);
+  // Alles al beantwoord (herladen net na de laatste vraag)? Dan bij de laatste vraag, met het antwoord zichtbaar.
+  let index = $state(firstOpen === -1 ? Math.max(0, untrack(() => questions.length) - 1) : firstOpen);
+  let revealed = $state(firstOpen === -1);
 
   const q = $derived(QUIZ[difficulty][questions[index] ?? 0]);
   const chosen = $derived(answers[index] ?? null);

@@ -47,6 +47,7 @@
   autosave('taskStats', () => $state.snapshot(app.taskStats), 300);
   autosave('customTasks', () => $state.snapshot(app.customTasks), 300);
   autosave('ai', () => $state.snapshot(app.ai), 300);
+  autosave('draft', () => $state.snapshot(app.draft), 300);
 
   $effect(() => setSoundEnabled(app.settings.soundEnabled));
 

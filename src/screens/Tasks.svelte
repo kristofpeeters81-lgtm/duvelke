@@ -53,6 +53,19 @@
   const preview = (t: TaskDef): string => fillVars(t.explain, Object.fromEntries(Object.entries(t.vars ?? {}).map(([k, v]) => [k, v.normaal[0] ?? '?'])));
   const own = (t: TaskDef): boolean => t.source === 'eigen' || t.source === 'ai';
 
+  function removeOpen(): void {
+    if (!open) return;
+    const id = open.id;
+    if (app.game?.program.some((p) => p.taskId === id) || app.draft?.program.some((p) => p.taskId === id)) {
+      showToast('Deze opdracht zit in het lopende spel of het programma. Haal ze daar eerst weg.', 'error');
+      confirmDelete = false;
+      return;
+    }
+    deleteCustomTask(id);
+    open = null;
+    showToast('Opdracht verwijderd.');
+  }
+
   function supplyLabel(id: string): string {
     const s = SUPPLIES.find((x) => x.id === id) ?? app.settings.customSupplies.find((c) => c.id === id);
     return s ? `${s.emoji} ${s.label}` : id;
@@ -311,7 +324,7 @@
         {#if own(open)}
           <BigButton variant="secondary" onclick={() => (editing = open)}>✏️ Bewerken</BigButton>
           {#if confirmDelete}
-            <BigButton variant="danger" onclick={() => (open && deleteCustomTask(open.id), (open = null), showToast('Opdracht verwijderd.'))}>Ja, verwijder</BigButton>
+            <BigButton variant="danger" onclick={removeOpen}>Ja, verwijder</BigButton>
           {:else}
             <BigButton variant="danger" onclick={() => (confirmDelete = true)}>🗑️ Verwijderen</BigButton>
           {/if}

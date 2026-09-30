@@ -1,7 +1,7 @@
 <script lang="ts">
   import BigButton from '../../components/BigButton.svelte';
   import HoldToReveal from '../../components/HoldToReveal.svelte';
-  import { briefingLater, briefingNext, useJoker } from '../../lib/game';
+  import { briefingLater, briefingNext, briefingSkip, useJoker } from '../../lib/game';
   import { app } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
 
@@ -55,6 +55,7 @@
       {#if b.index < b.order.length - 1}
         <button type="button" class="link" onclick={() => app.game && briefingLater(app.game)}>{player.name} is er even niet: later</button>
       {/if}
+      <button type="button" class="link" onclick={() => app.game && briefingSkip(app.game)}>{player.name} is weg: overslaan</button>
     </div>
   {:else}
     <div class="stack">

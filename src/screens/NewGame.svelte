@@ -113,8 +113,8 @@
     <section class="section">
       <h2>🎬 Wie is de spelleider?</h2>
       <p class="hint">
-        De spelleider leest voor en duidt resultaten aan. Speelt die mee, dan kan die ook {s.saboteurName} zijn en toont de
-        app nooit geheime info aan de spelleider.
+        De spelleider leest voor en duidt resultaten aan. Speelt die mee, dan kan die ook {s.saboteurName} zijn en ziet die, net als iedereen, enkel de
+        eigen geheimen.
       </p>
       <div class="chips">
         {#each chosen as p (p.id)}

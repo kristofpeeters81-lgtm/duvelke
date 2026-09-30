@@ -4,7 +4,7 @@
   import Dossier from '../../components/Dossier.svelte';
   import HoldToReveal from '../../components/HoldToReveal.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
-  import { skipCurrent, type GamePlayer } from '../../lib/game';
+  import { markAbsent, skipCurrent, type GamePlayer } from '../../lib/game';
   import { getTask } from '../../lib/tasks/registry';
   import { app, go, lineContext, showToast } from '../../lib/store.svelte';
   import { pickLine, rememberLine } from '../../lib/windy';
@@ -16,7 +16,7 @@
 
   let { onclose }: Props = $props();
 
-  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma';
+  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma' | 'afwezig';
 
   let view = $state<View>('hub');
   let chosen = $state<GamePlayer | null>(null);
@@ -48,6 +48,11 @@
   function stopGame(): void {
     app.game = null;
     go('home');
+  }
+
+  function showRole(): void {
+    if (app.game && chosen) app.game.roleViews[chosen.playerId] = (app.game.roleViews[chosen.playerId] ?? 0) + 1;
+    view = 'toon';
   }
 
   function skip(): void {
@@ -86,6 +91,7 @@
         <BigButton variant="secondary" full onclick={() => (view = 'kies')}>🆘 Toon mijn rol opnieuw</BigButton>
         {#if game.program.length > 0}<BigButton variant="ghost" full onclick={() => (view = 'programma')}>📋 Programma bekijken</BigButton>{/if}
         {#if game.phase === 'opdrachten' && game.current}<BigButton variant="ghost" full onclick={() => (view = 'overslaan')}>⏭ Deze opdracht overslaan</BigButton>{/if}
+        {#if game.phase === 'opdrachten' || game.phase === 'einde'}<BigButton variant="ghost" full onclick={() => (view = 'afwezig')}>🚪 Wie is er weg?{game.absent.length > 0 ? ` (${game.absent.length})` : ''}</BigButton>{/if}
         {#if game.pin}
           <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht spelleider</BigButton>
         {/if}
@@ -102,9 +108,11 @@
           <button type="button" class="pl" onclick={() => choose(p)}>
             <span class="av" style="--c:{p.color}">{p.avatar}</span>
             <span class="nm">{p.name}</span>
+            {#if (game.roleViews[p.playerId] ?? 0) > 0}<span class="views">👁️ {game.roleViews[p.playerId]}×</span>{/if}
           </button>
         {/each}
       </div>
+      <p class="hint">Iedereen ziet hoe vaak iemand zijn rol opnieuw bekeek. Spieken valt dus op!</p>
       <BigButton variant="ghost" full onclick={back}>◀ Terug</BigButton>
     </div>
   {:else if view === 'bevestig' && chosen}
@@ -112,7 +120,8 @@
       <span class="av big" style="--c:{chosen.color}">{chosen.avatar}</span>
       <h2>Ben jij echt {chosen.name}?</h2>
       <p class="hint">Stiekem de rol van iemand anders bekijken is valsspelen. Dat doet enkel {game.settings.saboteurName}!</p>
-      <BigButton variant="gold" size="large" full onclick={() => (view = 'toon')}>Ja, ik ben {chosen.name}</BigButton>
+      {#if (game.roleViews[chosen.playerId] ?? 0) > 0}<p class="hint">Je bekeek je rol al {game.roleViews[chosen.playerId]} keer opnieuw.</p>{/if}
+      <BigButton variant="gold" size="large" full onclick={showRole}>Ja, ik ben {chosen.name}</BigButton>
       <BigButton variant="ghost" full onclick={back}>Nee, terug</BigButton>
     </div>
   {:else if view === 'toon' && chosen}
@@ -155,6 +164,22 @@
         {/each}
       </ul>
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
+    </div>
+  {:else if view === 'afwezig'}
+    <div class="panel">
+      <h2>🚪 Wie is er weg?</h2>
+      <p class="hint">Wie weg is, wordt overgeslagen bij de geheime briefing en De Test. Tik om aan of af te melden.</p>
+      <div class="grid">
+        {#each game.players as p (p.playerId)}
+          {@const away = game.absent.includes(p.playerId)}
+          <button type="button" class="pl" class:away onclick={() => app.game && markAbsent(app.game, p.playerId, !away)}>
+            <span class="av" style="--c:{p.color}">{p.avatar}</span>
+            <span class="nm">{p.name}</span>
+            <span class="st">{away ? '🚪 weg' : '✓ er'}</span>
+          </button>
+        {/each}
+      </div>
+      <BigButton variant="primary" full onclick={back}>Klaar</BigButton>
     </div>
   {:else if view === 'overslaan'}
     <div class="panel center">
@@ -201,6 +226,16 @@
   .done {
     text-align: center;
     font-size: clamp(1.5rem, 4.5vw, 2rem);
+  }
+
+  .views {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--gold);
+  }
+
+  .pl.away {
+    opacity: 0.5;
   }
 
   .prog {

@@ -1,5 +1,5 @@
 import * as db from './db';
-import { normalizeGame, type Game } from './game';
+import { isValidPin, normalizeGame, normalizeProgram, type Game } from './game';
 import { sortPlayers } from './players';
 import { defaultSettings, normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
@@ -146,7 +146,7 @@ export function startFromHome(screen: Screen): void {
 }
 export async function loadAll(): Promise<void> {
   try {
-    const [players, rawSettings, rawLines, rawGame, recorded, rawStats, rawCustom, rawAi] = await Promise.all([
+    const [players, rawSettings, rawLines, rawGame, recorded, rawStats, rawCustom, rawAi, rawDraft] = await Promise.all([
       db.getAllPlayers(),
       db.getValue('settings'),
       db.getValue('windyLines'),
@@ -155,9 +155,8 @@ export async function loadAll(): Promise<void> {
       db.getValue('taskStats'),
       db.getValue('customTasks'),
       db.getValue('ai'),
+      db.getValue('draft'),
     ]);
-    app.customTasks = normalizeCustomTasks(rawCustom, app.settings.customSupplies);
-    setExtraTasks(app.customTasks);
     if (rawAi && typeof rawAi === 'object') {
       const a = rawAi as Record<string, unknown>;
       app.ai = { geminiKey: typeof a.geminiKey === 'string' ? a.geminiKey : '', model: typeof a.model === 'string' ? a.model : '' };
@@ -166,8 +165,12 @@ export async function loadAll(): Promise<void> {
     app.recordedLineIds = recorded;
     app.players = sortPlayers(players);
     app.settings = normalizeSettings(rawSettings);
+    // Na de instellingen: eigen opdrachten kunnen eigen spullen gebruiken.
+    app.customTasks = normalizeCustomTasks(rawCustom, app.settings.customSupplies);
+    setExtraTasks(app.customTasks);
     app.windyLines = normalizeLineState(rawLines);
     app.game = normalizeGame(rawGame);
+    app.draft = normalizeDraft(rawDraft, app.players.map((p) => p.id));
     if (rawGame && !app.game) showToast('Het vorige spel was beschadigd en is gestopt.', 'error');
   } catch (err) {
     app.loadError = true;
@@ -210,7 +213,7 @@ export async function deletePlayer(id: string): Promise<boolean> {
   }
 }
 
-export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats' | 'customTasks' | 'ai';
+export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats' | 'customTasks' | 'ai' | 'draft';
 
 const lastSaved = new Map<PersistKey, string>();
 /** Per sleutel één wachtrij, zodat een oudere versie nooit een nieuwere overschrijft. */
@@ -225,7 +228,7 @@ export function persistValue(key: PersistKey, value: unknown): Promise<void> {
       await db.setValue(key, JSON.parse(json));
       lastSaved.set(key, json);
     } catch (err) {
-      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes', customTasks: 'de eigen opdrachten', ai: 'de AI-sleutel' }[key];
+      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes', customTasks: 'de eigen opdrachten', ai: 'de AI-sleutel', draft: 'het spel in voorbereiding' }[key];
       showToast(`Opslaan van ${what} is mislukt.`, 'error');
       console.error(err);
     }
@@ -244,6 +247,7 @@ export function persistAllNow(): void {
   void persistValue('taskStats', $state.snapshot(app.taskStats));
   void persistValue('customTasks', $state.snapshot(app.customTasks));
   void persistValue('ai', $state.snapshot(app.ai));
+  void persistValue('draft', $state.snapshot(app.draft));
 }
 
 export function resetSettings(): void {
@@ -359,4 +363,19 @@ export async function importBackup(file: File): Promise<string> {
 /** De geschreven vorm (met plaatshouders) van een uitspraak, om ingesproken stukjes te vinden. */
 export function lineTemplate(id: string): string | undefined {
   return BUILTIN_LINES.find((l) => l.id === id)?.text ?? app.windyLines.custom.find((l) => l.id === id)?.text;
+}
+/** Een bewaard spel in voorbereiding terugzetten (bv. na herladen op het programma of de paklijst). */
+function normalizeDraft(raw: unknown, knownPlayers: string[]): GameDraft | null {
+  if (typeof raw !== 'object' || raw === null) return null;
+  const r = raw as Record<string, unknown>;
+  const playerIds = Array.isArray(r.playerIds) ? r.playerIds.filter((id): id is string => typeof id === 'string' && knownPlayers.includes(id)) : [];
+  if (playerIds.length === 0) return null;
+  const gameMasterId = typeof r.gameMasterId === 'string' && playerIds.includes(r.gameMasterId) ? r.gameMasterId : null;
+  return {
+    playerIds,
+    gameMasterId,
+    pin: gameMasterId === null && typeof r.pin === 'string' && isValidPin(r.pin) ? r.pin : null,
+    settings: normalizeSettings(r.settings),
+    program: normalizeProgram(r.program),
+  };
 }

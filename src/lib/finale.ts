@@ -58,7 +58,8 @@ export function buildTest(
   rng: Rng = Math.random,
 ): TestQuestion[] {
   const saboteurs = players.filter((p) => p.role === 'saboteur');
-  const multiple = saboteurs.length > 1;
+  // Vanaf 7 spelers kunnen er meerdere zijn: dan altijd "één van de" zeggen, anders verraadt de tekst hoeveel er zijn.
+  const multiple = saboteurs.length > 1 || players.length >= 7;
   const sab = multiple ? `één van de ${saboteurName.replace(/^('t|de|het)\s+/i, '')}s` : saboteurName;
   const questions: TestQuestion[] = [
     {

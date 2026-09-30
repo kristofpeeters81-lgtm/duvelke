@@ -91,6 +91,10 @@ export interface Game {
   /** Welke sabotagetips 't Duvelke kreeg (voor de terugblik). */
   sabotageLog: { taskUid: string; playerId: string; tip: string }[];
   finale: FinaleState | null;
+  /** Spelers die (even) weg zijn: die worden overgeslagen bij briefings en De Test. */
+  absent: string[];
+  /** Hoe vaak elke speler zijn rol opnieuw bekeek (zichtbaar voor iedereen, tegen spieken). */
+  roleViews: Record<string, number>;
 }
 
 export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'terugblik' | 'fotos';
@@ -201,6 +205,8 @@ export function createGame(
     jokersGiven: {},
     sabotageLog: [],
     finale: null,
+    absent: [],
+    roleViews: {},
   };
 }
 
@@ -287,21 +293,28 @@ export function normalizeGame(raw: unknown): Game | null {
       ? raw.sabotageLog.filter((s): s is Game['sabotageLog'][number] => isRecord(s) && typeof s.taskUid === 'string' && typeof s.playerId === 'string' && typeof s.tip === 'string')
       : [],
     finale: null,
+    absent: Array.isArray(raw.absent) ? [...new Set(raw.absent.filter((id): id is string => typeof id === 'string' && ids.has(id)))] : [],
+    roleViews: normalizeCounts(raw.roleViews, ids),
   };
-  if (game.phase === 'einde') game.finale = normalizeFinale(raw.finale, game) ?? newFinale(game);
+  // Eerst de opdrachten (die kunnen naar het einde doorschuiven), daarna pas de finale.
   if (game.phase === 'opdrachten') {
-    if (game.taskIndex >= game.program.length) game.phase = 'einde';
-    else game.current = normalizeCurrent(raw.current, game) ?? newCurrent(game);
+    const current = normalizeCurrent(raw.current, game);
+    if (current) game.current = current;
+    else enterTask(game);
   }
+  if (game.phase === 'einde') game.finale = normalizeFinale(raw.finale, game) ?? newFinale(game);
   return game;
 }
 
-/** Programma-items van onbekende opdrachten (bv. een gewiste eigen opdracht) worden weggelaten. */
+/**
+ * Programma-items blijven staan, ook als de opdracht niet (meer) bestaat (bv. een gewiste eigen
+ * opdracht): zo verschuift de volgorde niet. Zulke items worden tijdens het spel overgeslagen.
+ */
 export function normalizeProgram(raw: unknown): ProgramItem[] {
   if (!Array.isArray(raw)) return [];
   const items: ProgramItem[] = [];
   for (const item of raw) {
-    if (!isRecord(item) || typeof item.taskId !== 'string' || !getTask(item.taskId)) continue;
+    if (!isRecord(item) || typeof item.taskId !== 'string') continue;
     const vars: Record<string, string | number> = {};
     if (isRecord(item.vars)) {
       for (const [k, v] of Object.entries(item.vars)) if (typeof v === 'string' || typeof v === 'number') vars[k] = v;
@@ -350,18 +363,33 @@ export function startTasks(game: Game): void {
   }
   game.phase = 'opdrachten';
   game.taskIndex = 0;
-  game.current = newCurrent(game);
+  enterTask(game);
+}
+
+/**
+ * Maakt de opdracht op taskIndex klaar. Opdrachten die niet (meer) bestaan worden overgeslagen;
+ * na de laatste opdracht volgt de finale. Zo kan het spel nooit vastlopen op een lege stap.
+ */
+function enterTask(game: Game, rng: Rng = Math.random): void {
+  while (game.taskIndex < game.program.length) {
+    const item = game.program[game.taskIndex];
+    if (item && getTask(item.taskId)) {
+      game.current = newCurrent(game, rng);
+      return;
+    }
+    if (item && !game.results.some((r) => r.uid === item.uid)) {
+      game.results = [...game.results, { uid: item.uid, taskId: item.taskId, outcome: 'overgeslagen', score: null, target: null, gems: 0, maxGems: 0, roles: {}, rating: 0 }];
+    }
+    game.taskIndex += 1;
+  }
+  game.phase = 'einde';
+  game.current = null;
+  game.finale = newFinale(game, rng);
 }
 
 function nextTask(game: Game): void {
   game.taskIndex += 1;
-  if (game.taskIndex >= game.program.length) {
-    game.phase = 'einde';
-    game.current = null;
-    game.finale = newFinale(game);
-  } else {
-    game.current = newCurrent(game);
-  }
+  enterTask(game);
 }
 
 /** Resultaat bewaren (met duimpje) en door naar de volgende opdracht. */
@@ -477,8 +505,13 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
     if (game.players.find((p) => p.playerId === id)?.role === 'saboteur') game.sabotageLog = [...game.sabotageLog, { taskUid: current.uid, playerId: id, tip: card.tip }];
     if (card.innocent) remember(game, id, card.innocent);
   }
-  current.briefing = { order: shuffle(game.players.map((p) => p.playerId), rng), index: 0, stage: 'geef', cards: withJokers };
+  const order = shuffle(game.players.map((p) => p.playerId).filter((id) => !game.absent.includes(id)), rng);
   game.briefingCount += 1;
+  if (order.length === 0) {
+    current.step = 'uitleg';
+    return;
+  }
+  current.briefing = { order, index: 0, stage: 'geef', cards: withJokers };
   current.step = 'briefing';
 }
 
@@ -503,6 +536,24 @@ export function briefingNext(game: Game): void {
   b.index += 1;
   b.stage = 'geef';
   if (b.index >= b.order.length) game.current.step = 'uitleg';
+}
+
+/** Iemand is weg: overslaan zonder het kaartje te tonen, en ook bij volgende briefings en De Test. */
+export function briefingSkip(game: Game): void {
+  const b = game.current?.briefing;
+  const id = b?.order[b.index];
+  if (!b || !id || !game.current) return;
+  markAbsent(game, id, true);
+  b.index += 1;
+  b.stage = 'geef';
+  if (b.index >= b.order.length) game.current.step = 'uitleg';
+}
+
+export function markAbsent(game: Game, playerId: string, absent: boolean): void {
+  const set = new Set(game.absent);
+  if (absent) set.add(playerId);
+  else set.delete(playerId);
+  game.absent = [...set];
 }
 
 /** Iemand is er even niet: achteraan de rij. */
@@ -568,8 +619,8 @@ function normalizeGossip(raw: unknown): Gossip | null {
 function normalizeBriefing(raw: unknown, game: Game): BriefingState | null {
   if (!isRecord(raw) || !Array.isArray(raw.order) || !isRecord(raw.cards)) return null;
   const ids = new Set(game.players.map((p) => p.playerId));
-  const order = raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id));
-  if (order.length !== game.players.length) return null;
+  const order = [...new Set(raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id)))];
+  if (order.length === 0) return null;
   const cards: BriefingState['cards'] = {};
   for (const id of order) {
     const c = raw.cards[id];
@@ -584,7 +635,8 @@ function normalizeBriefing(raw: unknown, game: Game): BriefingState | null {
   return {
     order,
     index: typeof raw.index === 'number' ? Math.min(order.length, Math.max(0, Math.floor(raw.index))) : 0,
-    stage: raw.stage === 'lezen' ? 'lezen' : 'geef',
+    // Na herladen nooit meteen een kaartje tonen: eerst opnieuw "Ik ben ..." laten tikken.
+    stage: 'geef',
     cards,
   };
 }
@@ -595,13 +647,29 @@ export function newFinale(game: Game, rng: Rng = Math.random): FinaleState {
   return {
     step: 'intro',
     questions: buildTest(game.players, game.results, title, { jokersGiven: game.jokersGiven }, game.settings.saboteurName, rng),
-    order: shuffle(game.players.map((p) => p.playerId), rng),
+    order: shuffle(present(game), rng),
     index: 0,
     stage: 'geef',
     qIndex: 0,
     answers: {},
     reveal: 0,
   };
+}
+
+function present(game: Game): string[] {
+  const ids = game.players.map((p) => p.playerId).filter((id) => !game.absent.includes(id));
+  return ids.length > 0 ? ids : game.players.map((p) => p.playerId);
+}
+
+/** Iemand is weg tijdens De Test: overslaan, telt niet mee in de ranglijst. */
+export function testSkip(game: Game): void {
+  const f = game.finale;
+  const id = f?.order[f.index];
+  if (!f || !id) return;
+  markAbsent(game, id, true);
+  delete f.answers[id];
+  f.stage = 'klaar';
+  nextTestPlayer(game);
 }
 
 /** Eén antwoord in De Test; na de laatste vraag is die speler klaar. */
@@ -653,8 +721,8 @@ function normalizeFinale(raw: unknown, game: Game): FinaleState | null {
   const steps: FinaleStep[] = ['intro', 'test', 'schat', 'ontmaskering', 'ranking', 'terugblik', 'fotos'];
   if (!steps.includes(raw.step as FinaleStep)) return null;
   const ids = new Set(game.players.map((p) => p.playerId));
-  const order = raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id));
-  if (order.length !== game.players.length) return null;
+  const order = [...new Set(raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id)))];
+  if (order.length === 0) return null;
   const questions: TestQuestion[] = [];
   for (const q of raw.questions) {
     if (!isRecord(q) || typeof q.id !== 'string' || typeof q.text !== 'string' || !Array.isArray(q.options) || !Array.isArray(q.correct)) return null;
@@ -680,7 +748,8 @@ function normalizeFinale(raw: unknown, game: Game): FinaleState | null {
     questions,
     order,
     index: int(raw.index, order.length),
-    stage: raw.stage === 'vragen' || raw.stage === 'klaar' ? raw.stage : 'geef',
+    // Midden in de vragen herladen: terug naar "Ik ben ...", zodat niemand anders verder antwoordt.
+    stage: raw.stage === 'klaar' ? 'klaar' : 'geef',
     qIndex: int(raw.qIndex, Math.max(0, questions.length - 1)),
     answers,
     reveal: int(raw.reveal, 1000),

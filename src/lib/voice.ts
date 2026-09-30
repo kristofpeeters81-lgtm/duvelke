@@ -76,12 +76,14 @@ let voicesCache: SpeechSynthesisVoice[] = [];
 let voicesLoaded = false;
 
 /** Spreekt de tekst uit; de belofte wordt ingelost als de zin gedaan is (of mislukt). */
-export async function speak(text: string, settings: VoiceSettings): Promise<void> {
+export async function speak(text: string, settings: VoiceSettings, isStale?: () => boolean): Promise<void> {
   if (!settings.enabled || !speechSupported()) return;
   if (!voicesLoaded) {
     voicesCache = await loadDutchVoices();
     voicesLoaded = true;
   }
+  // Stemmen laden kan even duren: is de zin intussen niet meer nodig, dan niet meer uitspreken.
+  if (isStale?.()) return;
 
   speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(toSpeech(text));

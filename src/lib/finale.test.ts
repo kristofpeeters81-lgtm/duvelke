@@ -73,6 +73,14 @@ describe('buildTest', () => {
   });
 });
 
+describe('niets verraden over het aantal Duvelkes', () => {
+  it('zegt vanaf 7 spelers altijd "één van de", ook met maar één Duvelke', () => {
+    const seven = [...players, ...['d', 'e', 'f'].map((id) => ({ playerId: id, name: id, role: 'speurder' as const, speurneus: false, profile: prof('wit', 'nee') }))];
+    const q = buildTest(seven, [], (id) => id, { jokersGiven: {} }, "'t Duvelke", seeded(4));
+    expect(q[0]!.text).toBe('Wie is één van de Duvelkes?');
+  });
+});
+
 describe('scoren en rangschikken', () => {
   const qs = buildTest(players, results, (id) => id, { jokersGiven: {} }, "'t Duvelke", seeded(3));
   const perfect = (ms: number): TestAnswers => ({ answers: qs.map((q) => q.correct[0] ?? null), ms });

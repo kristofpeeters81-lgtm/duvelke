@@ -82,7 +82,8 @@ export function makeGossip(
   const saboteurs = players.filter((p) => p.role === 'saboteur');
   const about = pickRandom(saboteurs, rng);
   if (!about) return null;
-  const usedIds = new Set(used.filter((g) => g.aboutId === about.playerId).map((g) => g.questionId));
+  // Onderwerpen gelden voor het hele spel: twee roddels over hetzelfde onderwerp zouden verraden dat er meerdere Duvelkes zijn.
+  const usedIds = new Set(used.map((g) => g.questionId));
   const questionId = GOSSIP_ORDER.find((q) => !usedIds.has(q) && about.profile[q] !== undefined);
   if (!questionId) return null;
   const truth = about.profile[questionId] as string;

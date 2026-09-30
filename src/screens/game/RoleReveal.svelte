@@ -52,8 +52,13 @@
     step = 'vragen';
   }
 
+  // Een dubbeltik mag niet meteen de volgende vraag beantwoorden.
+  let locked = false;
+
   function answer(value: string): void {
-    if (!app.game || !current || !question) return;
+    if (!app.game || !current || !question || locked) return;
+    locked = true;
+    setTimeout(() => (locked = false), 400);
     const p = app.game.players.find((x) => x.playerId === current.playerId);
     if (p) p.profile[question.id] = value;
     if (questionIndex + 1 < PROFILE_QUESTIONS.length) {

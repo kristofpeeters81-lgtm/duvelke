@@ -99,8 +99,15 @@ const CACHE_MAX = 40;
 /** Eén zin tegelijk: het rekenmodel kan niet twee zinnen tegelijk maken. */
 let queue: Promise<unknown> = Promise.resolve();
 
-export function synthesize(text: string, id: PiperVoiceId): Promise<Blob> {
-  const run = queue.then(() => synthesizeNow(text, id));
+/** Een zin die intussen niet meer nodig is (er werd al verder getikt). */
+export class StaleSpeechError extends Error {}
+
+export function synthesize(text: string, id: PiperVoiceId, isStale?: () => boolean): Promise<Blob> {
+  const run = queue.then(() => {
+    // Niet meer nodig? Dan niet laten rekenen: dat zou het scherm nodeloos vertragen.
+    if (isStale?.()) throw new StaleSpeechError();
+    return synthesizeNow(text, id);
+  });
   queue = run.catch(() => undefined);
   return run;
 }

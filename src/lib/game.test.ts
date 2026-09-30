@@ -4,6 +4,7 @@ import {
   afterGossip,
   afterTreasure,
   answerTest,
+  briefingSkip,
   assignRoles,
   briefingNext,
   createGame,
@@ -17,6 +18,7 @@ import {
   saboteurCount,
   skipCurrent,
   startTasks,
+  testSkip,
   useJoker,
 } from './game';
 import { defaultSettings } from './settings';
@@ -272,9 +274,39 @@ describe('briefing, jokers, roddels en dilemma', () => {
     afterAnnouncement(game);
     briefingNext(game);
     const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
-    expect(back.current!.briefing).toEqual(game.current!.briefing);
+    // Na herladen nooit meteen het kaartje: terug naar "Ik ben ...".
+    expect(back.current!.briefing).toEqual({ ...game.current!.briefing!, stage: 'geef' });
     expect(back.jokers).toEqual(game.jokers);
     expect(back.known).toEqual(game.known);
+  });
+});
+
+describe('afwezige spelers', () => {
+  const program: ProgramItem[] = [{ uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] }];
+
+  it('slaat een afwezige speler over in de briefing en De Test, zonder zijn kaartje te tonen', () => {
+    const game = createGame(players(5), defaultSettings(), null, null, program, seeded(5));
+    startTasks(game);
+    afterAnnouncement(game);
+    const first = game.current!.briefing!.order[0]!;
+    briefingSkip(game);
+    expect(game.absent).toEqual([first]);
+    expect(game.current!.briefing!.index).toBe(1);
+    expect(game.current!.briefing!.stage).toBe('geef');
+    skipCurrent(game);
+    expect(game.finale!.order).not.toContain(first);
+    expect(game.finale!.order).toHaveLength(4);
+  });
+
+  it('kan in De Test iemand overslaan die dan niet in de ranglijst komt', () => {
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(6));
+    startTasks(game);
+    skipCurrent(game);
+    finaleStep(game, 'test');
+    const who = game.finale!.order[0]!;
+    testSkip(game);
+    expect(game.finale!.answers[who]).toBeUndefined();
+    expect(game.finale!.index).toBe(1);
   });
 });
 
@@ -309,10 +341,21 @@ describe('normalizeGame', () => {
     expect(roundTrip).toEqual(game);
   });
 
-  it('laat onbekende opdrachten uit het programma weg', () => {
+  it('houdt onbekende opdrachten in het programma (geen verschuiving) en slaat ze over', () => {
     const game = createGame(players(6), defaultSettings(), null, null, [], seeded(9));
-    const raw = { ...JSON.parse(JSON.stringify(game)), program: [{ uid: 'a', taskId: 'bestaat-niet', location: 'binnen', vars: {}, list: [] }, { uid: 'b', taskId: 'bekertoren', location: 'tuin', vars: { lagen: 3 }, list: [] }] };
-    expect(normalizeGame(raw)?.program.map((p) => p.taskId)).toEqual(['bekertoren']);
+    const raw = { ...JSON.parse(JSON.stringify(game)), phase: 'opdrachten', taskIndex: 0, program: [{ uid: 'a', taskId: 'bestaat-niet', location: 'binnen', vars: {}, list: [] }, { uid: 'b', taskId: 'bekertoren', location: 'tuin', vars: { lagen: 3 }, list: [] }] };
+    const back = normalizeGame(raw)!;
+    expect(back.program.map((p) => p.taskId)).toEqual(['bestaat-niet', 'bekertoren']);
+    expect(back.current?.uid).toBe('b');
+    expect(back.results[0]).toMatchObject({ uid: 'a', outcome: 'overgeslagen' });
+  });
+
+  it('gaat naar de finale als de laatste opdracht verdwenen is, en maakt die finale meteen aan', () => {
+    const game = createGame(players(4), defaultSettings(), null, null, [], seeded(9));
+    const raw = { ...JSON.parse(JSON.stringify(game)), phase: 'opdrachten', taskIndex: 0, program: [{ uid: 'a', taskId: 'weg', location: 'binnen', vars: {}, list: [] }] };
+    const back = normalizeGame(raw)!;
+    expect(back.phase).toBe('einde');
+    expect(back.finale).not.toBeNull();
   });
 
   it('gooit beschadigde spellen weg', () => {

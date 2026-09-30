@@ -1,7 +1,7 @@
 <script lang="ts">
   import BigButton from '../../components/BigButton.svelte';
   import { PROFILE_QUESTIONS } from '../../lib/data/profile';
-  import { answerTest, nextTestPlayer, testLater } from '../../lib/game';
+  import { answerTest, nextTestPlayer, testLater, testSkip } from '../../lib/game';
   import { sfx } from '../../lib/sfx';
   import { app } from '../../lib/store.svelte';
 
@@ -19,8 +19,13 @@
     shownAt = performance.now();
   });
 
+  // Een dubbeltik mag niet meteen de volgende vraag beantwoorden.
+  let locked = false;
+
   function answer(value: string): void {
-    if (!app.game) return;
+    if (!app.game || locked) return;
+    locked = true;
+    setTimeout(() => (locked = false), 400);
     sfx.tap();
     answerTest(app.game, value, performance.now() - shownAt);
   }
@@ -50,6 +55,7 @@
       {#if f.index < f.order.length - 1}
         <button type="button" class="link" onclick={() => app.game && testLater(app.game)}>{player.name} is er even niet: later</button>
       {/if}
+      <button type="button" class="link" onclick={() => app.game && testSkip(app.game)}>{player.name} is weg: overslaan (telt niet mee)</button>
     </div>
   {:else if f.stage === 'vragen' && question}
     <div class="stack">

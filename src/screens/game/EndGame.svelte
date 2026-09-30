@@ -93,7 +93,9 @@
       <h2 class="title">💎 De schatkist</h2>
       <TreasureChest gems={total.gems} max={total.max} size="groot" bounce />
       <p class="pct" class:win={groupWins}>{pct}%</p>
-      {#if groupWins}
+      {#if total.max === 0}
+        <div class="verdict">🤷 Alle opdrachten werden overgeslagen, dus er is geen schat te verdelen. Niemand wint de schat!</div>
+      {:else if groupWins}
         <div class="verdict good">🎉 Meer dan de helft! De groep wint de schat. {sab} is er niet in geslaagd alles te verknoeien!</div>
         {#if groupWins}<Confetti count={60} />{/if}
       {:else}

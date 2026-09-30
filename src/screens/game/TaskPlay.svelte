@@ -52,14 +52,16 @@
     }
   });
 
-  // De uitleg alvast laten maken door de AI-stem terwijl Windy de opdracht aankondigt.
+  // De uitleg alvast laten maken door de AI-stem terwijl Windy de opdracht aankondigt. Begint intussen
+  // de geheime briefing, dan wordt dat geschrapt: rekenen blokkeert het scherm even, en dat mag niet
+  // terwijl iemand zijn kaartje vasthoudt.
   let prefetched = '';
   $effect(() => {
     const step = current?.step;
-    if ((step === 'aankondiging' || step === 'briefing') && explain && explain !== prefetched) {
+    if (step === 'aankondiging' && explain && explain !== prefetched) {
       prefetched = explain;
       const voice = untrack(() => $state.snapshot(app.settings.voice));
-      setTimeout(() => void prefetch(explain, voice), 2500);
+      void prefetch(explain, voice, () => app.game?.current?.step !== 'aankondiging');
     }
   });
 
