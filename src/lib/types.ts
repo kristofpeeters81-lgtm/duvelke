@@ -24,10 +24,21 @@ export interface CustomSupply {
   emoji: string;
 }
 
+export interface VoiceSettings {
+  enabled: boolean;
+  /** voiceURI van de gekozen stem; null = automatisch een Nederlandse stem kiezen. */
+  voiceURI: string | null;
+  pitch: number;
+  rate: number;
+}
+
 export interface Settings {
   version: 1;
   saboteurName: string;
   hostName: string;
+  /** De zoon over wie Windy altijd klaagt. */
+  sonName: string;
+  voice: VoiceSettings;
   durationMinutes: number;
   difficulty: Difficulty;
   locations: LocationId[];

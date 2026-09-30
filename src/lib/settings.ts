@@ -1,7 +1,8 @@
 import { LOCATION_IDS } from './data/locations';
 import { SUPPLIES, SUPPLY_IDS } from './data/supplies';
 import { newId } from './ids';
-import type { CustomSupply, Difficulty, LocationId, Settings, TreasureItem, TreasureMode } from './types';
+import { clampNumber, isRecord } from './util';
+import type { CustomSupply, Difficulty, LocationId, Settings, TreasureItem, TreasureMode, VoiceSettings } from './types';
 
 export const MIN_DURATION = 30;
 export const MAX_DURATION = 150;
@@ -11,11 +12,32 @@ export const MAX_SUPPLY_LENGTH = 30;
 export const MAX_CUSTOM_SUPPLIES = 60;
 export const CUSTOM_SUPPLY_EMOJIS = ['📦', '🎁', '🧰', '🪀', '🎯', '🏐', '🪁', '🛹', '🎨', '🧃', '🍪', '🔑', '🪄', '🎺', '🧲', '🕯️'];
 
+export const PITCH_RANGE = { min: 0.5, max: 2 } as const;
+export const RATE_RANGE = { min: 0.6, max: 1.5 } as const;
+
+/** Een wat hogere toon dan normaal: "een man die een hoog stemmetje opzet". */
+export function defaultVoice(): VoiceSettings {
+  return { enabled: true, voiceURI: null, pitch: 1.35, rate: 1.05 };
+}
+
+function cleanVoice(raw: unknown): VoiceSettings {
+  const d = defaultVoice();
+  if (!isRecord(raw)) return d;
+  return {
+    enabled: typeof raw.enabled === 'boolean' ? raw.enabled : d.enabled,
+    voiceURI: typeof raw.voiceURI === 'string' && raw.voiceURI !== '' ? raw.voiceURI : null,
+    pitch: clampNumber(raw.pitch, PITCH_RANGE.min, PITCH_RANGE.max, d.pitch),
+    rate: clampNumber(raw.rate, RATE_RANGE.min, RATE_RANGE.max, d.rate),
+  };
+}
+
 export function defaultSettings(): Settings {
   return {
     version: 1,
     saboteurName: "'t Duvelke",
     hostName: 'Windy',
+    sonName: 'Kenzo',
+    voice: defaultVoice(),
     durationMinutes: 90,
     difficulty: 'normaal',
     locations: ['binnen', 'tuin'],
@@ -28,10 +50,6 @@ export function defaultSettings(): Settings {
     supplies: [],
     customSupplies: [],
   };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 function cleanName(value: unknown, fallback: string): string {
@@ -117,6 +135,8 @@ export function normalizeSettings(raw: unknown): Settings {
     version: 1,
     saboteurName: cleanName(raw.saboteurName, d.saboteurName),
     hostName: cleanName(raw.hostName, d.hostName),
+    sonName: cleanName(raw.sonName, d.sonName),
+    voice: cleanVoice(raw.voice),
     durationMinutes: clampDuration(raw.durationMinutes, d.durationMinutes),
     difficulty: difficulties.includes(raw.difficulty as Difficulty) ? (raw.difficulty as Difficulty) : d.difficulty,
     locations: locations.length > 0 ? locations : d.locations,

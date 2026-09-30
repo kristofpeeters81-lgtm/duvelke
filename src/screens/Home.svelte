@@ -4,6 +4,16 @@
   import { app, go } from '../lib/store.svelte';
 
   const title = $derived(`Wie is ${app.settings.saboteurName}?`);
+  let confirmNew = $state(false);
+
+  function newGame(): void {
+    if (app.game && !confirmNew) {
+      confirmNew = true;
+      return;
+    }
+    confirmNew = false;
+    go('nieuw-spel');
+  }
 </script>
 
 <main class="page home">
@@ -20,9 +30,20 @@
   </div>
 
   <nav class="menu">
-    <BigButton variant="primary" size="large" full disabled>
-      ▶ Nieuw spel <span class="soon">binnenkort</span>
-    </BigButton>
+    {#if app.game}
+      <BigButton variant="gold" size="large" full onclick={() => go('spel')}>▶ Verder spelen</BigButton>
+      {#if confirmNew}
+        <p class="warn">Er loopt nog een spel. Een nieuw spel starten wist het vorige.</p>
+        <div class="grid">
+          <BigButton variant="danger" full onclick={newGame}>Ja, nieuw spel</BigButton>
+          <BigButton variant="ghost" full onclick={() => (confirmNew = false)}>Toch niet</BigButton>
+        </div>
+      {:else}
+        <BigButton variant="primary" full onclick={newGame}>🎲 Nieuw spel</BigButton>
+      {/if}
+    {:else}
+      <BigButton variant="primary" size="large" full onclick={newGame}>▶ Nieuw spel</BigButton>
+    {/if}
     <div class="grid">
       <BigButton variant="secondary" full onclick={() => go('spelers')}>
         👥 Spelers <span class="count">{app.players.length}</span>
@@ -31,7 +52,10 @@
         🎒 Benodigdheden <span class="count">{app.settings.supplies.length}</span>
       </BigButton>
     </div>
-    <BigButton variant="ghost" full onclick={() => go('instellingen')}>⚙️ Instellingen</BigButton>
+    <div class="grid">
+      <BigButton variant="ghost" full onclick={() => go('windy')}>🎙️ {app.settings.hostName}</BigButton>
+      <BigButton variant="ghost" full onclick={() => go('instellingen')}>⚙️ Instellingen</BigButton>
+    </div>
   </nav>
 
   <p class="status" class:ok={app.offlineReady}>
@@ -119,11 +143,11 @@
     font-size: 0.95rem;
   }
 
-  .soon {
-    font-size: 0.8rem;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 999px;
-    padding: 2px 10px;
+  .warn {
+    margin: 0;
+    text-align: center;
+    color: var(--gold);
+    font-weight: 800;
   }
 
   .status {

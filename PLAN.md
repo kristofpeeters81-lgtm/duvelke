@@ -37,7 +37,8 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
   - Kleurrijke gestreepte gebreide trui, overdreven gezichtsuitdrukkingen.
   - Sappig Kempisch commentaar, geen letterlijke citaten van het origineel.
   - Toon: moederfrustraties, goedbedoelde bemoeienissen, luid en dramatisch binnenstormen, nuchtere levenswijsheden ("'t komt altijd goed... meestal toch"), verontwaardigd over "lelijke woorden".
-  - Vermeldt af en toe haar zoon **"onzen Kenzo"** (de puber die niks wil).
+  - Vermeldt af en toe haar zoon **"onzen Kenzo"** (de puber die niks wil). Naam instelbaar.
+  - **Uitsprakenlijst** per soort (begin, dossiers, doorgeven, opdracht, gelukt, mislukt, roddel, zoon, wijsheid, einde): ingebouwde uitspraken aan/uit te zetten, eigen uitspraken toe te voegen, met plaatshouders {saboteur}, {zoon}, {windy}, {speler}.
   - **Stem**: Android-TTS met instelbare stemkeuze, toonhoogte en snelheid ("man die een hoog stemmetje opzet"), met een testknop.
   - **Roddels**: 👀 "Ik heb het ZELF gezien!" is altijd waar. 🗣️ "De buurvrouw zei…" is soms gelogen (uit te zetten).
 

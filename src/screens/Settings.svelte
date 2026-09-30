@@ -47,7 +47,7 @@
   }
 
   /** Lege namen niet bewaren: bij het verlaten van het veld terugzetten naar de standaard. */
-  function fixName(field: 'saboteurName' | 'hostName', fallback: string): void {
+  function fixName(field: 'saboteurName' | 'hostName' | 'sonName', fallback: string): void {
     if (s[field].trim() === '') s[field] = fallback;
   }
 
@@ -76,6 +76,14 @@
       bind:value={s.hostName}
       maxlength={MAX_NAME_LENGTH}
       onblur={() => fixName('hostName', 'Windy')}
+    />
+    <label class="field-label" for="son-name">Haar zoon heet...</label>
+    <input
+      id="son-name"
+      class="text-input"
+      bind:value={s.sonName}
+      maxlength={MAX_NAME_LENGTH}
+      onblur={() => fixName('sonName', 'Kenzo')}
     />
   </section>
 
