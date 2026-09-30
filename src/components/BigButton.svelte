@@ -52,8 +52,11 @@
     padding: 16px 34px;
   }
 
+  /* Brede knoppen mogen over twee regels, zodat lange teksten op een smal scherm niet wegvallen. */
   .full {
     width: 100%;
+    white-space: normal;
+    text-align: center;
   }
 
   .primary {
