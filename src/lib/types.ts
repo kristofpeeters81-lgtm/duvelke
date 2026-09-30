@@ -33,6 +33,8 @@ export interface VoiceSettings {
   piperVoice: PiperVoiceId;
   /** Afspeelsnelheid zonder toonbehoud: hoger = hogere (en iets snellere) stem. */
   piperPitch: number;
+  /** Zelf ingesproken uitspraken afspelen als ze bestaan. */
+  useRecordings: boolean;
   /** voiceURI van de toestelstem; null = automatisch een Nederlandse stem kiezen. */
   voiceURI: string | null;
   pitch: number;

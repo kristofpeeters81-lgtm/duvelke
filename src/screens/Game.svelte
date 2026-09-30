@@ -22,19 +22,19 @@
   ];
   let introStep = $state(0);
 
-  function lineFor(category: LineCategory): string {
-    if (!app.game) return '';
+  function lineFor(category: LineCategory): { id: string; text: string } | null {
+    if (!app.game) return null;
     const line = pickLine(category, app.windyLines, lineContext(), app.game.recentLines);
-    if (!line) return '';
+    if (!line) return null;
     app.game.recentLines = rememberLine(app.game.recentLines, line.id);
-    return line.text;
+    return line;
   }
 
-  let introText = $state('');
+  let intro = $state<{ id: string; text: string } | null>(null);
   $effect(() => {
     if (game?.phase === 'intro') {
       const step = introPlan[introStep];
-      introText = step ? untrack(() => lineFor(step.category)) : '';
+      intro = step ? untrack(() => lineFor(step.category)) : null;
     }
   });
 
@@ -53,9 +53,9 @@
   <main class="page game">
     {#if game.phase === 'intro'}
       <div class="center">
-        {#if introText}
-          {#key introText}
-            <WindyBubble text={introText} mood={introPlan[introStep]?.mood ?? 'blij'} size={220}>
+        {#if intro}
+          {#key intro.id}
+            <WindyBubble text={intro.text} lineId={intro.id} mood={introPlan[introStep]?.mood ?? 'blij'} size={220}>
               <BigButton variant="primary" size="large" full onclick={nextIntro}>Verder ▶</BigButton>
             </WindyBubble>
           {/key}

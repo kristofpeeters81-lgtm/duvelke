@@ -1,7 +1,10 @@
 /**
- * Eén ingang voor al het voorlezen: de Vlaamse AI-stem als die gedownload is,
- * anders (of bij een fout) de voorleesstem van het toestel.
+ * Eén ingang voor al het voorlezen, in deze volgorde:
+ * 1. een zelf ingesproken opname van die uitspraak (als die bestaat),
+ * 2. de Vlaamse AI-stem (als die gedownload is),
+ * 3. de voorleesstem van het toestel.
  */
+import { getRecording } from './db';
 import { BrokenVoiceError, piperSupported, playWav, stopPiper, storedVoices, synthesize } from './piper';
 import type { VoiceSettings } from './types';
 import { speak as speakDevice, stopSpeaking } from './voice';
@@ -22,6 +25,8 @@ async function piperReady(v: VoiceSettings): Promise<boolean> {
 export interface SpeakOptions {
   /** Wordt aangeroepen op het moment dat het geluid echt begint. */
   onStart?: () => void;
+  /** Id van de uitspraak: dan kan een eigen opname gebruikt worden. */
+  lineId?: string;
 }
 
 export async function speak(text: string, v: VoiceSettings, options: SpeakOptions = {}): Promise<void> {
@@ -29,6 +34,20 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
   const mine = ++token;
   stopPiper();
   stopSpeaking();
+
+  if (v.useRecordings && options.lineId) {
+    try {
+      const recording = await getRecording(options.lineId);
+      if (mine !== token) return;
+      if (recording) {
+        options.onStart?.();
+        await playWav(recording.audio, 1);
+        return;
+      }
+    } catch (err) {
+      console.warn('Opname afspelen mislukt', err);
+    }
+  }
 
   if (await piperReady(v)) {
     try {

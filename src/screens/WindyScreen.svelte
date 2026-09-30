@@ -7,6 +7,7 @@
   import BigButton from '../components/BigButton.svelte';
   import Segmented from '../components/Segmented.svelte';
   import Toggle from '../components/Toggle.svelte';
+  import RecordPanel from '../components/RecordPanel.svelte';
   import TopBar from '../components/TopBar.svelte';
   import Windy, { type WindyMood } from '../components/Windy.svelte';
   import { LINE_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
@@ -14,7 +15,7 @@
   import { PIPER_VOICES, storedVoices } from '../lib/piper';
   import { defaultVoice, PIPER_PITCH_RANGE, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
   import { speak, stopAll } from '../lib/speech';
-  import { app, go, lineContext, showToast } from '../lib/store.svelte';
+  import { app, deleteRecording, go, lineContext, showToast } from '../lib/store.svelte';
   import { loadDutchVoices, speechSupported } from '../lib/voice';
   import { fillPlaceholders, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine } from '../lib/windy';
 
@@ -54,10 +55,11 @@
 
   const v = $derived(app.settings.voice);
 
-  async function testVoice(text?: string): Promise<void> {
+  async function testVoice(text?: string, lineId?: string): Promise<void> {
     const line = text ?? pickLine('intro', app.windyLines, lineContext())?.text ?? 'Hallo schatjes, het is hier Windy!';
     testing = true;
     await speak(line, { ...$state.snapshot(app.settings.voice), enabled: true }, {
+      lineId,
       onStart: () => {
         testing = false;
         talking = true;
@@ -121,7 +123,10 @@
   function removeLine(id: string): void {
     app.windyLines.custom = app.windyLines.custom.filter((l) => l.id !== id);
     confirmDelete = null;
+    if (app.recordedLineIds.includes(id)) void deleteRecording(id);
   }
+
+  let recording = $state<{ id: string; text: string } | null>(null);
 
   function open(category: LineCategory): void {
     openCategory = openCategory === category ? null : category;
@@ -175,6 +180,12 @@
           { value: 'toestel', label: '📱 Stem van het toestel', sub: 'reserve' },
         ]}
         onchange={(e) => (app.settings.voice.engine = e)}
+      />
+      <Toggle
+        label="🎤 Eigen opnames gebruiken"
+        description="Zelf ingesproken zinnen (bij Uitspraken) gaan altijd voor. {app.recordedLineIds.length} ingesproken."
+        checked={v.useRecordings}
+        onchange={(on) => (app.settings.voice.useRecordings = on)}
       />
     </section>
 
@@ -317,14 +328,26 @@
                   type="button"
                   class="play"
                   aria-label="Beluister"
-                  onclick={() => testVoice(fillPlaceholders(line.text, lineContext(app.players[0]?.name ?? 'Lotte')))}>▶</button
+                  onclick={() => testVoice(fillPlaceholders(line.text, lineContext(app.players[0]?.name ?? 'Lotte')), line.id)}>▶</button
                 >
                 <span class="text">
                   {#each parts(line.text) as part, i (i)}
                     {#if part.ph}<span class="ph">{part.t}</span>{:else}{part.t}{/if}
                   {/each}
                   {#if !line.builtIn}<span class="own">eigen</span>{/if}
+                  {#if app.recordedLineIds.includes(line.id)}<span class="own rec-badge">🎙️ ingesproken</span>{/if}
                 </span>
+                {#if line.text.includes('{speler}')}
+                  <button type="button" class="mic" disabled title="Bevat de naam van een speler: die verandert elke keer, dus inspreken kan niet.">🎤</button>
+                {:else}
+                  <button
+                    type="button"
+                    class="mic"
+                    class:has={app.recordedLineIds.includes(line.id)}
+                    aria-label="Zelf inspreken"
+                    onclick={() => (recording = { id: line.id, text: fillPlaceholders(line.text, lineContext()) })}>🎤</button
+                  >
+                {/if}
                 {#if line.builtIn}
                   <button type="button" class="onoff" aria-pressed={!off} onclick={() => toggleBuiltIn(line.id)}>
                     {off ? 'uit' : 'aan'}
@@ -366,6 +389,10 @@
     {/each}
   {/if}
 </main>
+
+{#if recording}
+  <RecordPanel lineId={recording.id} text={recording.text} onclose={() => (recording = null)} />
+{/if}
 
 <style>
   .tabs {
@@ -554,6 +581,32 @@
     border-radius: 999px;
     padding: 1px 8px;
     font-weight: 800;
+  }
+
+  .mic {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--line);
+    background: transparent;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  .mic.has {
+    border-color: var(--gold);
+    background: rgba(255, 207, 63, 0.15);
+  }
+
+  .mic:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .rec-badge {
+    background: var(--pink);
+    color: #fff;
   }
 
   .play {

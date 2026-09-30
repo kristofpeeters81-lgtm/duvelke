@@ -39,7 +39,11 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
   - Toon: moederfrustraties, goedbedoelde bemoeienissen, luid en dramatisch binnenstormen, nuchtere levenswijsheden ("'t komt altijd goed... meestal toch"), verontwaardigd over "lelijke woorden".
   - Vermeldt af en toe haar zoon **"onzen Kenzo"** (de puber die niks wil). Naam instelbaar.
   - **Uitsprakenlijst** per soort (begin, dossiers, doorgeven, opdracht, gelukt, mislukt, roddel, zoon, wijsheid, einde): ingebouwde uitspraken aan/uit te zetten, eigen uitspraken toe te voegen, met plaatshouders {saboteur}, {zoon}, {windy}, {speler}.
-  - **Stem**: Android-TTS met instelbare stemkeuze, toonhoogte en snelheid ("man die een hoog stemmetje opzet"), met een testknop.
+  - **Stem**, in volgorde van voorrang:
+    1. **Zelf ingesproken** opnames per uitspraak (niet voor uitspraken met {speler}).
+    2. **Vlaamse AI-stem Piper "rdh"** (CC0), draait in de browser, één keer downloaden (± 60 MB), daarna offline. Toonhoogte via afspeelsnelheid (standaard 1,2). Uitspraaklijst voor klinkerloze woorden en HOOFDLETTERS.
+    3. **Toestelstem** (Android-TTS) als reserve.
+  - Later eventueel: de AI-stem nog natuurlijker maken.
   - **Roddels**: 👀 "Ik heb het ZELF gezien!" is altijd waar. 🗣️ "De buurvrouw zei…" is soms gelogen (uit te zetten).
 
 ## Rollen

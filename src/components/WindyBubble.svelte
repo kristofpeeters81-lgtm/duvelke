@@ -6,13 +6,15 @@
 
   interface Props {
     text: string;
+    /** Id van de uitspraak, zodat een eigen opname afgespeeld kan worden. */
+    lineId?: string;
     mood?: WindyMood;
     size?: number;
     /** Knoppen of inhoud onder de ballon. */
     children?: Snippet;
   }
 
-  let { text, mood = 'blij', size = 200, children }: Props = $props();
+  let { text, lineId, mood = 'blij', size = 200, children }: Props = $props();
 
   let talking = $state(false);
   let runId = 0;
@@ -21,7 +23,7 @@
     const id = ++runId;
     talking = false;
     // De mond beweegt pas als het geluid echt start (de AI-stem heeft even denktijd nodig).
-    await speak(line, $state.snapshot(app.settings.voice), { onStart: () => id === runId && (talking = true) });
+    await speak(line, $state.snapshot(app.settings.voice), { lineId, onStart: () => id === runId && (talking = true) });
     if (id === runId) talking = false;
   }
 

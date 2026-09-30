@@ -16,6 +16,8 @@ export const app = $state({
   settings: defaultSettings(),
   windyLines: emptyLineState() as WindyLineState,
   game: null as Game | null,
+  /** Uitspraken waarvan een eigen opname bestaat. */
+  recordedLineIds: [] as string[],
 });
 
 export const toast = $state({ message: '', kind: 'info' as 'info' | 'error', id: 0 });
@@ -76,12 +78,14 @@ export function go(screen: Screen): void {
 
 export async function loadAll(): Promise<void> {
   try {
-    const [players, rawSettings, rawLines, rawGame] = await Promise.all([
+    const [players, rawSettings, rawLines, rawGame, recorded] = await Promise.all([
       db.getAllPlayers(),
       db.getValue('settings'),
       db.getValue('windyLines'),
       db.getValue('game'),
+      db.listRecordingIds(),
     ]);
+    app.recordedLineIds = recorded;
     app.players = sortPlayers(players);
     app.settings = normalizeSettings(rawSettings);
     app.windyLines = normalizeLineState(rawLines);
@@ -162,4 +166,28 @@ export function resetSettings(): void {
   // Benodigdheden horen bij het huis en de stem bij de tablet, niet bij het spel: die blijven staan.
   const { supplies, customSupplies, voice } = app.settings;
   app.settings = { ...defaultSettings(), supplies, customSupplies, voice };
+}
+
+export async function saveRecording(lineId: string, audio: Blob, durationMs: number): Promise<boolean> {
+  try {
+    await db.putRecording({ lineId, audio, durationMs, createdAt: Date.now() });
+    if (!app.recordedLineIds.includes(lineId)) app.recordedLineIds = [...app.recordedLineIds, lineId];
+    return true;
+  } catch (err) {
+    showToast('Opslaan van de opname is mislukt.', 'error');
+    console.error(err);
+    return false;
+  }
+}
+
+export async function deleteRecording(lineId: string): Promise<boolean> {
+  try {
+    await db.removeRecording(lineId);
+    app.recordedLineIds = app.recordedLineIds.filter((id) => id !== lineId);
+    return true;
+  } catch (err) {
+    showToast('Wissen van de opname is mislukt.', 'error');
+    console.error(err);
+    return false;
+  }
 }

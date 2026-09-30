@@ -17,10 +17,10 @@
   const game = $derived(app.game);
 
   const hubLine = untrack(() => {
-    if (!app.game) return '';
+    if (!app.game) return null;
     const line = pickLine('zoon', app.windyLines, lineContext(), app.game.recentLines);
     if (line) app.game.recentLines = rememberLine(app.game.recentLines, line.id);
-    return `Alle geheime dossiers zijn uitgedeeld! ${line?.text ?? ''}`.trim();
+    return line;
   });
 
   function choose(p: GamePlayer): void {
@@ -51,7 +51,8 @@
 {#if game}
   {#if view === 'hub'}
     <div class="hub">
-      <WindyBubble text={hubLine} mood="blij" size={170} />
+      <h2 class="done">🗂️ Alle geheime dossiers zijn uitgedeeld!</h2>
+      {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} />{/if}
 
       <div class="soon">
         <span class="em">🎯</span>
@@ -151,6 +152,11 @@
     gap: 16px;
     width: min(640px, 100%);
     margin: 0 auto;
+  }
+
+  .done {
+    text-align: center;
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
   }
 
   .center {
