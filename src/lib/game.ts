@@ -5,6 +5,7 @@ import type { ProgramItem } from './tasks/program';
 import { getTask } from './tasks/registry';
 import { assignTaskRoles, pickQuiz, timerSeconds, type Outcome, type TaskResult } from './gameplay';
 import { makeBriefing, makeGossip, pickInnocent, type BriefingCard, type Gossip } from './secrets';
+import { buildTest, type TestAnswers, type TestQuestion } from './finale';
 import type { Player, Settings } from './types';
 import { isRecord, shuffle, type Rng } from './util';
 
@@ -85,6 +86,25 @@ export interface Game {
   gossipLog: Gossip[];
   briefingCount: number;
   photoCount: number;
+  /** Hoeveel jokers elke speler ooit kreeg (voor De Test). */
+  jokersGiven: Record<string, number>;
+  /** Welke sabotagetips 't Duvelke kreeg (voor de terugblik). */
+  sabotageLog: { taskUid: string; playerId: string; tip: string }[];
+  finale: FinaleState | null;
+}
+
+export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'terugblik' | 'fotos';
+
+export interface FinaleState {
+  step: FinaleStep;
+  questions: TestQuestion[];
+  order: string[];
+  index: number;
+  stage: 'geef' | 'vragen' | 'klaar';
+  qIndex: number;
+  answers: Record<string, TestAnswers>;
+  /** Hoe ver de ontmaskering of ranglijst al onthuld is. */
+  reveal: number;
 }
 
 /**
@@ -178,6 +198,9 @@ export function createGame(
     gossipLog: [],
     briefingCount: 0,
     photoCount: 0,
+    jokersGiven: {},
+    sabotageLog: [],
+    finale: null,
   };
 }
 
@@ -259,7 +282,13 @@ export function normalizeGame(raw: unknown): Game | null {
     gossipLog: Array.isArray(raw.gossipLog) ? raw.gossipLog.map(normalizeGossip).filter((g): g is Gossip => g !== null) : [],
     briefingCount: typeof raw.briefingCount === 'number' ? Math.max(0, Math.floor(raw.briefingCount)) : 0,
     photoCount: typeof raw.photoCount === 'number' ? Math.max(0, Math.floor(raw.photoCount)) : 0,
+    jokersGiven: normalizeCounts(raw.jokersGiven, ids),
+    sabotageLog: Array.isArray(raw.sabotageLog)
+      ? raw.sabotageLog.filter((s): s is Game['sabotageLog'][number] => isRecord(s) && typeof s.taskUid === 'string' && typeof s.playerId === 'string' && typeof s.tip === 'string')
+      : [],
+    finale: null,
   };
+  if (game.phase === 'einde') game.finale = normalizeFinale(raw.finale, game) ?? newFinale(game);
   if (game.phase === 'opdrachten') {
     if (game.taskIndex >= game.program.length) game.phase = 'einde';
     else game.current = normalizeCurrent(raw.current, game) ?? newCurrent(game);
@@ -329,6 +358,7 @@ function nextTask(game: Game): void {
   if (game.taskIndex >= game.program.length) {
     game.phase = 'einde';
     game.current = null;
+    game.finale = newFinale(game);
   } else {
     game.current = newCurrent(game);
   }
@@ -444,6 +474,7 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
   const withJokers: BriefingState['cards'] = {};
   for (const [id, card] of Object.entries(cards)) {
     withJokers[id] = { ...card, jokerInnocent: null };
+    if (game.players.find((p) => p.playerId === id)?.role === 'saboteur') game.sabotageLog = [...game.sabotageLog, { taskUid: current.uid, playerId: id, tip: card.tip }];
     if (card.innocent) remember(game, id, card.innocent);
   }
   current.briefing = { order: shuffle(game.players.map((p) => p.playerId), rng), index: 0, stage: 'geef', cards: withJokers };
@@ -504,6 +535,7 @@ export function resolveDilemma(game: Game, jokerTo: string | null): void {
     const cost = Math.min(current.pending.gems, JOKER_COST);
     current.pending.gems -= cost;
     game.jokers[jokerTo] = (game.jokers[jokerTo] ?? 0) + 1;
+    game.jokersGiven[jokerTo] = (game.jokersGiven[jokerTo] ?? 0) + 1;
   }
   current.step = 'duim';
 }
@@ -554,5 +586,103 @@ function normalizeBriefing(raw: unknown, game: Game): BriefingState | null {
     index: typeof raw.index === 'number' ? Math.min(order.length, Math.max(0, Math.floor(raw.index))) : 0,
     stage: raw.stage === 'lezen' ? 'lezen' : 'geef',
     cards,
+  };
+}
+// --- Finale -----------------------------------------------------------------------
+
+export function newFinale(game: Game, rng: Rng = Math.random): FinaleState {
+  const title = (id: string): string => getTask(id)?.title ?? id;
+  return {
+    step: 'intro',
+    questions: buildTest(game.players, game.results, title, { jokersGiven: game.jokersGiven }, game.settings.saboteurName, rng),
+    order: shuffle(game.players.map((p) => p.playerId), rng),
+    index: 0,
+    stage: 'geef',
+    qIndex: 0,
+    answers: {},
+    reveal: 0,
+  };
+}
+
+/** Eén antwoord in De Test; na de laatste vraag is die speler klaar. */
+export function answerTest(game: Game, value: string, elapsedMs: number): void {
+  const f = game.finale;
+  const pid = f?.order[f.index];
+  if (!f || !pid) return;
+  const mine = f.answers[pid] ?? { answers: f.questions.map(() => null), ms: 0 };
+  mine.answers[f.qIndex] = value;
+  mine.ms += Math.max(0, elapsedMs);
+  f.answers[pid] = mine;
+  if (f.qIndex + 1 < f.questions.length) f.qIndex += 1;
+  else f.stage = 'klaar';
+}
+
+/** Tablet naar de volgende speler; na de laatste speler naar de schat. */
+export function nextTestPlayer(game: Game): void {
+  const f = game.finale;
+  if (!f) return;
+  if (f.stage === 'geef') {
+    f.stage = 'vragen';
+    f.qIndex = 0;
+    return;
+  }
+  f.index += 1;
+  f.stage = 'geef';
+  f.qIndex = 0;
+  if (f.index >= f.order.length) {
+    f.step = 'schat';
+    f.reveal = 0;
+  }
+}
+
+export function testLater(game: Game): void {
+  const f = game.finale;
+  if (!f) return;
+  const [id] = f.order.splice(f.index, 1);
+  if (id) f.order.push(id);
+}
+
+export function finaleStep(game: Game, step: FinaleStep): void {
+  if (!game.finale) return;
+  game.finale.step = step;
+  game.finale.reveal = 0;
+}
+
+function normalizeFinale(raw: unknown, game: Game): FinaleState | null {
+  if (!isRecord(raw) || !Array.isArray(raw.questions) || !Array.isArray(raw.order)) return null;
+  const steps: FinaleStep[] = ['intro', 'test', 'schat', 'ontmaskering', 'ranking', 'terugblik', 'fotos'];
+  if (!steps.includes(raw.step as FinaleStep)) return null;
+  const ids = new Set(game.players.map((p) => p.playerId));
+  const order = raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id));
+  if (order.length !== game.players.length) return null;
+  const questions: TestQuestion[] = [];
+  for (const q of raw.questions) {
+    if (!isRecord(q) || typeof q.id !== 'string' || typeof q.text !== 'string' || !Array.isArray(q.options) || !Array.isArray(q.correct)) return null;
+    questions.push({
+      id: q.id,
+      kind: q.kind === 'profiel' || q.kind === 'rol' || q.kind === 'joker' ? q.kind : 'wie',
+      text: q.text,
+      options: q.options.filter((o): o is TestQuestion['options'][number] => isRecord(o) && typeof o.value === 'string' && typeof o.label === 'string'),
+      correct: q.correct.filter((c): c is string => typeof c === 'string'),
+    });
+  }
+  const answers: Record<string, TestAnswers> = {};
+  if (isRecord(raw.answers)) {
+    for (const [id, a] of Object.entries(raw.answers)) {
+      if (!ids.has(id) || !isRecord(a) || !Array.isArray(a.answers)) continue;
+      const list: unknown[] = a.answers;
+      answers[id] = { answers: questions.map((_, i) => (typeof list[i] === 'string' ? (list[i] as string) : null)), ms: typeof a.ms === 'number' ? a.ms : 0 };
+    }
+  }
+  const int = (v: unknown, max: number): number => (typeof v === 'number' ? Math.min(max, Math.max(0, Math.floor(v))) : 0);
+  return {
+    step: raw.step as FinaleStep,
+    questions,
+    order,
+    index: int(raw.index, order.length),
+    stage: raw.stage === 'vragen' || raw.stage === 'klaar' ? raw.stage : 'geef',
+    qIndex: int(raw.qIndex, Math.max(0, questions.length - 1)),
+    answers,
+    reveal: int(raw.reveal, 1000),
   };
 }

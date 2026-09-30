@@ -108,6 +108,7 @@
   }
 
   .menu {
+    margin-left: auto;
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -115,6 +116,10 @@
     background: rgba(255, 255, 255, 0.08);
     font-size: 1.5rem;
     cursor: pointer;
+  }
+
+  .progress + .menu {
+    margin-left: 0;
   }
 
   .game {

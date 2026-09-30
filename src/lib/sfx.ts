@@ -63,4 +63,28 @@ export const sfx = {
   reveal(): void {
     tone(220, 0, 0.6, 'sine', 0.15, 880);
   },
+  /** Tromgeroffel: steeds sneller en luider. */
+  drumroll(seconds = 1.6): void {
+    let t = 0;
+    let gap = 0.12;
+    let vol = 0.04;
+    while (t < seconds) {
+      tone(140 + Math.random() * 30, t, 0.06, 'triangle', vol);
+      t += gap;
+      gap = Math.max(0.035, gap * 0.9);
+      vol = Math.min(0.16, vol * 1.08);
+    }
+  },
+  /** De ontmaskering: dramatisch akkoord. */
+  unmask(): void {
+    tone(110, 0, 1.6, 'sawtooth', 0.12);
+    tone(131, 0, 1.6, 'sawtooth', 0.1);
+    tone(156, 0.05, 1.6, 'sawtooth', 0.08);
+    tone(55, 0, 1.8, 'sine', 0.2);
+  },
+  fanfare(): void {
+    const notes = [523, 523, 523, 659, 784, 659, 784, 1047];
+    const times = [0, 0.15, 0.3, 0.45, 0.75, 0.95, 1.1, 1.3];
+    notes.forEach((f, i) => tone(f, times[i] ?? 0, i === notes.length - 1 ? 0.9 : 0.18, 'square', 0.1));
+  },
 };

@@ -3,12 +3,15 @@ import {
   afterAnnouncement,
   afterGossip,
   afterTreasure,
+  answerTest,
   assignRoles,
   briefingNext,
   createGame,
+  finaleStep,
   finishCurrent,
   JOKER_COST,
   newCurrent,
+  nextTestPlayer,
   normalizeGame,
   resolveDilemma,
   saboteurCount,
@@ -272,6 +275,30 @@ describe('briefing, jokers, roddels en dilemma', () => {
     expect(back.current!.briefing).toEqual(game.current!.briefing);
     expect(back.jokers).toEqual(game.jokers);
     expect(back.known).toEqual(game.known);
+  });
+});
+
+describe('finale', () => {
+  it('start De Test na de laatste opdracht en gaat per speler door de vragen', () => {
+    const program: ProgramItem[] = [{ uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] }];
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(8));
+    for (const p of game.players) p.profile = { eten: 'pizza', broerzus: 'geen', onderstuk: 'rok', schoenen: 'laarzen', haarlengte: 'lang', bril: 'nee', haarkleur: 'bruin', bovenstuk: 'rood' };
+    startTasks(game);
+    skipCurrent(game);
+    expect(game.phase).toBe('einde');
+    const f = game.finale!;
+    expect(f.questions[0]!.kind).toBe('wie');
+    finaleStep(game, 'test');
+    for (let p = 0; p < 4; p++) {
+      nextTestPlayer(game);
+      for (let q = 0; q < f.questions.length; q++) answerTest(game, f.questions[q]!.options[0]!.value, 500);
+      expect(f.stage).toBe('klaar');
+      nextTestPlayer(game);
+    }
+    expect(f.step).toBe('schat');
+    expect(Object.keys(f.answers)).toHaveLength(4);
+    const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
+    expect(back.finale).toEqual(game.finale);
   });
 });
 
