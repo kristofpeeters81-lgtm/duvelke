@@ -48,7 +48,7 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
 
 ## Rollen
 
-- **'t Duvelke**: 4–6 spelers: 1. 7–11: 1 (30% kans op 2). 12–16: 1 (30% op 2, 10% op 3). Duvelkes weten niet van elkaar.
+- **'t Duvelke**: 3–6 spelers: 1. 7–11: 1 (30% kans op 2). 12–16: 1 (30% op 2, 10% op 3). Duvelkes weten niet van elkaar.
 - **Speurders**: alle anderen.
 - **🔍 Speurneus** (optioneel, standaard uit): krijgt gaandeweg onschuldige namen. Speelt voor een aparte Speurneus-medaille.
 - **🙋 Bemoeial** (optioneel, standaard uit): bemoeit zich ongevraagd met alles.
@@ -57,7 +57,7 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
 ## Verloop
 
 ### A. Voorbereiding
-1. **Spelers**: naam, kleur/avatar, kind of volwassene. De lijst wordt bewaard. Per spel aanvinken wie meedoet (4–16).
+1. **Spelers**: naam, kleur/avatar, kind of volwassene. De lijst wordt bewaard. Per spel aanvinken wie meedoet (3–16).
 2. **Instellingen**: duur (30 min–2,5 u), moeilijkheid (Makkelijk 6–8 / Normaal 9–12 / Pittig tieners+volwassenen), locaties (aanvinken: binnen, tuin, straat/buurt, bos, speeltuin/park, dorp, strand), schat (virtueel of fysiek met inventaris), namen, optionele rollen, buurvrouw-roddels, spelleider speelt mee.
 3. **Benodigdheden**: een checklist, die bewaard wordt.
 4. **Programma**: de app stelt een programma voor. De spelleider kan wisselen, schrappen, herordenen en vastzetten.

@@ -22,8 +22,8 @@ function players(n: number): Player[] {
 }
 
 describe('saboteurCount', () => {
-  it('geeft altijd 1 saboteur bij 4 tot 6 spelers', () => {
-    for (const n of [4, 5, 6]) {
+  it('geeft altijd 1 saboteur bij 3 tot 6 spelers', () => {
+    for (const n of [3, 4, 5, 6]) {
       expect(saboteurCount(n, () => 0)).toBe(1);
       expect(saboteurCount(n, () => 0.99)).toBe(1);
     }
@@ -52,7 +52,16 @@ describe('saboteurCount', () => {
 
 describe('assignRoles', () => {
   it('weigert te weinig spelers', () => {
-    expect(() => assignRoles(ids(3), { speurneus: false, bemoeial: false })).toThrow();
+    expect(() => assignRoles(ids(2), { speurneus: false, bemoeial: false })).toThrow();
+  });
+
+  it('werkt met 3 spelers: 1 saboteur, geen speciale rollen', () => {
+    for (let seed = 1; seed < 50; seed++) {
+      const r = assignRoles(ids(3), { speurneus: true, bemoeial: true }, seeded(seed));
+      expect(r.saboteurs).toHaveLength(1);
+      expect(r.speurneus).toBeNull();
+      expect(r.bemoeial).toBeNull();
+    }
   });
 
   it('geeft Speurneus en Bemoeial nooit aan een saboteur, en nooit aan dezelfde persoon', () => {

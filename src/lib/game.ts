@@ -4,7 +4,7 @@ import { normalizeSettings } from './settings';
 import type { Player, Settings } from './types';
 import { isRecord, shuffle, type Rng } from './util';
 
-export const MIN_PLAYERS = 4;
+export const MIN_PLAYERS = 3;
 export const MAX_PLAYERS = 16;
 
 export type Role = 'saboteur' | 'speurder';
@@ -42,7 +42,7 @@ export interface Game {
 }
 
 /**
- * Hoeveel saboteurs? 4–6 spelers: altijd 1. 7–11: 30% kans op 2.
+ * Hoeveel saboteurs? 3–6 spelers: altijd 1. 7–11: 30% kans op 2.
  * 12–16: 30% kans op 2 en 10% kans op 3.
  */
 export function saboteurCount(playerCount: number, rng: Rng = Math.random): number {
