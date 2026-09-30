@@ -96,3 +96,33 @@ export function pickLine(
 export function rememberLine(recent: string[], id: string, max = 25): string[] {
   return [id, ...recent.filter((r) => r !== id)].slice(0, max);
 }
+
+export interface RecordingPart {
+  id: string;
+  template: string;
+  label: string;
+}
+
+/**
+ * Welke stukjes je moet inspreken voor een uitspraak. Een zin met {speler} wordt gesplitst
+ * in "vóór de naam" en "na de naam"; de naam zelf spreek je één keer in per speler.
+ */
+export function recordingParts(line: { id: string; text: string }): RecordingPart[] {
+  const pieces = line.text.split('{speler}');
+  if (pieces.length === 1) return [{ id: line.id, template: line.text, label: 'De zin' }];
+  if (pieces.length > 2) return [];
+  const [before = '', after = ''] = pieces;
+  const parts: RecordingPart[] = [];
+  if (before.trim()) parts.push({ id: `${line.id}:voor`, template: before.trim(), label: '1. Vóór de naam' });
+  if (after.trim()) parts.push({ id: `${line.id}:na`, template: after.trim(), label: parts.length ? '2. Na de naam' : 'Na de naam' });
+  return parts;
+}
+
+export function isFullyRecorded(line: { id: string; text: string }, recorded: readonly string[]): boolean {
+  const parts = recordingParts(line);
+  return parts.length > 0 && parts.every((p) => recorded.includes(p.id));
+}
+
+export function nameRecordingId(playerId: string): string {
+  return `naam:${playerId}`;
+}

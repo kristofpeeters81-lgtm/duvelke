@@ -8,6 +8,7 @@ import { getRecording } from './db';
 import { BrokenVoiceError, piperSupported, playWav, stopPiper, storedVoices, synthesize } from './piper';
 import type { VoiceSettings } from './types';
 import { speak as speakDevice, stopSpeaking } from './voice';
+import { nameRecordingId, recordingParts } from './windy';
 
 let token = 0;
 let storedCache: string[] | null = null;
@@ -29,6 +30,31 @@ export interface SpeakOptions {
   lineId?: string;
   /** Andere AI-stem voor deze zin (bv. de buurvrouw). Niet gedownload? Dan de gewone stem, iets lager. */
   voice?: { piperVoice: VoiceSettings['piperVoice']; piperPitch: number };
+  /** De uitspraak zoals ze geschreven is (met {speler}), om ingesproken stukjes te vinden. */
+  template?: string;
+  /** Wie er genoemd wordt: voor de ingesproken naam. */
+  playerId?: string;
+}
+
+/** Alle ingesproken stukjes van een zin, in volgorde, of null als er één ontbreekt. */
+async function recordedPieces(options: SpeakOptions): Promise<Blob[] | null> {
+  if (!options.lineId) return null;
+  const template = options.template ?? '';
+  if (!template.includes('{speler}')) {
+    const r = await getRecording(options.lineId);
+    return r ? [r.audio] : null;
+  }
+  if (!options.playerId) return null;
+  const parts = recordingParts({ id: options.lineId, text: template });
+  if (parts.length === 0) return null;
+  const name = await getRecording(nameRecordingId(options.playerId));
+  if (!name) return null;
+  const before = parts.find((p) => p.id.endsWith(':voor'));
+  const after = parts.find((p) => p.id.endsWith(':na'));
+  const b = before ? await getRecording(before.id) : undefined;
+  const a = after ? await getRecording(after.id) : undefined;
+  if ((before && !b) || (after && !a)) return null;
+  return [b?.audio, name.audio, a?.audio].filter((x): x is Blob => !!x);
 }
 
 export async function speak(text: string, v: VoiceSettings, options: SpeakOptions = {}): Promise<void> {
@@ -39,11 +65,14 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
 
   if (v.useRecordings && options.lineId) {
     try {
-      const recording = await getRecording(options.lineId);
+      const pieces = await recordedPieces(options);
       if (mine !== token) return;
-      if (recording) {
+      if (pieces) {
         options.onStart?.();
-        await playWav(recording.audio, 1);
+        for (const piece of pieces) {
+          if (mine !== token) return;
+          await playWav(piece, 1);
+        }
         return;
       }
     } catch (err) {

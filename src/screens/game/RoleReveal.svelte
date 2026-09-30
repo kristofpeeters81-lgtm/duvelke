@@ -22,14 +22,19 @@
   const question = $derived(PROFILE_QUESTIONS[questionIndex]);
 
   let passLine = $state('');
+  let passLineId = $state<string | undefined>(undefined);
   $effect(() => {
     const name = current?.name;
     if (step !== 'geef' || !name) return;
     passLine = untrack(() => {
       if (!app.game) return '';
       const line = pickLine('doorgeven', app.windyLines, lineContext(name), app.game.recentLines);
-      if (!line) return `Geef de tablet aan ${name}.`;
+      if (!line) {
+        passLineId = undefined;
+        return `Geef de tablet aan ${name}.`;
+      }
       app.game.recentLines = rememberLine(app.game.recentLines, line.id);
+      passLineId = line.id;
       return line.text;
     });
   });
@@ -87,7 +92,7 @@
   {#if step === 'geef'}
     <div class="pass">
       {#key passLine}
-        <WindyBubble text={passLine} mood="blij" size={150} />
+        <WindyBubble text={passLine} lineId={passLineId} playerId={current.playerId} mood="blij" size={150} />
       {/key}
       <div class="target">
         <span class="av" style="--c:{current.color}">{current.avatar}</span>

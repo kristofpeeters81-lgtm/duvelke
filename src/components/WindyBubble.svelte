@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { app } from '../lib/store.svelte';
+  import { app, lineTemplate } from '../lib/store.svelte';
   import { speak, stopAll } from '../lib/speech';
   import Neighbour from './Neighbour.svelte';
   import Windy, { type WindyMood } from './Windy.svelte';
@@ -9,6 +9,8 @@
     text: string;
     /** Id van de uitspraak, zodat een eigen opname afgespeeld kan worden. */
     lineId?: string;
+    /** Wie er genoemd wordt (voor ingesproken namen). */
+    playerId?: string;
     mood?: WindyMood;
     /** Wie er spreekt: Windy of de buurvrouw (met haar eigen stem). */
     speaker?: 'windy' | 'buurvrouw';
@@ -17,7 +19,7 @@
     children?: Snippet;
   }
 
-  let { text, lineId, mood = 'blij', speaker = 'windy', size = 200, children }: Props = $props();
+  let { text, lineId, playerId, mood = 'blij', speaker = 'windy', size = 200, children }: Props = $props();
 
   let talking = $state(false);
   let runId = 0;
@@ -28,6 +30,8 @@
     // De mond beweegt pas als het geluid echt start (de AI-stem heeft even denktijd nodig).
     await speak(line, $state.snapshot(app.settings.voice), {
       lineId,
+      playerId,
+      template: lineId ? lineTemplate(lineId) : undefined,
       voice: speaker === 'buurvrouw' ? { piperVoice: app.settings.voice.neighbourVoice, piperPitch: app.settings.voice.neighbourPitch } : undefined,
       onStart: () => id === runId && (talking = true),
     });

@@ -17,7 +17,7 @@
   import { speak, stopAll } from '../lib/speech';
   import { app, deleteRecording, go, lineContext, showToast } from '../lib/store.svelte';
   import { loadDutchVoices, speechSupported } from '../lib/voice';
-  import { fillPlaceholders, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine } from '../lib/windy';
+  import { fillPlaceholders, isFullyRecorded, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine, recordingParts } from '../lib/windy';
 
   let tab = $state<'stem' | 'uitspraken'>(rememberedTab);
   $effect(() => {
@@ -123,10 +123,10 @@
   function removeLine(id: string): void {
     app.windyLines.custom = app.windyLines.custom.filter((l) => l.id !== id);
     confirmDelete = null;
-    if (app.recordedLineIds.includes(id)) void deleteRecording(id);
+    for (const r of app.recordedLineIds.filter((r) => r === id || r.startsWith(`${id}:`))) void deleteRecording(r);
   }
 
-  let recording = $state<{ id: string; text: string } | null>(null);
+  let recording = $state<{ id: string; text: string; label: string }[] | null>(null);
 
   function open(category: LineCategory): void {
     openCategory = openCategory === category ? null : category;
@@ -335,17 +335,18 @@
                     {#if part.ph}<span class="ph">{part.t}</span>{:else}{part.t}{/if}
                   {/each}
                   {#if !line.builtIn}<span class="own">eigen</span>{/if}
-                  {#if app.recordedLineIds.includes(line.id)}<span class="own rec-badge">🎙️ ingesproken</span>{/if}
+                  {#if isFullyRecorded(line, app.recordedLineIds)}<span class="own rec-badge">🎙️ ingesproken</span>{/if}
                 </span>
-                {#if line.text.includes('{speler}')}
-                  <button type="button" class="mic" disabled title="Bevat de naam van een speler: die verandert elke keer, dus inspreken kan niet.">🎤</button>
+                {#if recordingParts(line).length === 0}
+                  <button type="button" class="mic" disabled title="Deze zin noemt meer dan één naam: inspreken kan niet.">🎤</button>
                 {:else}
                   <button
                     type="button"
                     class="mic"
-                    class:has={app.recordedLineIds.includes(line.id)}
+                    class:has={isFullyRecorded(line, app.recordedLineIds)}
                     aria-label="Zelf inspreken"
-                    onclick={() => (recording = { id: line.id, text: fillPlaceholders(line.text, lineContext()) })}>🎤</button
+                    onclick={() =>
+                      (recording = recordingParts(line).map((p) => ({ id: p.id, label: p.label, text: fillPlaceholders(p.template, lineContext()) })))}>🎤</button
                   >
                 {/if}
                 {#if line.builtIn}
@@ -391,7 +392,13 @@
 </main>
 
 {#if recording}
-  <RecordPanel lineId={recording.id} text={recording.text} onclose={() => (recording = null)} />
+  <RecordPanel
+    segments={recording}
+    hint={recording.length > 1
+      ? 'Deze zin noemt de speler die de tablet krijgt. Spreek de stukjes vóór en na de naam apart in; de namen spreek je in bij Spelers.'
+      : "Lees de zin voor met je beste Windy-stem. Hou de tablet op zo'n 20 cm van je mond."}
+    onclose={() => (recording = null)}
+  />
 {/if}
 
 <style>

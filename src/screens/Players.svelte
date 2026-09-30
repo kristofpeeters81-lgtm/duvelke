@@ -1,5 +1,7 @@
 <script lang="ts">
   import BigButton from '../components/BigButton.svelte';
+  import RecordPanel from '../components/RecordPanel.svelte';
+  import { nameRecordingId } from '../lib/windy';
   import Segmented from '../components/Segmented.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { PLAYER_AVATARS, PLAYER_COLORS } from '../lib/data/looks';
@@ -12,6 +14,7 @@
   let isNew = $state(false);
   let confirmDelete = $state(false);
   let saving = $state(false);
+  let recordName = $state<Player | null>(null);
 
   const error = $derived(editing ? validatePlayerName(editing.name, app.players, editing.id) : null);
 
@@ -66,6 +69,7 @@
         <span class="avatar" style="--c:{player.color}">{player.avatar}</span>
         <span class="name">{player.name}</span>
         {#if player.isAdult}<span class="badge">volwassene</span>{/if}
+        {#if app.recordedLineIds.includes(nameRecordingId(player.id))}<span class="rec" title="Naam ingesproken">🎙️</span>{/if}
       </button>
     {/each}
     <button class="player add" type="button" onclick={startNew}>
@@ -74,6 +78,15 @@
     </button>
   </div>
 </main>
+
+{#if recordName}
+  <RecordPanel
+    segments={[{ id: nameRecordingId(recordName.id), text: recordName.name, label: 'De naam' }]}
+    title="🎤 Naam inspreken"
+    hint="Zeg de naam zoals {app.settings.hostName} hem zou roepen. Wordt gebruikt als {app.settings.hostName} zegt wie de tablet krijgt."
+    onclose={() => (recordName = null)}
+  />
+{/if}
 
 {#if editing}
   <div class="overlay" role="presentation" onclick={() => (editing = null)}>
@@ -135,6 +148,9 @@
         </BigButton>
         <BigButton variant="ghost" full onclick={() => (editing = null)}>Annuleren</BigButton>
         {#if !isNew}
+          <BigButton variant="ghost" full onclick={() => editing && (recordName = editing)}>
+            🎤 Naam inspreken {app.recordedLineIds.includes(nameRecordingId(editing.id)) ? '(✓ ingesproken)' : ''}
+          </BigButton>
           {#if confirmDelete}
             <BigButton variant="danger" full onclick={remove}>Ja, verwijder {editing.name}</BigButton>
           {:else}
@@ -154,6 +170,7 @@
   }
 
   .player {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -204,6 +221,12 @@
     font-weight: 800;
     text-align: center;
     word-break: break-word;
+  }
+
+  .rec {
+    position: absolute;
+    top: 8px;
+    right: 10px;
   }
 
   .badge {

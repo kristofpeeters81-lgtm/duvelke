@@ -7,7 +7,7 @@ import { setExtraTasks } from './tasks/registry';
 import type { TaskDef } from './tasks/types';
 import { validateTask } from './tasks/validate';
 import type { Player, Settings } from './types';
-import type { LineCategory } from './data/windyLines';
+import { BUILTIN_LINES, type LineCategory } from './data/windyLines';
 import { emptyLineState, normalizeLineState, pickLine, rememberLine, type LineContext, type WindyLineState } from './windy';
 
 export type Screen =
@@ -197,6 +197,9 @@ export async function deletePlayer(id: string): Promise<boolean> {
   app.players = previous.filter((p) => p.id !== id);
   try {
     await db.removePlayer(id);
+    // Ook de ingesproken naam opruimen.
+    const nameId = `naam:${id}`;
+    if (app.recordedLineIds.includes(nameId)) void deleteRecording(nameId);
     return true;
   } catch (err) {
     app.players = previous;
@@ -351,4 +354,8 @@ export async function importBackup(file: File): Promise<string> {
   app.taskStats = data.taskStats;
   app.recordedLineIds = await db.listRecordingIds();
   return `${data.players.length} spelers, ${data.customTasks.length} eigen opdrachten en ${data.recordings.length} opnames teruggezet.`;
+}
+/** De geschreven vorm (met plaatshouders) van een uitspraak, om ingesproken stukjes te vinden. */
+export function lineTemplate(id: string): string | undefined {
+  return BUILTIN_LINES.find((l) => l.id === id)?.text ?? app.windyLines.custom.find((l) => l.id === id)?.text;
 }

@@ -1,6 +1,9 @@
 <script lang="ts">
   import BigButton from '../components/BigButton.svelte';
+  import RecordPanel from '../components/RecordPanel.svelte';
   import TopBar from '../components/TopBar.svelte';
+  import { BUILTIN_LINES } from '../lib/data/windyLines';
+  import { isFullyRecorded, nameRecordingId } from '../lib/windy';
   import { SUPPLIES } from '../lib/data/supplies';
   import { createGame } from '../lib/game';
   import { app, go, startFromHome } from '../lib/store.svelte';
@@ -11,6 +14,17 @@
   const list = $derived(draft ? packingList(draft.program, allTasks()) : { supplies: [], prep: [] });
 
   let ticked = $state<string[]>([]);
+  let recordFor = $state<{ id: string; name: string } | null>(null);
+
+  // Zijn er doorgeef-zinnen ingesproken? Dan moeten ook de namen ingesproken zijn, anders praat de AI-stem.
+  const splitRecorded = $derived(
+    [...BUILTIN_LINES.filter((l) => l.category === 'doorgeven' && !app.windyLines.disabled.includes(l.id)), ...app.windyLines.custom.filter((l) => l.category === 'doorgeven')].some(
+      (l) => l.text.includes('{speler}') && isFullyRecorded(l, app.recordedLineIds),
+    ),
+  );
+  const missingNames = $derived(
+    splitRecorded && draft ? app.players.filter((p) => draft.playerIds.includes(p.id) && !app.recordedLineIds.includes(nameRecordingId(p.id))) : [],
+  );
 
   function toggle(key: string): void {
     ticked = ticked.includes(key) ? ticked.filter((k) => k !== key) : [...ticked, key];
@@ -84,6 +98,18 @@
       </section>
     {/if}
 
+    {#if missingNames.length > 0}
+      <section class="section names">
+        <h2>🎤 Nog even de namen inspreken?</h2>
+        <p class="hint">Je sprak de doorgeef-zinnen zelf in. Voor deze spelers ontbreekt de naam nog: zonder naam leest de AI-stem die zin voor.</p>
+        <div class="chips">
+          {#each missingNames as p (p.id)}
+            <button type="button" class="chip" onclick={() => (recordFor = { id: p.id, name: p.name })}><span class="emoji">🎤</span>{p.name}</button>
+          {/each}
+        </div>
+      </section>
+    {/if}
+
     <section class="section tip">
       <strong>🔋 Tablet opgeladen?</strong> Het scherm blijft aan tijdens het spel, dat vraagt wat batterij.
     </section>
@@ -93,6 +119,15 @@
     </BigButton>
   {/if}
 </main>
+
+{#if recordFor}
+  <RecordPanel
+    segments={[{ id: nameRecordingId(recordFor.id), text: recordFor.name, label: 'De naam' }]}
+    title="🎤 Naam inspreken"
+    hint="Zeg de naam zoals {app.settings.hostName} hem zou roepen."
+    onclose={() => (recordFor = null)}
+  />
+{/if}
 
 <style>
   .checks {
@@ -140,6 +175,10 @@
 
   .em {
     font-size: 1.5rem;
+  }
+
+  .names {
+    border-color: rgba(255, 207, 63, 0.5);
   }
 
   .tip {

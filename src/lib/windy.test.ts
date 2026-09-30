@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { BUILTIN_LINES, LINE_CATEGORIES } from './data/windyLines';
 import { toSpeech } from './voice';
-import { emptyLineState, fillPlaceholders, linesFor, normalizeLineState, pickLine, rememberLine } from './windy';
+import { emptyLineState, fillPlaceholders, isFullyRecorded, linesFor, normalizeLineState, pickLine, recordingParts, rememberLine } from './windy';
 
 const ctx = { saboteur: "'t Duvelke", zoon: 'Kenzo', windy: 'Windy' };
 
@@ -111,5 +111,25 @@ describe('toSpeech', () => {
       const vowelless = words.filter((w) => !/[aeiouyáéíóúàèëïöü]/i.test(w) && !spelledOnPurpose.has(w.toLowerCase()));
       expect(vowelless, `${line.id}: ${spoken}`).toEqual([]);
     }
+  });
+});
+
+describe('recordingParts', () => {
+  it('splitst een zin met {speler} in vóór en na de naam', () => {
+    const parts = recordingParts({ id: 'w011', text: 'Allee, geef de tablet maar aan {speler}. Voorzichtig hé!' });
+    expect(parts.map((p) => p.id)).toEqual(['w011:voor', 'w011:na']);
+    expect(parts[0]!.template).toBe('Allee, geef de tablet maar aan');
+    expect(parts[1]!.template).toBe('. Voorzichtig hé!');
+  });
+
+  it('heeft maar één stuk als de naam vooraan staat', () => {
+    expect(recordingParts({ id: 'x', text: '{speler}, uw beurt!' }).map((p) => p.id)).toEqual(['x:na']);
+  });
+
+  it('gewone zinnen zijn één stuk; volledig ingesproken als alle stukken er zijn', () => {
+    expect(recordingParts({ id: 'y', text: 'Hallo!' })).toEqual([{ id: 'y', template: 'Hallo!', label: 'De zin' }]);
+    const line = { id: 'z', text: 'A {speler} B' };
+    expect(isFullyRecorded(line, ['z:voor'])).toBe(false);
+    expect(isFullyRecorded(line, ['z:voor', 'z:na'])).toBe(true);
   });
 });

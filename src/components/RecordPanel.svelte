@@ -1,19 +1,32 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, untrack } from 'svelte';
   import { getRecording } from '../lib/db';
   import { playWav, stopPiper } from '../lib/piper';
   import { MAX_RECORDING_MS, MicrophoneDeniedError, recordingSupported, startRecording, type ActiveRecording } from '../lib/recorder';
   import { deleteRecording, saveRecording, showToast } from '../lib/store.svelte';
   import BigButton from './BigButton.svelte';
 
-  interface Props {
-    lineId: string;
-    /** De zin zoals ze voorgelezen moet worden (plaatshouders al ingevuld). */
+  interface Segment {
+    id: string;
+    /** De tekst zoals ze ingesproken moet worden (plaatshouders al ingevuld). */
     text: string;
+    label?: string;
+  }
+
+  interface Props {
+    /** Eén of meer stukjes om in te spreken (bv. vóór en na een naam). */
+    segments: Segment[];
+    title?: string;
+    hint?: string;
     onclose: () => void;
   }
 
-  let { lineId, text, onclose }: Props = $props();
+  let { segments, title = '🎤 Zelf inspreken', hint = "Lees de zin voor met je beste Windy-stem. Hou de tablet op zo'n 20 cm van je mond.", onclose }: Props = $props();
+
+  let seg = $state(0);
+  const current = $derived(segments[seg] ?? segments[0]);
+  const lineId = $derived(current?.id ?? '');
+  const text = $derived(current?.text ?? '');
 
   type Phase = 'klaar' | 'aftellen' | 'opnemen' | 'opgenomen';
   let phase = $state<Phase>('klaar');
@@ -26,8 +39,21 @@
   let active: ActiveRecording | null = null;
   let tick: ReturnType<typeof setInterval> | undefined;
 
+  function loadExisting(id: string): void {
+    existing = null;
+    void getRecording(id).then((r) => (existing = r ? { audio: r.audio, durationMs: r.durationMs } : null));
+  }
+
+  $effect(() => {
+    const id = lineId;
+    untrack(() => {
+      take = null;
+      phase = 'klaar';
+      loadExisting(id);
+    });
+  });
+
   onMount(() => {
-    void getRecording(lineId).then((r) => (existing = r ? { audio: r.audio, durationMs: r.durationMs } : null));
     return () => {
       clearInterval(tick);
       active?.cancel();
@@ -91,8 +117,13 @@
   async function save(): Promise<void> {
     if (!take) return;
     if (await saveRecording(lineId, take.audio, take.durationMs)) {
-      showToast('Opname bewaard! Windy gebruikt nu jouw stem voor deze zin.');
-      onclose();
+      if (seg + 1 < segments.length) {
+        showToast('Bewaard! Nu het volgende stukje.');
+        seg += 1;
+      } else {
+        showToast('Opname bewaard!');
+        onclose();
+      }
     }
   }
 
@@ -109,8 +140,15 @@
 
 <div class="overlay" role="presentation">
   <div class="sheet" role="dialog" aria-modal="true" aria-label="Uitspraak inspreken">
-    <h2>🎤 Zelf inspreken</h2>
-    <p class="hint">Lees de zin voor met je beste Windy-stem. Hou de tablet op zo'n 20 cm van je mond.</p>
+    <h2>{title}</h2>
+    <p class="hint">{hint}</p>
+    {#if segments.length > 1}
+      <div class="segs">
+        {#each segments as s, i (s.id)}
+          <button type="button" class="segbtn" aria-pressed={seg === i} onclick={() => (seg = i)}>{s.label ?? `Deel ${i + 1}`}</button>
+        {/each}
+      </div>
+    {/if}
     <blockquote>{text}</blockquote>
 
     {#if !recordingSupported()}
@@ -168,6 +206,27 @@
     flex-direction: column;
     gap: 14px;
     box-shadow: var(--shadow);
+  }
+
+  .segs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .segbtn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 2px solid var(--line);
+    background: transparent;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .segbtn[aria-pressed='true'] {
+    background: var(--turquoise);
+    border-color: var(--turquoise);
+    color: #0d2b33;
   }
 
   blockquote {
