@@ -10,6 +10,7 @@
   import Players from './screens/Players.svelte';
   import Settings from './screens/Settings.svelte';
   import Supplies from './screens/Supplies.svelte';
+  import VoiceTest from './screens/VoiceTest.svelte';
   import WindyScreen from './screens/WindyScreen.svelte';
 
   onMount(() => {
@@ -58,6 +59,8 @@
   <Supplies />
 {:else if app.screen === 'windy'}
   <WindyScreen />
+{:else if app.screen === 'stemtest'}
+  <VoiceTest />
 {:else if app.screen === 'nieuw-spel'}
   <NewGame />
 {:else if app.screen === 'spel' && app.game}

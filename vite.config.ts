@@ -33,6 +33,20 @@ export default defineConfig({
       workbox: {
         // Alles (ook lettertypes en geluiden) wordt vooraf in de cache gezet: zo werkt het spel offline.
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2,mp3,ogg,webp}'],
+        runtimeCaching: [
+          {
+            // Rekenmodules van de Vlaamse AI-stem (onnxruntime + piper). Het stemmodel zelf
+            // bewaart de bibliotheek in de browseropslag, dus Hugging Face hoort hier niet bij.
+            urlPattern: ({ url }) =>
+              url.origin === 'https://cdnjs.cloudflare.com' || url.origin === 'https://cdn.jsdelivr.net',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'stem-rekenmodules',
+              expiration: { maxEntries: 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },
     }),
   ],

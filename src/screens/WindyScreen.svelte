@@ -12,7 +12,7 @@
   import { LINE_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
   import { newId } from '../lib/ids';
   import { defaultVoice, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
-  import { app, lineContext, showToast } from '../lib/store.svelte';
+  import { app, go, lineContext, showToast } from '../lib/store.svelte';
   import { loadDutchVoices, speak, speechSupported, stopSpeaking } from '../lib/voice';
   import { fillPlaceholders, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine } from '../lib/windy';
 
@@ -136,8 +136,16 @@
       <p class="hint">Tik op {app.settings.hostName} om haar gezicht te veranderen.</p>
     </section>
 
+    <section class="section try">
+      <div>
+        <h2>🧪 Nieuw: Vlaamse AI-stemmen</h2>
+        <p class="hint">Veel natuurlijker dan de stem van het toestel, gratis en ook offline. Test ze eerst.</p>
+      </div>
+      <BigButton variant="gold" onclick={() => go('stemtest')}>Stemtest ▶</BigButton>
+    </section>
+
     <section class="section">
-      <h2>🔊 Voorleesstem</h2>
+      <h2>🔊 Voorleesstem van het toestel</h2>
       {#if !speechSupported()}
         <p class="warn">Deze browser kan niet voorlezen. Gebruik Chrome op de tablet.</p>
       {:else}
@@ -151,8 +159,10 @@
         <label class="field-label" for="voice">Stem</label>
         {#if voicesLoaded && voices.length === 0}
           <p class="warn">
-            Geen Nederlandse stem gevonden. Op Android: <b>Instellingen → Systeem → Talen → Tekst-naar-spraak</b>, kies de
-            Google-engine en download <b>Nederlands (België)</b>. Dan werkt het ook zonder internet.
+            Geen Nederlandse stem gevonden. Gebruik liever de Vlaamse AI-stem hierboven. Wil je toch de stem van het toestel,
+            dan op een Samsung: <b>Instellingen → Algemeen beheer → Tekst-naar-spraak</b> (soms onder <b>Taal en invoer</b>).
+            Kies als voorkeursengine <b>Spraakservices van Google</b> (anders eerst gratis installeren via de Play Store), tik op
+            het tandwiel ernaast → <b>Spraakgegevens installeren</b> → <b>Nederlands (België)</b>.
           </p>
         {:else}
           <select id="voice" class="text-input" bind:value={app.settings.voice.voiceURI}>
@@ -285,6 +295,15 @@
 <style>
   .tabs {
     margin-bottom: 18px;
+  }
+
+  .try {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-color: rgba(255, 207, 63, 0.5);
   }
 
   .hero {

@@ -5,7 +5,7 @@ import { defaultSettings, normalizeSettings } from './settings';
 import type { Player } from './types';
 import { emptyLineState, normalizeLineState, type LineContext, type WindyLineState } from './windy';
 
-export type Screen = 'home' | 'spelers' | 'instellingen' | 'benodigdheden' | 'windy' | 'nieuw-spel' | 'spel';
+export type Screen = 'home' | 'spelers' | 'instellingen' | 'benodigdheden' | 'windy' | 'stemtest' | 'nieuw-spel' | 'spel';
 
 export const app = $state({
   ready: false,
@@ -32,7 +32,7 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'nieuw-spel', 'spel'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'nieuw-spel', 'spel'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);
