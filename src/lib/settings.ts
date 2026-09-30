@@ -1,4 +1,5 @@
 import { LOCATION_IDS } from './data/locations';
+import { DEFAULT_PIPER_VOICE, PIPER_VOICE_IDS } from './data/piperVoices';
 import { SUPPLIES, SUPPLY_IDS } from './data/supplies';
 import { newId } from './ids';
 import { clampNumber, isRecord } from './util';
@@ -16,8 +17,18 @@ export const PITCH_RANGE = { min: 0.5, max: 2 } as const;
 export const RATE_RANGE = { min: 0.6, max: 1.5 } as const;
 
 /** Een wat hogere toon dan normaal: "een man die een hoog stemmetje opzet". */
+export const PIPER_PITCH_RANGE = { min: 0.85, max: 1.5 } as const;
+
 export function defaultVoice(): VoiceSettings {
-  return { enabled: true, voiceURI: null, pitch: 1.35, rate: 1.05 };
+  return {
+    enabled: true,
+    engine: 'piper',
+    piperVoice: DEFAULT_PIPER_VOICE,
+    piperPitch: 1.2,
+    voiceURI: null,
+    pitch: 1.35,
+    rate: 1.05,
+  };
 }
 
 function cleanVoice(raw: unknown): VoiceSettings {
@@ -25,6 +36,9 @@ function cleanVoice(raw: unknown): VoiceSettings {
   if (!isRecord(raw)) return d;
   return {
     enabled: typeof raw.enabled === 'boolean' ? raw.enabled : d.enabled,
+    engine: raw.engine === 'toestel' ? 'toestel' : 'piper',
+    piperVoice: PIPER_VOICE_IDS.find((id) => id === raw.piperVoice) ?? d.piperVoice,
+    piperPitch: clampNumber(raw.piperPitch, PIPER_PITCH_RANGE.min, PIPER_PITCH_RANGE.max, d.piperPitch),
     voiceURI: typeof raw.voiceURI === 'string' && raw.voiceURI !== '' ? raw.voiceURI : null,
     pitch: clampNumber(raw.pitch, PITCH_RANGE.min, PITCH_RANGE.max, d.pitch),
     rate: clampNumber(raw.rate, RATE_RANGE.min, RATE_RANGE.max, d.rate),

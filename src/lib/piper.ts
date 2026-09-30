@@ -3,11 +3,12 @@
  * Het stemmodel wordt één keer gedownload en in de browseropslag (OPFS) bewaard;
  * de rekenmodules worden door de service worker gecachet. Daarna werkt alles offline.
  */
-import type { ProgressCallback, VoiceId } from '@mintplex-labs/piper-tts-web';
+import type { ProgressCallback } from '@mintplex-labs/piper-tts-web';
+import type { PiperVoiceId } from './data/piperVoices';
 import { toSpeech } from './voice';
 
 export interface PiperVoice {
-  id: VoiceId;
+  id: PiperVoiceId;
   label: string;
   description: string;
 }
@@ -45,7 +46,7 @@ export async function storedVoices(): Promise<string[]> {
  * Downloadt een stem door er meteen een sessie mee te maken. Bewust niet via tts.download():
  * die wacht niet tot het bestand volledig bewaard is, waardoor de eerste zin een half model leest.
  */
-export async function downloadVoice(id: VoiceId, onProgress: (fraction: number) => void): Promise<void> {
+export async function downloadVoice(id: PiperVoiceId, onProgress: (fraction: number) => void): Promise<void> {
   resetSession();
   await getSession(id, (p) => {
     if (p.url.endsWith('.onnx') && p.total > 0) onProgress(p.loaded / p.total);
@@ -55,14 +56,14 @@ export async function downloadVoice(id: VoiceId, onProgress: (fraction: number) 
 /** Een onvolledig bewaard model (bv. tablet viel uit tijdens het downloaden) herkennen en opruimen. */
 export class BrokenVoiceError extends Error {}
 
-export async function removeVoice(id: VoiceId): Promise<void> {
+export async function removeVoice(id: PiperVoiceId): Promise<void> {
   const tts = await lib();
   await tts.remove(id);
   cache.clear();
   if (currentVoice === id) resetSession();
 }
 
-let currentVoice: VoiceId | null = null;
+let currentVoice: PiperVoiceId | null = null;
 let session: import('@mintplex-labs/piper-tts-web').TtsSession | null = null;
 
 function resetSession(): void {
@@ -70,7 +71,7 @@ function resetSession(): void {
   currentVoice = null;
 }
 
-async function getSession(id: VoiceId, progress?: ProgressCallback) {
+async function getSession(id: PiperVoiceId, progress?: ProgressCallback) {
   const tts = await lib();
   if (session && currentVoice === id) return session;
   // De bibliotheek hergebruikt standaard één sessie, ook voor een andere stem: die dan eerst loslaten.
@@ -95,7 +96,7 @@ async function getSession(id: VoiceId, progress?: ProgressCallback) {
 const cache = new Map<string, Blob>();
 const CACHE_MAX = 40;
 
-export async function synthesize(text: string, id: VoiceId): Promise<Blob> {
+export async function synthesize(text: string, id: PiperVoiceId): Promise<Blob> {
   const spoken = toSpeech(text);
   const key = `${id}|${spoken}`;
   const hit = cache.get(key);

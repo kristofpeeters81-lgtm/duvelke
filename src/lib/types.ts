@@ -1,3 +1,5 @@
+import type { PiperVoiceId } from './data/piperVoices';
+
 export type LocationId = 'binnen' | 'tuin' | 'straat' | 'bos' | 'park' | 'dorp' | 'strand';
 export type Difficulty = 'makkelijk' | 'normaal' | 'pittig';
 export type TreasureMode = 'virtueel' | 'fysiek';
@@ -26,7 +28,12 @@ export interface CustomSupply {
 
 export interface VoiceSettings {
   enabled: boolean;
-  /** voiceURI van de gekozen stem; null = automatisch een Nederlandse stem kiezen. */
+  /** 'piper' = Vlaamse AI-stem op de tablet zelf; 'toestel' = voorleesstem van Android/Windows. */
+  engine: 'piper' | 'toestel';
+  piperVoice: PiperVoiceId;
+  /** Afspeelsnelheid zonder toonbehoud: hoger = hogere (en iets snellere) stem. */
+  piperPitch: number;
+  /** voiceURI van de toestelstem; null = automatisch een Nederlandse stem kiezen. */
   voiceURI: string | null;
   pitch: number;
   rate: number;

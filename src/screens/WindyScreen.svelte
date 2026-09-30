@@ -11,9 +11,11 @@
   import Windy, { type WindyMood } from '../components/Windy.svelte';
   import { LINE_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
   import { newId } from '../lib/ids';
-  import { defaultVoice, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
+  import { PIPER_VOICES, storedVoices } from '../lib/piper';
+  import { defaultVoice, PIPER_PITCH_RANGE, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
+  import { speak, stopAll } from '../lib/speech';
   import { app, go, lineContext, showToast } from '../lib/store.svelte';
-  import { loadDutchVoices, speak, speechSupported, stopSpeaking } from '../lib/voice';
+  import { loadDutchVoices, speechSupported } from '../lib/voice';
   import { fillPlaceholders, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine } from '../lib/windy';
 
   let tab = $state<'stem' | 'uitspraken'>(rememberedTab);
@@ -27,21 +29,41 @@
   let talking = $state(false);
   const moods: WindyMood[] = ['blij', 'geschokt', 'stiekem', 'boos'];
   let moodIndex = $state(0);
+  let piperStored = $state<string[] | null>(null);
+  let testing = $state(false);
+
+  const PIPER_PITCHES = [
+    { value: 1, label: 'Gewoon' },
+    { value: 1.1, label: 'Iets hoger' },
+    { value: 1.2, label: 'Windy' },
+    { value: 1.32, label: 'Heel hoog' },
+  ];
+
+  function voiceLabel(id: string): string {
+    return PIPER_VOICES.find((p) => p.id === id)?.label ?? id;
+  }
 
   onMount(() => {
     void loadDutchVoices().then((v) => {
       voices = v;
       voicesLoaded = true;
     });
-    return () => stopSpeaking();
+    void storedVoices().then((s) => (piperStored = s));
+    return () => stopAll();
   });
 
   const v = $derived(app.settings.voice);
 
   async function testVoice(text?: string): Promise<void> {
     const line = text ?? pickLine('intro', app.windyLines, lineContext())?.text ?? 'Hallo schatjes, het is hier Windy!';
-    talking = true;
-    await speak(line, { ...$state.snapshot(app.settings.voice), enabled: true });
+    testing = true;
+    await speak(line, { ...$state.snapshot(app.settings.voice), enabled: true }, {
+      onStart: () => {
+        testing = false;
+        talking = true;
+      },
+    });
+    testing = false;
     talking = false;
   }
 
@@ -136,30 +158,82 @@
       <p class="hint">Tik op {app.settings.hostName} om haar gezicht te veranderen.</p>
     </section>
 
-    <section class="section try">
-      <div>
-        <h2>🧪 Nieuw: Vlaamse AI-stemmen</h2>
-        <p class="hint">Veel natuurlijker dan de stem van het toestel, gratis en ook offline. Test ze eerst.</p>
-      </div>
-      <BigButton variant="gold" onclick={() => go('stemtest')}>Stemtest ▶</BigButton>
+    <section class="section">
+      <h2>🔊 Voorlezen</h2>
+      <Toggle
+        label="Voorlezen"
+        description="{app.settings.hostName} leest alles hardop voor."
+        checked={v.enabled}
+        onchange={(on) => (app.settings.voice.enabled = on)}
+      />
+      <span class="field-label">Welke stem?</span>
+      <Segmented
+        label="Soort stem"
+        value={v.engine}
+        options={[
+          { value: 'piper', label: '✨ Vlaamse AI-stem', sub: 'aanbevolen' },
+          { value: 'toestel', label: '📱 Stem van het toestel', sub: 'reserve' },
+        ]}
+        onchange={(e) => (app.settings.voice.engine = e)}
+      />
     </section>
 
+    {#if v.engine === 'piper'}
+      <section class="section">
+        <h2>✨ Vlaamse AI-stem</h2>
+        {#if piperStored === null}
+          <p class="hint">Even kijken welke stemmen er op de tablet staan...</p>
+        {:else if !piperStored.includes(v.piperVoice)}
+          <p class="warn">
+            De stem {voiceLabel(v.piperVoice)} staat nog niet op dit toestel. Download ze eerst (met wifi) in de stemtest.
+            Tot dan leest de stem van het toestel voor.
+          </p>
+        {:else}
+          <p class="ok">✓ {voiceLabel(v.piperVoice)} staat op dit toestel en werkt ook zonder internet.</p>
+        {/if}
+
+        <span class="field-label">Stem</span>
+        <div class="chips">
+          {#each PIPER_VOICES as pv (pv.id)}
+            <button type="button" class="chip" aria-pressed={v.piperVoice === pv.id} onclick={() => (app.settings.voice.piperVoice = pv.id)}>
+              {pv.label}{piperStored?.includes(pv.id) ? ' ✓' : ''}
+            </button>
+          {/each}
+        </div>
+
+        <span class="field-label">Hoe hoog?</span>
+        <div class="chips">
+          {#each PIPER_PITCHES as p (p.value)}
+            <button type="button" class="chip" aria-pressed={Math.abs(v.piperPitch - p.value) < 0.001} onclick={() => ((app.settings.voice.piperPitch = p.value), void testVoice())}>
+              {p.label}
+            </button>
+          {/each}
+        </div>
+        <input
+          type="range"
+          min={PIPER_PITCH_RANGE.min}
+          max={PIPER_PITCH_RANGE.max}
+          step="0.02"
+          bind:value={app.settings.voice.piperPitch}
+          aria-label="Toonhoogte AI-stem"
+        />
+        <div class="scale"><span>laag</span><span>hoog</span></div>
+
+        <div class="test">
+          <BigButton variant="secondary" full onclick={() => testVoice()}>{testing ? '⏳ Even denken...' : '▶ Test de stem'}</BigButton>
+          <button type="button" class="link" onclick={() => go('stemtest')}>🧪 Stemmen downloaden, vergelijken of wissen</button>
+        </div>
+      </section>
+    {:else}
     <section class="section">
-      <h2>🔊 Voorleesstem van het toestel</h2>
+      <h2>📱 Stem van het toestel</h2>
       {#if !speechSupported()}
         <p class="warn">Deze browser kan niet voorlezen. Gebruik Chrome op de tablet.</p>
       {:else}
-        <Toggle
-          label="Voorlezen"
-          description="{app.settings.hostName} leest alles hardop voor."
-          checked={v.enabled}
-          onchange={(on) => (app.settings.voice.enabled = on)}
-        />
-
         <label class="field-label" for="voice">Stem</label>
         {#if voicesLoaded && voices.length === 0}
           <p class="warn">
-            Geen Nederlandse stem gevonden. Gebruik liever de Vlaamse AI-stem hierboven. Wil je toch de stem van het toestel,
+            Geen Nederlandse stem gevonden. Kies liefst de Vlaamse AI-stem hierboven. Wil je toch de stem van het toestel,
             dan op een Samsung: <b>Instellingen → Algemeen beheer → Tekst-naar-spraak</b> (soms onder <b>Taal en invoer</b>).
             Kies als voorkeursengine <b>Spraakservices van Google</b> (anders eerst gratis installeren via de Play Store), tik op
             het tandwiel ernaast → <b>Spraakgegevens installeren</b> → <b>Nederlands (België)</b>.
@@ -195,12 +269,13 @@
             type="button"
             class="link"
             onclick={() => {
-              app.settings.voice = { ...defaultVoice(), enabled: v.enabled };
+              app.settings.voice = { ...defaultVoice(), enabled: v.enabled, engine: 'toestel' };
             }}>Terug naar standaard</button
           >
         </div>
       {/if}
     </section>
+    {/if}
   {:else}
     <section class="section">
       <h2>💬 Wat zegt {app.settings.hostName}?</h2>
@@ -297,13 +372,9 @@
     margin-bottom: 18px;
   }
 
-  .try {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    border-color: rgba(255, 207, 63, 0.5);
+  .ok {
+    color: var(--turquoise);
+    font-weight: 800;
   }
 
   .hero {

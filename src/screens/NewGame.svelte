@@ -4,11 +4,13 @@
 </script>
 
 <script lang="ts">
+  import { onMount } from 'svelte';
   import BigButton from '../components/BigButton.svelte';
   import Toggle from '../components/Toggle.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { LOCATIONS } from '../lib/data/locations';
   import { createGame, isValidPin, MAX_PLAYERS, MIN_PLAYERS } from '../lib/game';
+  import { piperSupported, storedVoices } from '../lib/piper';
   import { formatDuration } from '../lib/settings';
   import { app, go, showToast } from '../lib/store.svelte';
 
@@ -19,6 +21,14 @@
   // Per spel aan te passen, zonder de standaardinstellingen te wijzigen.
   let speurneus = $state(app.settings.speurneusEnabled);
   let bemoeial = $state(app.settings.bemoeialEnabled);
+
+  // Waarschuwen als de AI-stem nog niet op de tablet staat: beter nu dan tijdens het feest.
+  let voiceMissing = $state(false);
+  onMount(() => {
+    const v = app.settings.voice;
+    if (!v.enabled || v.engine !== 'piper' || !piperSupported()) return;
+    void storedVoices().then((s) => (voiceMissing = !s.includes(v.piperVoice)));
+  });
 
   $effect(() => {
     remembered = { selected: [...selected], gameMaster };
@@ -125,6 +135,12 @@
 
   <section class="section">
     <h2>⚙️ Dit spel</h2>
+    {#if voiceMissing}
+      <p class="voice-warn">
+        🎙️ De Vlaamse stem van {s.hostName} staat nog niet op deze tablet.
+        <button type="button" class="link" onclick={() => go('stemtest')}>Nu downloaden (wifi nodig)</button>
+      </p>
+    {/if}
     <ul class="summary">
       <li><span>🎯</span> {s.difficulty === 'makkelijk' ? 'Makkelijk' : s.difficulty === 'normaal' ? 'Normaal' : 'Pittig'}</li>
       <li><span>⏱️</span> {formatDuration(s.durationMinutes)}</li>
@@ -272,6 +288,14 @@
 
   .start {
     margin-top: 10px;
+  }
+
+  .voice-warn {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 207, 63, 0.12);
+    color: var(--gold);
+    font-weight: 700;
   }
 
   .problem {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import { app } from '../lib/store.svelte';
-  import { speak, stopSpeaking } from '../lib/voice';
+  import { speak, stopAll } from '../lib/speech';
   import Windy, { type WindyMood } from './Windy.svelte';
 
   interface Props {
@@ -19,8 +19,9 @@
 
   async function say(line: string): Promise<void> {
     const id = ++runId;
-    talking = app.settings.voice.enabled;
-    await speak(line, $state.snapshot(app.settings.voice));
+    talking = false;
+    // De mond beweegt pas als het geluid echt start (de AI-stem heeft even denktijd nodig).
+    await speak(line, $state.snapshot(app.settings.voice), { onStart: () => id === runId && (talking = true) });
     if (id === runId) talking = false;
   }
 
@@ -28,7 +29,7 @@
     void say(text);
     return () => {
       runId++;
-      stopSpeaking();
+      stopAll();
     };
   });
 </script>

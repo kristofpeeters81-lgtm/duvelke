@@ -3,6 +3,7 @@
   import Duvelke from './components/Duvelke.svelte';
   import Toast from './components/Toast.svelte';
   import { requestPersistentStorage } from './lib/db';
+  import { warmUp } from './lib/speech';
   import { app, initNavigation, loadAll, persistAllNow, persistValue, type PersistKey } from './lib/store.svelte';
   import GameScreen from './screens/Game.svelte';
   import Home from './screens/Home.svelte';
@@ -15,7 +16,8 @@
 
   onMount(() => {
     initNavigation();
-    void loadAll();
+    // Na het laden het stemmodel alvast opwarmen, zodat Windy's eerste zin vlot komt.
+    void loadAll().then(() => setTimeout(() => void warmUp($state.snapshot(app.settings.voice)), 1500));
     void requestPersistentStorage();
   });
 

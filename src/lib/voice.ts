@@ -35,15 +35,41 @@ function rankVoice(v: SpeechSynthesisVoice): number {
   return (lang === 'nl-be' ? 2 : 0) + (v.localService ? 1 : 0);
 }
 
+/**
+ * Uitspraaklijst: woorden die de voorleesstem anders letter per letter spelt.
+ * Woorden zonder klinker ("Psst", "Hmm") spelt ze als afkorting; die vervangen of weglaten.
+ */
+const PRONUNCIATION: [RegExp, string][] = [
+  [/\bp+s+t+\b[.!…]*/gi, ''], // Psst... → gefluister, niet voorlezen
+  [/\bs{2,}t*\b[.!…]*/gi, ''], // Sssst
+  [/\bsh+t?\b[.!…]*/gi, ''], // Shh
+  [/\bhm+\b/gi, 'hum'],
+  [/\bmm+\b/gi, 'mjam'],
+  [/\bpf+t?\b/gi, 'poeh'],
+  [/\bbr{2,}\b/gi, 'boe'],
+  [/\bgr{2,}\b/gi, 'grom'],
+  [/\btsk\b/gi, 'tja'],
+  [/'k\b/gi, 'ik'],
+  [/'t\b/gi, 'et'],
+  [/'s\b/gi, 'es'],
+];
+
 /** Kempische schrijfwijze omzetten naar iets wat de voorleesstem fatsoenlijk uitspreekt. */
 export function toSpeech(text: string): string {
-  return text
-    .replace(/'k\b/gi, 'ik')
-    .replace(/'t\b/gi, 'et')
-    .replace(/'s\b/gi, 'es')
-    .replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  let out = text.replace(/[\p{Extended_Pictographic}\u{FE0F}\u{200D}]/gu, '');
+  for (const [pattern, replacement] of PRONUNCIATION) out = out.replace(pattern, replacement);
+  return (
+    out
+      // WOORDEN IN HOOFDLETTERS worden anders als afkorting gespeld: gewoon schrijven.
+      .replace(/\b\p{Lu}{2,}\b/gu, (w) => w.charAt(0) + w.slice(1).toLocaleLowerCase('nl-BE'))
+      // Beletseltekens als korte pauze
+      .replace(/\.{2,}|…/g, ', ')
+      .replace(/\s+([,.!?])/g, '$1')
+      .replace(/^[\s,.!?]+/, '')
+      .replace(/,\s*,/g, ',')
+      .replace(/\s+/g, ' ')
+      .trim()
+  );
 }
 
 let voicesCache: SpeechSynthesisVoice[] = [];

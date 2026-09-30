@@ -15,6 +15,7 @@
     synthesize,
     type PiperVoice,
   } from '../lib/piper';
+  import { invalidateStoredVoices } from '../lib/speech';
   import { app, lineContext, showToast } from '../lib/store.svelte';
   import { fillPlaceholders } from '../lib/windy';
 
@@ -38,7 +39,7 @@
   let talking = $state(false);
   let sample = $state(0);
   let ownText = $state('');
-  let pitch = $state(1.2);
+  let pitch = $state(app.settings.voice.piperPitch);
   let lastTiming = $state<{ voice: string; ms: number } | null>(null);
   const online = $state({ value: typeof navigator === 'undefined' ? true : navigator.onLine });
 
@@ -55,7 +56,16 @@
   });
 
   async function refresh(): Promise<void> {
+    invalidateStoredVoices();
     stored = await storedVoices();
+  }
+
+  function useForWindy(v: PiperVoice): void {
+    app.settings.voice.engine = 'piper';
+    app.settings.voice.piperVoice = v.id;
+    app.settings.voice.piperPitch = pitch;
+    app.settings.voice.enabled = true;
+    showToast(`${app.settings.hostName} spreekt nu met ${v.label}!`);
   }
 
   async function download(v: PiperVoice): Promise<void> {
@@ -171,6 +181,11 @@
               <BigButton variant="secondary" disabled={busy !== null} onclick={() => listen(v)}>
                 {busy === v.id ? '⏳ Even denken...' : '▶ Luister'}
               </BigButton>
+              {#if app.settings.voice.engine === 'piper' && app.settings.voice.piperVoice === v.id}
+                <span class="inuse">🎙️ Stem van {app.settings.hostName}</span>
+              {:else}
+                <BigButton variant="gold" onclick={() => useForWindy(v)}>Gebruik voor {app.settings.hostName}</BigButton>
+              {/if}
               <button type="button" class="link" onclick={() => remove(v)}>Wissen</button>
             {:else}
               <BigButton variant="ghost" disabled={!online.value} onclick={() => download(v)}>⬇ Downloaden</BigButton>
@@ -290,6 +305,11 @@
     text-decoration: underline;
     cursor: pointer;
     padding: 8px;
+  }
+
+  .inuse {
+    font-weight: 800;
+    color: var(--gold);
   }
 
   .timing {

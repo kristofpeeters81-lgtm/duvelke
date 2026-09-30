@@ -86,4 +86,30 @@ describe('toSpeech', () => {
   it('maakt Kempische afkortingen en emoji uitspreekbaar', () => {
     expect(toSpeech("'t Is hier Windy! 'k Zeg niks 😈 hé")).toBe('et Is hier Windy! ik Zeg niks hé');
   });
+
+  it('laat klinkerloze tussenwerpsels niet spellen', () => {
+    expect(toSpeech('Psst... kom ne keer dichter.')).toBe('kom ne keer dichter.');
+    expect(toSpeech('Sssst! Stil!')).toBe('Stil!');
+    expect(toSpeech('Hmm. Ik ruik hier iets.')).toBe('hum. Ik ruik hier iets.');
+    expect(toSpeech('Mmm, lekker. Pfff, moe. Brrr, koud.')).toBe('mjam, lekker. poeh, moe. boe, koud.');
+  });
+
+  it('leest WOORDEN IN HOOFDLETTERS als gewone woorden', () => {
+    expect(toSpeech('Ik overdrijf NOOIT. Nooit!')).toBe('Ik overdrijf Nooit. Nooit!');
+  });
+
+  it('maakt van beletseltekens een korte pauze', () => {
+    expect(toSpeech('Ik wil niet roddelen hé. Maar...')).toBe('Ik wil niet roddelen hé. Maar,');
+  });
+
+  it('laat geen enkele ingebouwde uitspraak met een klinkerloos woord achter', () => {
+    for (const line of BUILTIN_LINES) {
+      const spoken = toSpeech(line.text);
+      const words = spoken.split(/[^\p{L}]+/u).filter((w) => w.length > 1);
+      // Afkortingen die je in het Vlaams echt letter per letter zegt, mogen wel.
+      const spelledOnPurpose = new Set(['gsm', 'tv', 'wc', 'pc']);
+      const vowelless = words.filter((w) => !/[aeiouyáéíóúàèëïöü]/i.test(w) && !spelledOnPurpose.has(w.toLowerCase()));
+      expect(vowelless, `${line.id}: ${spoken}`).toEqual([]);
+    }
+  });
 });
