@@ -9,16 +9,27 @@ export interface Recording {
   createdAt: number;
 }
 
+/** Een bewijsfoto, enkel op de tablet bewaard. */
+export interface Photo {
+  id: string;
+  gameId: string;
+  taskUid: string | null;
+  caption: string;
+  createdAt: number;
+  image: Blob;
+}
+
 interface DuvelkeDB extends DBSchema {
   players: { key: string; value: Player };
   kv: { key: string; value: unknown };
   recordings: { key: string; value: Recording };
+  photos: { key: string; value: Photo; indexes: { byGame: string } };
 }
 
 let dbPromise: Promise<IDBPDatabase<DuvelkeDB>> | null = null;
 
 function db(): Promise<IDBPDatabase<DuvelkeDB>> {
-  dbPromise ??= openDB<DuvelkeDB>('duvelke', 2, {
+  dbPromise ??= openDB<DuvelkeDB>('duvelke', 3, {
     // Stap voor stap bijwerken, zodat bestaande gegevens op de tablet bewaard blijven.
     upgrade(database, oldVersion) {
       if (oldVersion < 1) {
@@ -27,6 +38,9 @@ function db(): Promise<IDBPDatabase<DuvelkeDB>> {
       }
       if (oldVersion < 2) {
         database.createObjectStore('recordings', { keyPath: 'lineId' });
+      }
+      if (oldVersion < 3) {
+        database.createObjectStore('photos', { keyPath: 'id' }).createIndex('byGame', 'gameId');
       }
     },
   });
@@ -67,6 +81,28 @@ export async function removeRecording(lineId: string): Promise<void> {
 
 export async function listRecordingIds(): Promise<string[]> {
   return (await db()).getAllKeys('recordings');
+}
+
+export async function putPhoto(photo: Photo): Promise<void> {
+  await (await db()).put('photos', photo);
+}
+
+export async function getPhotos(gameId: string): Promise<Photo[]> {
+  const all = await (await db()).getAllFromIndex('photos', 'byGame', gameId);
+  return all.sort((a, b) => a.createdAt - b.createdAt);
+}
+
+export async function deletePhoto(id: string): Promise<void> {
+  await (await db()).delete('photos', id);
+}
+
+/** Foto's ouder dan een aantal dagen opruimen, zodat de tablet niet volloopt. */
+export async function deleteOldPhotos(maxAgeDays: number): Promise<void> {
+  const database = await db();
+  const limit = Date.now() - maxAgeDays * 86400000;
+  const tx = database.transaction('photos', 'readwrite');
+  for (const photo of await tx.store.getAll()) if (photo.createdAt < limit) await tx.store.delete(photo.id);
+  await tx.done;
 }
 
 /** Vraagt de browser om de gegevens niet zomaar op te ruimen bij weinig opslagruimte. */

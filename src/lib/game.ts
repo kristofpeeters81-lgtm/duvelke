@@ -4,6 +4,7 @@ import { normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import { getTask } from './tasks/registry';
 import { assignTaskRoles, pickQuiz, timerSeconds, type Outcome, type TaskResult } from './gameplay';
+import { makeBriefing, makeGossip, pickInnocent, type BriefingCard, type Gossip } from './secrets';
 import type { Player, Settings } from './types';
 import { isRecord, shuffle, type Rng } from './util';
 
@@ -14,7 +15,14 @@ export type Role = 'saboteur' | 'speurder';
 /** 'klaar' = rollen verdeeld zonder programma (oudere spellen); 'opdrachten' = het spel loopt; 'einde' = eindtest. */
 export type GamePhase = 'intro' | 'rollen' | 'klaar' | 'opdrachten' | 'einde';
 
-export type TaskStep = 'aankondiging' | 'uitleg' | 'bezig' | 'resultaat' | 'schat' | 'duim';
+export type TaskStep = 'roddel' | 'aankondiging' | 'briefing' | 'uitleg' | 'bezig' | 'resultaat' | 'schat' | 'dilemma' | 'duim';
+
+export interface BriefingState {
+  order: string[];
+  index: number;
+  stage: 'geef' | 'lezen';
+  cards: Record<string, BriefingCard & { jokerInnocent: string | null }>;
+}
 
 export interface CurrentTask {
   uid: string;
@@ -27,6 +35,10 @@ export interface CurrentTask {
   stopwatch: { startedAt: number | null; elapsedMs: number | null };
   /** Het gekozen resultaat, nog voor het duimpje. */
   pending: Omit<TaskResult, 'rating'> | null;
+  briefing: BriefingState | null;
+  gossip: Gossip | null;
+  /** Komt er na deze opdracht een dilemma (schat of Kijk-joker)? */
+  dilemma: boolean;
 }
 
 export interface GamePlayer {
@@ -66,6 +78,13 @@ export interface Game {
   results: TaskResult[];
   /** Al gestelde quizvragen, zodat ze niet terugkomen. */
   askedQuiz: number[];
+  /** Kijk-jokers per speler. */
+  jokers: Record<string, number>;
+  /** Welke onschuldigen elke speler al kent (Speurneus en jokers). */
+  known: Record<string, string[]>;
+  gossipLog: Gossip[];
+  briefingCount: number;
+  photoCount: number;
 }
 
 /**
@@ -154,6 +173,11 @@ export function createGame(
     current: null,
     results: [],
     askedQuiz: [],
+    jokers: {},
+    known: {},
+    gossipLog: [],
+    briefingCount: 0,
+    photoCount: 0,
   };
 }
 
@@ -230,6 +254,11 @@ export function normalizeGame(raw: unknown): Game | null {
     current: null,
     results: normalizeResults(raw.results),
     askedQuiz: Array.isArray(raw.askedQuiz) ? raw.askedQuiz.filter((q): q is number => typeof q === 'number') : [],
+    jokers: normalizeCounts(raw.jokers, ids),
+    known: normalizeKnown(raw.known, ids),
+    gossipLog: Array.isArray(raw.gossipLog) ? raw.gossipLog.map(normalizeGossip).filter((g): g is Gossip => g !== null) : [],
+    briefingCount: typeof raw.briefingCount === 'number' ? Math.max(0, Math.floor(raw.briefingCount)) : 0,
+    photoCount: typeof raw.photoCount === 'number' ? Math.max(0, Math.floor(raw.photoCount)) : 0,
   };
   if (game.phase === 'opdrachten') {
     if (game.taskIndex >= game.program.length) game.phase = 'einde';
@@ -267,15 +296,20 @@ export function newCurrent(game: Game, rng: Rng = Math.random): CurrentTask | nu
   if (!item || !task) return null;
   const quiz = task.scoring.type === 'quiz' ? pickQuiz(game.settings.difficulty, task.scoring.questions, game.askedQuiz, rng) : [];
   const seconds = timerSeconds(task, item, game.settings.difficulty);
+  // Vanaf de tweede opdracht komt Windy (of de buurvrouw) eerst roddelen.
+  const gossip = game.taskIndex > 0 ? makeGossip(game.players, game.gossipLog, { neighbourGossip: game.settings.neighbourGossip }, rng) : null;
   return {
     uid: item.uid,
-    step: 'aankondiging',
+    step: gossip ? 'roddel' : 'aankondiging',
     roles: assignTaskRoles(task, game.players.map((p) => p.playerId), game.results, rng),
     quiz,
     quizAnswers: quiz.map(() => null),
     timer: seconds === null ? null : { total: seconds, remainingMs: seconds * 1000, endsAt: null },
     stopwatch: { startedAt: null, elapsedMs: null },
     pending: null,
+    briefing: null,
+    gossip,
+    dilemma: task.dilemma ? rng() < 0.7 : rng() < 0.15,
   };
 }
 
@@ -356,7 +390,7 @@ export function normalizeResults(raw: unknown): TaskResult[] {
   return out;
 }
 
-const STEPS: TaskStep[] = ['aankondiging', 'uitleg', 'bezig', 'resultaat', 'schat', 'duim'];
+const STEPS: TaskStep[] = ['roddel', 'aankondiging', 'briefing', 'uitleg', 'bezig', 'resultaat', 'schat', 'dilemma', 'duim'];
 
 function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
   const item = game.program[game.taskIndex];
@@ -382,5 +416,143 @@ function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
     timer,
     stopwatch: { startedAt: num(sw.startedAt), elapsedMs: num(sw.elapsedMs) },
     pending,
+    briefing: normalizeBriefing(raw.briefing, game),
+    gossip: normalizeGossip(raw.gossip),
+    dilemma: raw.dilemma === true,
+  };
+}
+// --- Briefing, jokers, roddels en dilemma's -------------------------------------
+
+export const JOKER_COST = 5;
+
+function remember(game: Game, playerId: string, innocentId: string): void {
+  const list = game.known[playerId] ?? [];
+  if (!list.includes(innocentId)) game.known[playerId] = [...list, innocentId];
+}
+
+/** Na de aankondiging: eerst de geheime briefing (als die aan de beurt is), anders meteen de uitleg. */
+export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
+  const current = game.current;
+  const item = game.program[game.taskIndex];
+  const task = item ? getTask(item.taskId) : undefined;
+  if (!current || !task) return;
+  if (game.taskIndex % game.settings.briefingEvery !== 0) {
+    current.step = 'uitleg';
+    return;
+  }
+  const cards = makeBriefing(game.players, task, { speurneusTurn: game.briefingCount % 2 === 0, known: game.known }, rng);
+  const withJokers: BriefingState['cards'] = {};
+  for (const [id, card] of Object.entries(cards)) {
+    withJokers[id] = { ...card, jokerInnocent: null };
+    if (card.innocent) remember(game, id, card.innocent);
+  }
+  current.briefing = { order: shuffle(game.players.map((p) => p.playerId), rng), index: 0, stage: 'geef', cards: withJokers };
+  game.briefingCount += 1;
+  current.step = 'briefing';
+}
+
+/** Een Kijk-joker inzetten tijdens de briefing: je ziet één naam die zeker onschuldig is. */
+export function useJoker(game: Game, playerId: string, rng: Rng = Math.random): string | null {
+  const card = game.current?.briefing?.cards[playerId];
+  if (!card || (game.jokers[playerId] ?? 0) <= 0) return null;
+  const innocent = pickInnocent(game.players, playerId, game.known[playerId] ?? [], rng);
+  game.jokers[playerId] = (game.jokers[playerId] ?? 0) - 1;
+  card.jokerInnocent = innocent ?? '';
+  if (innocent) remember(game, playerId, innocent);
+  return innocent;
+}
+
+export function briefingNext(game: Game): void {
+  const b = game.current?.briefing;
+  if (!b || !game.current) return;
+  if (b.stage === 'geef') {
+    b.stage = 'lezen';
+    return;
+  }
+  b.index += 1;
+  b.stage = 'geef';
+  if (b.index >= b.order.length) game.current.step = 'uitleg';
+}
+
+/** Iemand is er even niet: achteraan de rij. */
+export function briefingLater(game: Game): void {
+  const b = game.current?.briefing;
+  if (!b) return;
+  const [id] = b.order.splice(b.index, 1);
+  if (id) b.order.push(id);
+}
+
+export function afterGossip(game: Game): void {
+  const current = game.current;
+  if (!current) return;
+  if (current.gossip) game.gossipLog = [...game.gossipLog, current.gossip];
+  current.step = 'aankondiging';
+}
+
+/** Na de schatkist: een dilemma als dat gepland is én er genoeg edelstenen zijn om te ruilen. */
+export function afterTreasure(game: Game): void {
+  const current = game.current;
+  if (!current) return;
+  current.step = current.dilemma && (current.pending?.gems ?? 0) >= 3 ? 'dilemma' : 'duim';
+}
+
+/** Dilemma: edelstenen houden, of een deel ruilen voor een Kijk-joker voor één speler. */
+export function resolveDilemma(game: Game, jokerTo: string | null): void {
+  const current = game.current;
+  if (!current?.pending) return;
+  if (jokerTo && game.players.some((p) => p.playerId === jokerTo)) {
+    const cost = Math.min(current.pending.gems, JOKER_COST);
+    current.pending.gems -= cost;
+    game.jokers[jokerTo] = (game.jokers[jokerTo] ?? 0) + 1;
+  }
+  current.step = 'duim';
+}
+
+function normalizeCounts(raw: unknown, ids: Set<string>): Record<string, number> {
+  const out: Record<string, number> = {};
+  if (!isRecord(raw)) return out;
+  for (const [k, v] of Object.entries(raw)) if (ids.has(k) && typeof v === 'number' && v > 0) out[k] = Math.floor(v);
+  return out;
+}
+
+function normalizeKnown(raw: unknown, ids: Set<string>): Record<string, string[]> {
+  const out: Record<string, string[]> = {};
+  if (!isRecord(raw)) return out;
+  for (const [k, v] of Object.entries(raw)) if (ids.has(k) && Array.isArray(v)) out[k] = v.filter((x): x is string => typeof x === 'string' && ids.has(x));
+  return out;
+}
+
+function normalizeGossip(raw: unknown): Gossip | null {
+  if (!isRecord(raw) || typeof raw.questionId !== 'string' || typeof raw.value !== 'string' || typeof raw.aboutId !== 'string') return null;
+  return {
+    questionId: raw.questionId,
+    value: raw.value,
+    source: raw.source === 'buurvrouw' ? 'buurvrouw' : 'windy',
+    truthful: raw.truthful !== false,
+    aboutId: raw.aboutId,
+  };
+}
+
+function normalizeBriefing(raw: unknown, game: Game): BriefingState | null {
+  if (!isRecord(raw) || !Array.isArray(raw.order) || !isRecord(raw.cards)) return null;
+  const ids = new Set(game.players.map((p) => p.playerId));
+  const order = raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id));
+  if (order.length !== game.players.length) return null;
+  const cards: BriefingState['cards'] = {};
+  for (const id of order) {
+    const c = raw.cards[id];
+    if (!isRecord(c) || typeof c.tip !== 'string') return null;
+    cards[id] = {
+      tip: c.tip,
+      innocent: typeof c.innocent === 'string' ? c.innocent : null,
+      reminder: typeof c.reminder === 'string' ? c.reminder : null,
+      jokerInnocent: typeof c.jokerInnocent === 'string' ? c.jokerInnocent : null,
+    };
+  }
+  return {
+    order,
+    index: typeof raw.index === 'number' ? Math.min(order.length, Math.max(0, Math.floor(raw.index))) : 0,
+    stage: raw.stage === 'lezen' ? 'lezen' : 'geef',
+    cards,
   };
 }

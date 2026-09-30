@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { assignRoles, createGame, finishCurrent, normalizeGame, saboteurCount, skipCurrent, startTasks } from './game';
+import {
+  afterAnnouncement,
+  afterGossip,
+  afterTreasure,
+  assignRoles,
+  briefingNext,
+  createGame,
+  finishCurrent,
+  JOKER_COST,
+  newCurrent,
+  normalizeGame,
+  resolveDilemma,
+  saboteurCount,
+  skipCurrent,
+  startTasks,
+  useJoker,
+} from './game';
 import { defaultSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import type { Player } from './types';
@@ -174,6 +190,88 @@ describe('verloop van de opdrachten', () => {
     const game = started();
     const raw = { ...JSON.parse(JSON.stringify(game)), current: { uid: 'verkeerd', step: 'zweven' } };
     expect(normalizeGame(raw)?.current?.uid).toBe('u1');
+  });
+});
+
+describe('briefing, jokers, roddels en dilemma', () => {
+  const program: ProgramItem[] = [
+    { uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+    { uid: 'u2', taskId: 'codeslot', location: 'binnen', vars: {}, list: [] },
+  ];
+
+  function started(speurneus = false) {
+    const game = createGame(players(6), { ...defaultSettings(), speurneusEnabled: speurneus }, null, null, program, seeded(4));
+    for (const p of game.players) p.profile = { eten: 'pizza', broerzus: 'geen', onderstuk: 'rok', schoenen: 'laarzen', haarlengte: 'lang', bril: 'nee', haarkleur: 'bruin', bovenstuk: 'rood' };
+    startTasks(game);
+    return game;
+  }
+
+  it('deelt iedereen een briefingkaartje uit en gaat daarna naar de uitleg', () => {
+    const game = started();
+    afterAnnouncement(game);
+    const b = game.current!.briefing!;
+    expect(game.current!.step).toBe('briefing');
+    expect(Object.keys(b.cards)).toHaveLength(6);
+    for (let i = 0; i < 12; i++) briefingNext(game);
+    expect(game.current!.step).toBe('uitleg');
+  });
+
+  it('slaat de briefing over als die om de 2 opdrachten komt', () => {
+    const game = started();
+    game.settings.briefingEvery = 2;
+    game.taskIndex = 1;
+    game.current = newCurrent(game);
+    afterGossip(game);
+    afterAnnouncement(game);
+    expect(game.current!.step).toBe('uitleg');
+  });
+
+  it('laat een Kijk-joker een onschuldige naam zien en verbruikt de joker', () => {
+    const game = started();
+    const me = game.players[0]!.playerId;
+    game.jokers[me] = 1;
+    afterAnnouncement(game);
+    const innocent = useJoker(game, me);
+    const p = game.players.find((x) => x.playerId === innocent);
+    expect(p?.role).toBe('speurder');
+    expect(innocent).not.toBe(me);
+    expect(game.jokers[me]).toBe(0);
+    expect(useJoker(game, me)).toBeNull();
+  });
+
+  it('ruilt bij een dilemma edelstenen voor een joker', () => {
+    const game = started();
+    game.current!.dilemma = true;
+    game.current!.pending = { uid: 'u1', taskId: 'bekertoren', outcome: 'gelukt', score: null, target: null, gems: 10, maxGems: 10, roles: {} };
+    afterTreasure(game);
+    expect(game.current!.step).toBe('dilemma');
+    const who = game.players[2]!.playerId;
+    resolveDilemma(game, who);
+    expect(game.current!.pending!.gems).toBe(10 - JOKER_COST);
+    expect(game.jokers[who]).toBe(1);
+    expect(game.current!.step).toBe('duim');
+  });
+
+  it('begint de tweede opdracht met een roddel die in het logboek komt', () => {
+    const game = started();
+    game.current!.pending = { uid: 'u1', taskId: 'bekertoren', outcome: 'gelukt', score: null, target: null, gems: 10, maxGems: 10, roles: {} };
+    finishCurrent(game, 0);
+    expect(game.current!.step).toBe('roddel');
+    expect(game.current!.gossip).not.toBeNull();
+    afterGossip(game);
+    expect(game.gossipLog).toHaveLength(1);
+    expect(game.current!.step).toBe('aankondiging');
+  });
+
+  it('bewaart briefing, jokers en roddels bij herladen', () => {
+    const game = started(true);
+    game.jokers[game.players[1]!.playerId] = 2;
+    afterAnnouncement(game);
+    briefingNext(game);
+    const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
+    expect(back.current!.briefing).toEqual(game.current!.briefing);
+    expect(back.jokers).toEqual(game.jokers);
+    expect(back.known).toEqual(game.known);
   });
 });
 

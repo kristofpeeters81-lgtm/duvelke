@@ -27,6 +27,8 @@ export interface SpeakOptions {
   onStart?: () => void;
   /** Id van de uitspraak: dan kan een eigen opname gebruikt worden. */
   lineId?: string;
+  /** Andere AI-stem voor deze zin (bv. de buurvrouw). Niet gedownload? Dan de gewone stem, iets lager. */
+  voice?: { piperVoice: VoiceSettings['piperVoice']; piperPitch: number };
 }
 
 export async function speak(text: string, v: VoiceSettings, options: SpeakOptions = {}): Promise<void> {
@@ -49,12 +51,18 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
     }
   }
 
-  if (await piperReady(v)) {
+  let chosen = v;
+  if (options.voice) {
+    const wanted = { ...v, ...options.voice };
+    chosen = (await piperReady(wanted)) ? wanted : { ...v, piperPitch: v.piperPitch * 0.85, pitch: v.pitch * 0.85 };
+  }
+
+  if (await piperReady(chosen)) {
     try {
-      const wav = await synthesize(text, v.piperVoice);
+      const wav = await synthesize(text, chosen.piperVoice);
       if (mine !== token) return; // intussen al een nieuwere zin gevraagd
       options.onStart?.();
-      await playWav(wav, v.piperPitch);
+      await playWav(wav, chosen.piperPitch);
       return;
     } catch (err) {
       if (err instanceof BrokenVoiceError) invalidateStoredVoices();
@@ -63,7 +71,7 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
     }
   }
   options.onStart?.();
-  await speakDevice(text, v);
+  await speakDevice(text, chosen);
 }
 
 export function stopAll(): void {

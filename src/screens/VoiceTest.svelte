@@ -68,6 +68,12 @@
     showToast(`${app.settings.hostName} spreekt nu met ${v.label}!`);
   }
 
+  function useForNeighbour(v: PiperVoice): void {
+    app.settings.voice.neighbourVoice = v.id;
+    app.settings.voice.neighbourPitch = pitch;
+    showToast(`${app.settings.neighbourName} spreekt nu met ${v.label}!`);
+  }
+
   async function download(v: PiperVoice): Promise<void> {
     if (!online.value) {
       showToast('Voor het downloaden is internet nodig.', 'error');
@@ -185,6 +191,11 @@
                 <span class="inuse">🎙️ Stem van {app.settings.hostName}</span>
               {:else}
                 <BigButton variant="gold" onclick={() => useForWindy(v)}>Gebruik voor {app.settings.hostName}</BigButton>
+              {/if}
+              {#if app.settings.voice.neighbourVoice === v.id}
+                <span class="inuse nb">👵 Stem van {app.settings.neighbourName}</span>
+              {:else}
+                <BigButton variant="ghost" onclick={() => useForNeighbour(v)}>👵 Voor de buurvrouw</BigButton>
               {/if}
               <button type="button" class="link" onclick={() => remove(v)}>Wissen</button>
             {:else}
@@ -310,6 +321,10 @@
   .inuse {
     font-weight: 800;
     color: var(--gold);
+  }
+
+  .inuse.nb {
+    color: var(--pink);
   }
 
   .timing {

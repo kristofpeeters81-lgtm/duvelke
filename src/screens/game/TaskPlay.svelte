@@ -6,13 +6,17 @@
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { LOCATIONS } from '../../lib/data/locations';
   import { SUPPLIES } from '../../lib/data/supplies';
-  import { finishCurrent } from '../../lib/game';
+  import PhotoButton from '../../components/PhotoButton.svelte';
+  import { afterAnnouncement, afterTreasure, finishCurrent } from '../../lib/game';
   import { gemsForStopwatch, marginFor, maxGems, targetFor, treasure, type Outcome } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
   import { app, recordTaskPlayed, windySays } from '../../lib/store.svelte';
   import { CATEGORY_LABELS } from '../../lib/tasks/labels';
   import { fillVars } from '../../lib/tasks/program';
   import { getTask } from '../../lib/tasks/registry';
+  import Briefing from './Briefing.svelte';
+  import Dilemma from './Dilemma.svelte';
+  import GossipScene from './GossipScene.svelte';
   import QuizRunner from './QuizRunner.svelte';
   import ResultPicker from './ResultPicker.svelte';
   import StopwatchRunner from './StopwatchRunner.svelte';
@@ -89,7 +93,13 @@
 </script>
 
 {#if game && current && item && task}
-  {#if current.step === 'aankondiging'}
+  {#if current.step === 'roddel'}
+    <GossipScene />
+  {:else if current.step === 'briefing'}
+    <Briefing />
+  {:else if current.step === 'dilemma'}
+    <Dilemma />
+  {:else if current.step === 'aankondiging'}
     <div class="stack">
       {#if announce}
         {#key announce.id}<WindyBubble text={announce.text} lineId={announce.id} mood="blij" size={170} />{/key}
@@ -103,7 +113,7 @@
           {#if location}<span class="tag">{location.emoji} {location.label}{location.needsAdult ? ' · 🦺 met een volwassene' : ''}</span>{/if}
         </div>
       </div>
-      <BigButton variant="primary" size="large" full onclick={() => go('uitleg')}>Wat moeten we doen? ▶</BigButton>
+      <BigButton variant="primary" size="large" full onclick={() => app.game && afterAnnouncement(app.game)}>Wat moeten we doen? ▶</BigButton>
     </div>
   {:else if current.step === 'uitleg'}
     <div class="stack">
@@ -178,6 +188,7 @@
         />
       {:else if current.timer}
         <TaskTimer timer={current.timer} ondone={() => go('resultaat')} />
+        <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
           <summary>📜 Uitleg en rollen</summary>
           <p>{explain}</p>
@@ -205,7 +216,8 @@
       {#if reaction}
         {#key reaction.id}<WindyBubble text={reaction.text} lineId={reaction.id} mood={reaction.happy ? 'blij' : 'geschokt'} size={150} />{/key}
       {/if}
-      <BigButton variant="primary" size="large" full onclick={() => go('duim')}>Verder ▶</BigButton>
+      <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
+      <BigButton variant="primary" size="large" full onclick={() => app.game && afterTreasure(app.game)}>Verder ▶</BigButton>
     </div>
   {:else if current.step === 'duim'}
     <div class="stack center">

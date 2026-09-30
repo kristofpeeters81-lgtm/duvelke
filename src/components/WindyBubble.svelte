@@ -2,6 +2,7 @@
   import type { Snippet } from 'svelte';
   import { app } from '../lib/store.svelte';
   import { speak, stopAll } from '../lib/speech';
+  import Neighbour from './Neighbour.svelte';
   import Windy, { type WindyMood } from './Windy.svelte';
 
   interface Props {
@@ -9,12 +10,14 @@
     /** Id van de uitspraak, zodat een eigen opname afgespeeld kan worden. */
     lineId?: string;
     mood?: WindyMood;
+    /** Wie er spreekt: Windy of de buurvrouw (met haar eigen stem). */
+    speaker?: 'windy' | 'buurvrouw';
     size?: number;
     /** Knoppen of inhoud onder de ballon. */
     children?: Snippet;
   }
 
-  let { text, lineId, mood = 'blij', size = 200, children }: Props = $props();
+  let { text, lineId, mood = 'blij', speaker = 'windy', size = 200, children }: Props = $props();
 
   let talking = $state(false);
   let runId = 0;
@@ -23,7 +26,11 @@
     const id = ++runId;
     talking = false;
     // De mond beweegt pas als het geluid echt start (de AI-stem heeft even denktijd nodig).
-    await speak(line, $state.snapshot(app.settings.voice), { lineId, onStart: () => id === runId && (talking = true) });
+    await speak(line, $state.snapshot(app.settings.voice), {
+      lineId,
+      voice: speaker === 'buurvrouw' ? { piperVoice: app.settings.voice.neighbourVoice, piperPitch: app.settings.voice.neighbourPitch } : undefined,
+      onStart: () => id === runId && (talking = true),
+    });
     if (id === runId) talking = false;
   }
 
@@ -38,9 +45,9 @@
 
 <div class="stage">
   <div class="host">
-    <Windy {mood} {size} {talking} />
+    {#if speaker === 'buurvrouw'}<Neighbour {size} {talking} />{:else}<Windy {mood} {size} {talking} />{/if}
   </div>
-  <div class="bubble" aria-live="polite">
+  <div class="bubble" class:nb={speaker === 'buurvrouw'} aria-live="polite">
     <p>{text}</p>
     {#if app.settings.voice.enabled}
       <button type="button" class="replay" aria-label="Nog eens voorlezen" onclick={() => say(text)}>🔊</button>
@@ -70,6 +77,14 @@
     padding: 20px 56px 20px 24px;
     box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18), var(--shadow);
     animation: pop 0.35s cubic-bezier(0.3, 1.4, 0.6, 1);
+  }
+
+  .bubble.nb {
+    background: #ffe3ef;
+  }
+
+  .bubble.nb::before {
+    border-bottom-color: #ffe3ef;
   }
 
   .bubble::before {

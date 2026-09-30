@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import Duvelke from './components/Duvelke.svelte';
   import Toast from './components/Toast.svelte';
-  import { requestPersistentStorage } from './lib/db';
+  import { deleteOldPhotos, requestPersistentStorage } from './lib/db';
   import { setSoundEnabled } from './lib/sfx';
   import { warmUp } from './lib/speech';
   import { app, initNavigation, loadAll, persistAllNow, persistValue, type PersistKey } from './lib/store.svelte';
@@ -22,6 +22,8 @@
     // Na het laden het stemmodel alvast opwarmen, zodat Windy's eerste zin vlot komt.
     void loadAll().then(() => setTimeout(() => void warmUp($state.snapshot(app.settings.voice)), 1500));
     void requestPersistentStorage();
+    // Foto's van meer dan 60 dagen geleden opruimen (bewaar ze tijdig in de galerij).
+    void deleteOldPhotos(60).catch(() => {});
   });
 
   // Automatisch bewaren. Instellingen kort na het typen; het spel meteen bij elke stap, zodat er
