@@ -7,8 +7,8 @@ import { validateTask } from './validate';
 const LEVELS = ['makkelijk', 'normaal', 'pittig'] as const;
 
 describe('alle ingebouwde opdrachten', () => {
-  it('zijn er minstens 230, met unieke ids', () => {
-    expect(ALL_BUILTIN.length).toBeGreaterThanOrEqual(230);
+  it('zijn er minstens 300, met unieke ids', () => {
+    expect(ALL_BUILTIN.length).toBeGreaterThanOrEqual(300);
     const ids = ALL_BUILTIN.map((t) => t.id);
     const dupes = ids.filter((id, i) => ids.indexOf(id) !== i);
     expect(dupes).toEqual([]);
