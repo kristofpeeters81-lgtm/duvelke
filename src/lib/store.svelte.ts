@@ -18,6 +18,7 @@ export type Screen =
   | 'windy'
   | 'stemtest'
   | 'opdrachten'
+  | 'uitleg'
   | 'nieuw-spel'
   | 'programma'
   | 'paklijst'
@@ -65,7 +66,7 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'uitleg', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);

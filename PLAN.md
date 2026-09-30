@@ -94,6 +94,10 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
 - Back-up en herstel naar een bestand.
 - Duimpjes beïnvloeden hoe vaak een opdracht gekozen wordt.
 
+## Status (30/09/2026)
+
+Stappen 1 tot en met 5 zijn gebouwd en online, plus de extra's: Vlaamse AI-stem, zelf inspreken (ook namen), de buurvrouw, 305 ingebouwde opdrachten, AI-opdrachten (A + B), eigen opdrachten, back-up, uitlegscherm en [HANDLEIDING.md](HANDLEIDING.md). Rest: proefspel en bijschaven (stap 6).
+
 ## Bouwplanning
 
 | Stap | Klaar tegen | Inhoud |

@@ -7,6 +7,7 @@
   import { warmUp } from './lib/speech';
   import { app, initNavigation, loadAll, persistAllNow, persistValue, type PersistKey } from './lib/store.svelte';
   import GameScreen from './screens/Game.svelte';
+  import Help from './screens/Help.svelte';
   import Home from './screens/Home.svelte';
   import NewGame from './screens/NewGame.svelte';
   import Packing from './screens/Packing.svelte';
@@ -76,6 +77,8 @@
   <VoiceTest />
 {:else if app.screen === 'opdrachten'}
   <Tasks />
+{:else if app.screen === 'uitleg'}
+  <Help />
 {:else if app.screen === 'nieuw-spel'}
   <NewGame />
 {:else if app.screen === 'programma'}
