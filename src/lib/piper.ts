@@ -96,7 +96,16 @@ async function getSession(id: PiperVoiceId, progress?: ProgressCallback) {
 const cache = new Map<string, Blob>();
 const CACHE_MAX = 40;
 
-export async function synthesize(text: string, id: PiperVoiceId): Promise<Blob> {
+/** Eén zin tegelijk: het rekenmodel kan niet twee zinnen tegelijk maken. */
+let queue: Promise<unknown> = Promise.resolve();
+
+export function synthesize(text: string, id: PiperVoiceId): Promise<Blob> {
+  const run = queue.then(() => synthesizeNow(text, id));
+  queue = run.catch(() => undefined);
+  return run;
+}
+
+async function synthesizeNow(text: string, id: PiperVoiceId): Promise<Blob> {
   const spoken = toSpeech(text);
   const key = `${id}|${spoken}`;
   const hit = cache.get(key);

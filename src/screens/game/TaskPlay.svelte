@@ -10,6 +10,7 @@
   import { afterAnnouncement, afterTreasure, finishCurrent } from '../../lib/game';
   import { gemsForStopwatch, marginFor, maxGems, targetFor, treasure, type Outcome } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
+  import { prefetch } from '../../lib/speech';
   import { app, recordTaskPlayed, windySays } from '../../lib/store.svelte';
   import { CATEGORY_LABELS } from '../../lib/tasks/labels';
   import { fillVars } from '../../lib/tasks/program';
@@ -48,6 +49,17 @@
     if (current?.step === 'aankondiging' && uid && uid !== lastAnnounced) {
       lastAnnounced = uid;
       announce = untrack(() => windySays('aankondiging'));
+    }
+  });
+
+  // De uitleg alvast laten maken door de AI-stem terwijl Windy de opdracht aankondigt.
+  let prefetched = '';
+  $effect(() => {
+    const step = current?.step;
+    if ((step === 'aankondiging' || step === 'briefing') && explain && explain !== prefetched) {
+      prefetched = explain;
+      const voice = untrack(() => $state.snapshot(app.settings.voice));
+      setTimeout(() => void prefetch(explain, voice), 2500);
     }
   });
 

@@ -118,3 +118,16 @@ export async function warmUp(v: VoiceSettings): Promise<void> {
     invalidateStoredVoices();
   }
 }
+
+/**
+ * Een zin alvast klaarmaken (bv. de uitleg van de volgende opdracht), zodat ze meteen klinkt
+ * als ze nodig is. Stil: fouten negeren we, voorlezen valt dan gewoon terug op het normale pad.
+ */
+export async function prefetch(text: string, v: VoiceSettings): Promise<void> {
+  if (!v.enabled || !text.trim() || !(await piperReady(v))) return;
+  try {
+    await synthesize(text, v.piperVoice);
+  } catch {
+    /* niet erg */
+  }
+}
