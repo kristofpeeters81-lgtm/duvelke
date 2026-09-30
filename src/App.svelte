@@ -8,6 +8,8 @@
   import GameScreen from './screens/Game.svelte';
   import Home from './screens/Home.svelte';
   import NewGame from './screens/NewGame.svelte';
+  import Packing from './screens/Packing.svelte';
+  import Program from './screens/Program.svelte';
   import Players from './screens/Players.svelte';
   import Settings from './screens/Settings.svelte';
   import Supplies from './screens/Supplies.svelte';
@@ -65,6 +67,10 @@
   <VoiceTest />
 {:else if app.screen === 'nieuw-spel'}
   <NewGame />
+{:else if app.screen === 'programma'}
+  <Program />
+{:else if app.screen === 'paklijst'}
+  <Packing />
 {:else if app.screen === 'spel' && app.game}
   <GameScreen />
 {:else}

@@ -1,6 +1,8 @@
 import { PROFILE_QUESTIONS } from './data/profile';
 import { newId } from './ids';
 import { normalizeSettings } from './settings';
+import type { ProgramItem } from './tasks/program';
+import { getTask } from './tasks/registry';
 import type { Player, Settings } from './types';
 import { isRecord, shuffle, type Rng } from './util';
 
@@ -39,6 +41,10 @@ export interface Game {
   revealOrder: string[];
   revealIndex: number;
   recentLines: string[];
+  /** De goedgekeurde opdrachten, in volgorde. */
+  program: ProgramItem[];
+  /** Welke opdracht nu aan de beurt is (index in program). */
+  taskIndex: number;
 }
 
 /**
@@ -87,6 +93,7 @@ export function createGame(
   settings: Settings,
   gameMasterId: string | null,
   pin: string | null,
+  program: ProgramItem[] = [],
   rng: Rng = Math.random,
 ): Game {
   const roles = assignRoles(
@@ -121,6 +128,8 @@ export function createGame(
     ),
     revealIndex: 0,
     recentLines: [],
+    program: structuredClone(program),
+    taskIndex: 0,
   };
 }
 
@@ -176,6 +185,7 @@ export function normalizeGame(raw: unknown): Game | null {
 
   const gameMasterId = typeof raw.gameMasterId === 'string' && ids.has(raw.gameMasterId) ? raw.gameMasterId : null;
   const pin = gameMasterId === null && typeof raw.pin === 'string' && isValidPin(raw.pin) ? raw.pin : null;
+  const program = normalizeProgram(raw.program);
   const revealIndex = typeof raw.revealIndex === 'number' ? Math.min(players.length, Math.max(0, Math.floor(raw.revealIndex))) : 0;
 
   return {
@@ -190,5 +200,28 @@ export function normalizeGame(raw: unknown): Game | null {
     revealOrder,
     revealIndex,
     recentLines: Array.isArray(raw.recentLines) ? raw.recentLines.filter((l): l is string => typeof l === 'string').slice(0, 25) : [],
+    program,
+    taskIndex: typeof raw.taskIndex === 'number' ? Math.min(program.length, Math.max(0, Math.floor(raw.taskIndex))) : 0,
   };
+}
+
+/** Programma-items van onbekende opdrachten (bv. een gewiste eigen opdracht) worden weggelaten. */
+export function normalizeProgram(raw: unknown): ProgramItem[] {
+  if (!Array.isArray(raw)) return [];
+  const items: ProgramItem[] = [];
+  for (const item of raw) {
+    if (!isRecord(item) || typeof item.taskId !== 'string' || !getTask(item.taskId)) continue;
+    const vars: Record<string, string | number> = {};
+    if (isRecord(item.vars)) {
+      for (const [k, v] of Object.entries(item.vars)) if (typeof v === 'string' || typeof v === 'number') vars[k] = v;
+    }
+    items.push({
+      uid: typeof item.uid === 'string' ? item.uid : newId(),
+      taskId: item.taskId,
+      location: typeof item.location === 'string' ? (item.location as ProgramItem['location']) : 'binnen',
+      vars,
+      list: Array.isArray(item.list) ? item.list.filter((l): l is string => typeof l === 'string') : [],
+    });
+  }
+  return items;
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { go } from '../lib/store.svelte';
+  import { goBack } from '../lib/store.svelte';
 
   interface Props {
     title: string;
@@ -10,7 +10,7 @@
 </script>
 
 <header class="topbar">
-  <button class="back" type="button" onclick={() => go('home')} aria-label="Terug naar het begin">
+  <button class="back" type="button" onclick={goBack} aria-label="Terug">
     <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
       <path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
     </svg>

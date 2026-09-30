@@ -2,11 +2,29 @@ import * as db from './db';
 import { normalizeGame, type Game } from './game';
 import { sortPlayers } from './players';
 import { defaultSettings, normalizeSettings } from './settings';
-import type { Player } from './types';
+import type { ProgramItem } from './tasks/program';
+import type { Player, Settings } from './types';
 import { emptyLineState, normalizeLineState, type LineContext, type WindyLineState } from './windy';
 
-export type Screen = 'home' | 'spelers' | 'instellingen' | 'benodigdheden' | 'windy' | 'stemtest' | 'nieuw-spel' | 'spel';
+export type Screen =
+  | 'home'
+  | 'spelers'
+  | 'instellingen'
+  | 'benodigdheden'
+  | 'windy'
+  | 'stemtest'
+  | 'nieuw-spel'
+  | 'programma'
+  | 'paklijst'
+  | 'spel';
 
+export interface GameDraft {
+  playerIds: string[];
+  gameMasterId: string | null;
+  pin: string | null;
+  settings: Settings;
+  program: ProgramItem[];
+}
 export const app = $state({
   ready: false,
   loadError: false,
@@ -18,6 +36,8 @@ export const app = $state({
   game: null as Game | null,
   /** Uitspraken waarvan een eigen opname bestaat. */
   recordedLineIds: [] as string[],
+  /** Een spel in voorbereiding (spelers, programma), nog niet gestart. */
+  draft: null as GameDraft | null,
 });
 
 export const toast = $state({ message: '', kind: 'info' as 'info' | 'error', id: 0 });
@@ -34,48 +54,84 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'nieuw-spel', 'spel'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);
   return SCREENS.find((s) => s === hash) ?? 'home';
 }
 
-/** Of het huidige scherm vanaf het beginscherm geopend werd (dan kan "terug" gewoon history.back doen). */
-let openedFromHome = false;
+/** Schermen waar we vandaan komen, zodat "terug" (ook de Android-knop) naar het vorige scherm gaat. */
+const backStack: Screen[] = [];
 
-/** Koppelt de schermen aan de URL, zodat de terugknop van Android terug naar het beginscherm gaat i.p.v. de app te sluiten. */
+/** Koppelt de schermen aan de URL, zodat de terugknop van Android niet meteen de app sluit. */
 export function initNavigation(): void {
   app.screen = screenFromHash();
   window.addEventListener('hashchange', () => {
-    app.screen = screenFromHash();
-    if (app.screen === 'home') openedFromHome = false;
+    const screen = screenFromHash();
+    if (backStack.at(-1) === screen) backStack.pop();
+    app.screen = screen;
     window.scrollTo(0, 0);
   });
 }
 
+function hashFor(screen: Screen): string {
+  return screen === 'home' ? location.pathname + location.search : `#${screen}`;
+}
+
 export function go(screen: Screen): void {
+  if (screen === app.screen) return;
   if (screen === 'home') {
-    if (openedFromHome) {
-      history.back();
+    if (backStack.length > 0) {
+      // Helemaal terug in de geschiedenis, zodat de Android-knop daarna de app kan sluiten.
+      const steps = backStack.length;
+      backStack.length = 0;
+      history.go(-steps);
     } else {
-      history.replaceState(null, '', location.pathname + location.search);
+      history.replaceState(null, '', hashFor('home'));
       app.screen = 'home';
       window.scrollTo(0, 0);
     }
     return;
   }
-  // Van "nieuw spel" naar "spel": de geschiedenis vervangen, zodat terug naar het beginscherm gaat.
-  if (app.screen === 'nieuw-spel' && screen === 'spel') {
-    history.replaceState(null, '', `#${screen}`);
-    app.screen = screen;
-    window.scrollTo(0, 0);
-    return;
-  }
-  openedFromHome = app.screen === 'home';
+  backStack.push(app.screen);
   location.hash = screen;
 }
 
+/** Eén scherm terug. */
+export function goBack(): void {
+  if (backStack.length > 0) history.back();
+  else go('home');
+}
+
+/** Het huidige scherm vervangen, zonder nieuwe stap in de geschiedenis. */
+export function replaceScreen(screen: Screen): void {
+  history.replaceState(null, '', hashFor(screen));
+  app.screen = screen;
+  window.scrollTo(0, 0);
+}
+
+/**
+ * Naar een scherm gaan alsof je rechtstreeks van het beginscherm komt (bv. paklijst → spel):
+ * de voorbereidingsstappen verdwijnen uit de geschiedenis, zodat "terug" naar het beginscherm gaat.
+ */
+export function startFromHome(screen: Screen): void {
+  const steps = backStack.length;
+  if (steps === 0) {
+    replaceScreen(screen);
+    return;
+  }
+  backStack.length = 0;
+  const onPop = (): void => {
+    window.removeEventListener('popstate', onPop);
+    backStack.push('home');
+    history.pushState(null, '', hashFor(screen));
+    app.screen = screen;
+    window.scrollTo(0, 0);
+  };
+  window.addEventListener('popstate', onPop);
+  history.go(-steps);
+}
 export async function loadAll(): Promise<void> {
   try {
     const [players, rawSettings, rawLines, rawGame, recorded] = await Promise.all([

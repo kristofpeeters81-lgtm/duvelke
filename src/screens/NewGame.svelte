@@ -9,9 +9,11 @@
   import Toggle from '../components/Toggle.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { LOCATIONS } from '../lib/data/locations';
-  import { createGame, isValidPin, MAX_PLAYERS, MIN_PLAYERS } from '../lib/game';
+  import { isValidPin, MAX_PLAYERS, MIN_PLAYERS } from '../lib/game';
   import { piperSupported, storedVoices } from '../lib/piper';
   import { formatDuration } from '../lib/settings';
+  import { buildProgram } from '../lib/tasks/program';
+  import { allTasks } from '../lib/tasks/registry';
   import { app, go, showToast } from '../lib/store.svelte';
 
   const knownIds = new Set(app.players.map((p) => p.id));
@@ -64,9 +66,16 @@
     }
     const settings = { ...$state.snapshot(app.settings), speurneusEnabled: speurneus, bemoeialEnabled: bemoeial };
     const gm = gameMaster === 'geen' ? null : gameMaster;
-    app.game = createGame($state.snapshot(chosen), settings, gm, gm === null && pin !== '' ? pin : null);
-    remembered = { selected: [], gameMaster: null };
-    go('spel');
+    const playerIds = chosen.map((p) => p.id);
+    // Een eerder aangepast programma behouden als spelers en instellingen niet veranderd zijn.
+    const previous = app.draft;
+    const same =
+      previous !== null &&
+      JSON.stringify(previous.playerIds) === JSON.stringify(playerIds) &&
+      JSON.stringify(previous.settings) === JSON.stringify(settings);
+    const program = same && previous ? previous.program : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks() });
+    app.draft = { playerIds, gameMasterId: gm, pin: gm === null && pin !== '' ? pin : null, settings, program };
+    go('programma');
   }
 </script>
 
@@ -156,7 +165,7 @@
 
   <div class="start">
     {#if problem}<p class="problem">{problem}</p>{/if}
-    <BigButton variant="gold" size="large" full disabled={!!problem} onclick={start}>🎲 Start het spel!</BigButton>
+    <BigButton variant="gold" size="large" full disabled={!!problem} onclick={start}>Verder: het programma ▶</BigButton>
   </div>
 </main>
 

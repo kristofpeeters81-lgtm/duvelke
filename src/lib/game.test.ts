@@ -98,7 +98,7 @@ describe('assignRoles', () => {
 
 describe('createGame', () => {
   it('maakt een spel met precies de gekozen spelers en minstens één saboteur', () => {
-    const game = createGame(players(8), defaultSettings(), 'p1', null, seeded(3));
+    const game = createGame(players(8), defaultSettings(), 'p1', null, [], seeded(3));
     expect(game.players).toHaveLength(8);
     expect(game.players.filter((p) => p.role === 'saboteur').length).toBeGreaterThanOrEqual(1);
     expect(new Set(game.revealOrder)).toEqual(new Set(ids(8)));
@@ -113,13 +113,19 @@ describe('createGame', () => {
 
 describe('normalizeGame', () => {
   it('laat een geldig spel ongewijzigd door een opslag-rondje', () => {
-    const game = createGame(players(6), defaultSettings(), null, '4321', seeded(9));
+    const game = createGame(players(6), defaultSettings(), null, '4321', [{ uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] }], seeded(9));
     const roundTrip = normalizeGame(JSON.parse(JSON.stringify(game)));
     expect(roundTrip).toEqual(game);
   });
 
+  it('laat onbekende opdrachten uit het programma weg', () => {
+    const game = createGame(players(6), defaultSettings(), null, null, [], seeded(9));
+    const raw = { ...JSON.parse(JSON.stringify(game)), program: [{ uid: 'a', taskId: 'bestaat-niet', location: 'binnen', vars: {}, list: [] }, { uid: 'b', taskId: 'bekertoren', location: 'tuin', vars: { lagen: 3 }, list: [] }] };
+    expect(normalizeGame(raw)?.program.map((p) => p.taskId)).toEqual(['bekertoren']);
+  });
+
   it('gooit beschadigde spellen weg', () => {
-    const game = createGame(players(6), defaultSettings(), null, null, seeded(9));
+    const game = createGame(players(6), defaultSettings(), null, null, [], seeded(9));
     expect(normalizeGame(null)).toBeNull();
     expect(normalizeGame({ ...game, phase: 'raar' })).toBeNull();
     expect(normalizeGame({ ...game, players: game.players.map((p) => ({ ...p, role: 'speurder' })) })).toBeNull();
