@@ -23,6 +23,12 @@ De bevindingen uit [S13](S13-proefspel.md) oplossen. Elke fix krijgt een eigen c
 | 7 | Windy mag zich tijdens de timer meer moeien | Ongeveer elke minuut (45 tot 90 s, `meddleMoments` in `gameplay.ts`) in plaats van één keer halverwege. 12 nieuwe bemoei-uitspraken en 3 nieuwe "bijna om"-uitspraken, achteraan toegevoegd. |
 | 8 | In De Test kan je niet terug na een verkeerde keuze | **◀ Vorige vraag** (en vanaf "Klaar!"), enkel zolang de tablet bij dezelfde speler is. Het eerder gekozen antwoord is gemarkeerd. |
 
+### Ronde 3 (1/10) ✅ 1/10
+| # | Bevinding | Oplossing |
+|---|---|---|
+| 9 | Te veel pauze tussen de ingesproken naam en de rest van de zin | Gemeten op de echte opnames: tot 1,5 s stilte rond de naam (randstilte van elk stukje + opstarten van elk los geluid). Nu knipt `stitch()` in `wav.ts` bij het afspelen de stilte aan de randen weg en plakt de stukjes met ±0,12 s pauze aan elkaar tot één geluid. Geldt voor alle opnames, ook toekomstige; de bewaarde opnames blijven ongewijzigd. Zinnen met een naam zijn ±2 s korter. |
+| 10 | De map `backups/` stond niet in `.gitignore` | Toegevoegd: back-ups bevatten namen en stemopnames en mogen nooit in de publieke repo. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.

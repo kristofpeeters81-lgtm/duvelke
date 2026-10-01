@@ -2,7 +2,7 @@
 
 Dit is de index: één regel per stap. Meer info per stap staat in het detailbestand in [stappen/](stappen/), maar open dat alleen als je die stap nodig hebt. Het ontwerp en de spelregels staan in [PLAN.md](../PLAN.md).
 
-**Deadline:** feest op za 31/10/2026 om 14u. Bijgewerkt op 1/10/2026 (S14 ronde 2).
+**Deadline:** feest op za 31/10/2026 om 14u. Bijgewerkt op 1/10/2026 (S14 ronde 3).
 
 Status: ✅ klaar · 🔄 bezig · ⏳ gepland · 💡 idee (nog niet beslist)
 
@@ -28,7 +28,7 @@ Status: ✅ klaar · 🔄 bezig · ⏳ gepland · 💡 idee (nog niet beslist)
 | # | Stap | Status | Tegen | Detail |
 |---|---|---|---|---|
 | S13 | Proefspel met het gezin | ⏳ | ±24/10 | [S13](stappen/S13-proefspel.md) |
-| S14 | Bijschaven na het proefspel (ronde 1 en 2 klaar) | 🔄 | 28/10 | [S14](stappen/S14-bijschaven.md) |
+| S14 | Bijschaven na het proefspel (ronde 1 tot 3 klaar) | 🔄 | 28/10 | [S14](stappen/S14-bijschaven.md) |
 | S15 | Tablet klaarzetten voor het feest | ⏳ | 30/10 | [S15](stappen/S15-tablet-klaarzetten.md) |
 
 ## Ideeën (nog niet beslist)
