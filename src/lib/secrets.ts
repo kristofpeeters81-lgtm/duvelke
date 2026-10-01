@@ -42,7 +42,9 @@ export function makeBriefing(
   rng: Rng = Math.random,
 ): Record<string, BriefingCard> {
   const sabotage = shuffle(task.sabotage, rng);
-  const tips = shuffle(DETECTIVE_TIPS, rng);
+  // Tips die bij deze opdracht passen; algemene tips enkel als de opdracht er (bijna) geen heeft.
+  const own = task.detective ?? [];
+  const tips = shuffle(own.length >= 2 ? own : DETECTIVE_TIPS, rng);
   const cards: Record<string, BriefingCard> = {};
   let s = 0;
   let d = 0;

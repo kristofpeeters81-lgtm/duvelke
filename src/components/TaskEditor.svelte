@@ -36,6 +36,7 @@
   let explain = $state(start ? fill(start.explain) : '');
   let prep = $state(start?.prep ? fill(start.prep) : '');
   let sabotage = $state<string[]>(start ? [...start.sabotage, '', ''].slice(0, Math.max(3, start.sabotage.length)) : ['', '', '']);
+  let detective = $state<string[]>(start?.detective ? [...start.detective, ''].slice(0, Math.max(3, start.detective.length)) : ['', '', '']);
   let photo = $state(start?.photo ?? '');
   let dilemma = $state(start?.dilemma ?? false);
   let errors = $state<string[]>([]);
@@ -61,6 +62,7 @@
       prep,
       scoring: scoringType === 'aantal' ? { type: 'aantal', target: Number(target), unit } : { type: 'gelukt' },
       sabotage: sabotage.filter((s) => s.trim() !== ''),
+      detective: detective.filter((s) => s.trim() !== ''),
       photo,
       dilemma,
       source: editingOwn ? start?.source : 'eigen',
@@ -150,6 +152,13 @@
     <input class="text-input tip" bind:value={sabotage[i]} maxlength="200" placeholder="bv. Tel stiekem verkeerd." />
   {/each}
   <button type="button" class="link" onclick={() => (sabotage = [...sabotage, ''])}>+ nog een tip</button>
+  <p class="hint">Een goede tip past binnen de regels van de opdracht en valt niet op, ook niet als je hem twee keer doet.</p>
+
+  <span class="field-label">🔎 Speurderstips: waar letten de anderen op? (mag leeg)</span>
+  {#each detective as _, i (i)}
+    <input class="text-input tip" bind:value={detective[i]} maxlength="200" placeholder="bv. Tel zelf stil mee: klopt het getal?" />
+  {/each}
+  <button type="button" class="link" onclick={() => (detective = [...detective, ''])}>+ nog een tip</button>
 
   <label class="field-label" for="t-prep">Voorbereiding voor het hulpje (mag leeg)</label>
   <input id="t-prep" class="text-input" bind:value={prep} maxlength="400" placeholder="bv. Verstop 10 knuffels." />

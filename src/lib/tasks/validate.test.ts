@@ -34,6 +34,13 @@ describe('validateTask', () => {
     expect(fillVars(t.explain, { doel: 20 })).not.toMatch(/\{/);
   });
 
+  it('bewaart speurderstips enkel als er minstens twee zijn', () => {
+    const tips = ['Let op wie er net te traag springt.', 'Tel zelf stil mee met de sprongen.'];
+    expect(validateTask({ ...good, detective: tips }, opts).task!.detective).toEqual(tips);
+    expect(validateTask({ ...good, detective: [tips[0]] }, opts).task!.detective).toBeUndefined();
+    expect(validateTask(good, opts).task!.detective).toBeUndefined();
+  });
+
   it('weigert opdrachten zonder uitleg, plek of sabotagetips', () => {
     const r = validateTask({ title: 'X', locations: ['maan'], sabotage: [] }, opts);
     expect(r.task).toBeNull();

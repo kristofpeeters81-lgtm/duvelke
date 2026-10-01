@@ -30,8 +30,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{aantal}', unit: 'blaadjes' },
     sabotage: [
       'Leg twee blaadjes met bijna dezelfde kleur naast elkaar en zeg dat ze heel anders zijn.',
-      'Wissel stiekem twee blaadjes van plaats, zodat de ladder niet meer klopt.',
-      'Kom telkens terug met een blad dat er al ligt.',
+      'Wissel als niemand kijkt twee blaadjes die naast elkaar liggen van plaats.',
+      'Breng één of twee keer een blad met bijna dezelfde kleur als een blad dat er al ligt.',
+    ],
+    detective: [
+      'Let op wie blaadjes brengt met bijna dezelfde kleur als wat er al ligt.',
+      'Kijk af en toe of de ladder nog klopt: is er iets van plaats veranderd?',
+      'Wie zegt er heel zeker dat twee blaadjes "heel anders" zijn?',
     ],
     photo: 'De bladerladder met iedereens voeten erachter.',
   },
@@ -62,7 +67,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Breng iets mee dat er maar een klein beetje op lijkt en hou vol dat het perfect is.',
       'Zeg dat een vorm "onmogelijk" te vinden is, zodat de groep hem overslaat.',
-      'Leg een gevonden vorm stiekem een beetje verder weg.',
+      'Zoek "per ongeluk" naar een vorm die al gevonden is, zodat er tijd verloren gaat.',
+    ],
+    detective: [
+      'Let op wie dingen brengt die maar een beetje op de vorm lijken.',
+      'Wie wil er snel een vorm overslaan, terwijl er nog tijd is?',
+      'Hou bij wie nog zoekt naar vormen die al gevonden zijn.',
     ],
     photo: 'Alle vormen netjes op een rij.',
   },
@@ -84,8 +94,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{aantal}', unit: 'voorwerpen' },
     sabotage: [
       'Zie je iets? Kijk er "per ongeluk" net over en wandel verder.',
-      'Wijs naar een gewone steen of tak en roep dat je iets ziet.',
-      'Stel voor om sneller te wandelen, dan zie je minder.',
+      'Wijs één keer naar een gewone steen of tak en roep dat je iets ziet.',
+      'Stel voor om wat sneller te wandelen, "want de tijd loopt".',
+      'Kijk vooral naar de kant van het pad waar al gezocht is.',
+    ],
+    detective: [
+      'Wie wandelt er net voorbij een plek waar later toch iets blijkt te liggen?',
+      'Let op wie de groep wil laten haasten.',
+      'Wie roept er "ik zie iets!" bij iets wat gewoon in het bos hoort?',
     ],
     dilemma: true,
   },
@@ -115,8 +131,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 8, unit: 'vakjes' },
     sabotage: [
       'Breng een schelp die bijna klopt en zeg vol overtuiging dat hij perfect is.',
-      'Neem de emmer mee en loop "per ongeluk" de verkeerde kant op.',
-      'Gooi stiekem een vondst terug in het zand.',
+      'Zoek één keer naar iets wat al in de emmer zit, alsof je het vergeten was.',
+      'Zeg dat een vakje "zeker al" in de emmer zit, terwijl dat niet zo is.',
+    ],
+    detective: [
+      'Let op wie dingen brengt die net niet kloppen met de bingokaart.',
+      'Kijk zelf in de emmer: zit er echt in wat iemand zegt?',
+      'Wie zoekt er naar dingen die al gevonden zijn?',
     ],
     photo: 'Alle vondsten uitgestald op het zand.',
   },
@@ -145,9 +166,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 5, unit: 'records' },
     sabotage: [
-      'Zeg dat je het record al gevonden hebt en stop met zoeken.',
+      'Zeg één keer dat je het record al hebt, ook al is je vondst net niet goed genoeg.',
       'Kies "per ongeluk" net de kleinere schelp.',
-      'Meet heel slordig met je hand en zeg dat het klopt.',
+      'Meet een beetje slordig met je hand en zeg dat het klopt.',
+      'Zeg dat een record "veel te moeilijk" is, zodat jullie het overslaan.',
+    ],
+    detective: [
+      'Meet zelf nog eens na als iemand zegt dat een record klopt.',
+      'Wie wil er snel stoppen met zoeken naar een record?',
+      'Let op wie bij twee vondsten net de minst goede kiest.',
     ],
     photo: 'De recordhouders met hun vondsten.',
   },
@@ -205,9 +232,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 5, unit: 'raadsels' },
     sabotage: [
-      'Roep snel een fout antwoord en ga meteen iets verkeerds zoeken.',
+      'Roep één keer snel een fout antwoord, zodat de anderen de verkeerde kant op denken.',
       'Breng iets mee dat er een beetje op lijkt, maar net niet klopt.',
-      'Zeg dat je het antwoord "zeker" weet, maar kies het verkeerde.',
+      'Weet je het antwoord? Zeg het pas als iemand anders het al geraden heeft.',
+      'Vraag de spelleider om het raadsel nog eens voor te lezen, zodat de tijd wegtikt.',
+    ],
+    detective: [
+      'Let op wie snel een antwoord roept dat niet klopt.',
+      'Wie lijkt het antwoord te weten, maar zegt het pas heel laat?',
+      'Kijk goed of wat iemand meebrengt echt bij het raadsel past.',
     ],
     dilemma: true,
   },
@@ -258,9 +291,16 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 3, unit: 'puzzels' },
     sabotage: [
-      'Verleg zelf snel een takje, maar net het verkeerde.',
+      'Verleg één keer snel een takje, maar net het verkeerde.',
       'Zeg dat een puzzel "onmogelijk" is en dat jullie beter de volgende doen.',
-      'Leg de takjes een beetje scheef, zodat de figuur moeilijker te zien is.',
+      'Leg een takje dat je verlegt net een beetje scheef, zodat de figuur moeilijker te zien is.',
+      'Ziet iemand de oplossing? Zeg twijfelend: "nee, dat kan toch niet".',
+    ],
+    detective: [
+      'Let op wie snel een takje verlegt zonder het eerst uit te leggen.',
+      'Wie wil een puzzel opgeven terwijl er nog tijd is?',
+      'Kijk of de takjes na elke beurt nog netjes liggen.',
+      'Wie twijfelt er net als iemand de oplossing bijna heeft?',
     ],
     photo: 'De moeilijkste puzzel, opgelost, met de slimmeriken erachter.',
   },
@@ -315,9 +355,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 4, unit: 'dieren' },
     sabotage: [
-      'Roep na de eerste aanwijzing meteen een dier dat helemaal niet klopt.',
-      'Zeg "nee, dat kan niet, want..." als iemand het juiste dier noemt.',
+      'Stel een dier voor dat bij één aanwijzing past, maar niet bij de andere.',
+      'Zeg één keer "nee, dat kan niet, want..." als iemand het juiste dier noemt.',
       'Doe alsof je een aanwijzing verkeerd verstaan hebt.',
+    ],
+    detective: [
+      'Past het dier dat iemand voorstelt echt bij álle aanwijzingen?',
+      'Let op wie het juiste dier wegpraat.',
+      'Wie heeft er een aanwijzing "verkeerd verstaan"?',
     ],
   },
   {
@@ -368,8 +413,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 3, unit: 'sommen' },
     sabotage: [
       'Reken luidop mee en maak "per ongeluk" een kleine rekenfout.',
-      'Roep heel zeker een fout getal voor de anderen klaar zijn.',
+      'Roep één keer heel zeker een fout getal voor de anderen klaar zijn met rekenen.',
       'Verwar de schelp en de steen als je de som herhaalt.',
+    ],
+    detective: [
+      'Reken zelf mee in je hoofd: klopt wat iemand luidop zegt?',
+      'Wie roept er een antwoord nog voor iedereen klaar is?',
+      'Let op wie de schelp en de steen door elkaar haalt.',
     ],
     dilemma: true,
   },
@@ -424,9 +474,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Tel de stappen luidop mee en tel er stiekem één bij.',
-      'Zet heel kleine stapjes als jij de stappen mag zetten.',
+      'Zet net iets kleinere stappen als jij de stappen mag zetten.',
       'Stel voor om "een beetje meer naar links" te graven.',
       'Roep een fout antwoord op een raadsel en klink heel zeker.',
+    ],
+    detective: [
+      'Tel zelf stilletjes de stappen mee: klopt het getal?',
+      'Kijk of de stappenzetter echt grote stappen zet.',
+      'Wie wil er ergens anders graven dan waar jullie uitkwamen?',
+      'Reken de antwoorden zelf na in je hoofd.',
     ],
     dilemma: true,
     photo: 'De piraten met de gevonden schat.',
@@ -450,8 +506,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Zet jouw takje net iets te recht, zodat het wiebelt.',
-      'Stel voor om nog een extra zware tak bovenop te leggen.',
-      'Ga net in de weg staan als iemand een takje wil plaatsen.',
+      'Stel voor om er nog een dikke tak bovenop te leggen, "voor de stevigheid".',
+      'Sta één keer net in de weg als iemand een takje wil plaatsen.',
+      'Laat je takje een beetje te vroeg los, zodat het wegglijdt.',
+    ],
+    detective: [
+      'Let op wie takjes zet die wiebelen of wegglijden.',
+      'Wie wil er nog iets zwaars bovenop leggen?',
+      'Wie staat de bouwers in de weg?',
     ],
     dilemma: true,
     photo: 'De bouwers rond hun tipi.',
@@ -480,7 +542,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Trek zachtjes een hoek net de verkeerde kant op.',
       'Zeg "bij mij is het perfect" als jouw stuk scheef is.',
-      'Praat door de anderen heen als ze afspraken maken.',
+      'Stel één keer een ander plan voor, net als de groep het bijna eens is.',
+    ],
+    detective: [
+      'Voel aan het touw: trekt iemand het zachtjes een andere kant op?',
+      'Wie zegt dat zijn stuk perfect is? Kijk straks of dat klopte.',
+      'Let op wie met een nieuw plan komt als het bijna klaar is.',
     ],
     photo: 'De touwfiguur met iedereen nog met gesloten ogen.',
   },
@@ -504,9 +571,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'dennenappels' },
     sabotage: [
-      'Zet stiekem een klein stapje terwijl je een dennenappel vasthoudt.',
-      'Geef de dennenappel onhandig door, zodat hij valt.',
-      'Loop heel traag naar het einde van de rij.',
+      'Geef de dennenappel net iets te traag door, alsof je nog moet nadenken.',
+      'Laat één keer een dennenappel vallen bij het doorgeven.',
+      'Wandel rustig in plaats van te lopen als je naar het einde van de rij gaat.',
+      'Ga achteraan net iets te dicht bij de vorige staan, zodat de rij minder opschiet.',
+    ],
+    detective: [
+      'Wie laat er dennenappels vallen bij het doorgeven?',
+      'Let op wie op zijn gemak naar het einde van de rij gaat.',
+      'Kijk of iedereen achteraan een flinke stap verder gaat staan.',
     ],
     photo: 'De volle voorraadkast met de helpers.',
   },
@@ -527,8 +600,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Hou je handen een beetje open, zodat het zand ertussen glijdt.',
-      'Geef het zand heel snel door, zodat de helft valt.',
-      'Ga een stapje te ver staan, zodat de rij langer wordt.',
+      'Geef het zand een beetje te haastig door, zodat er wat naast valt.',
+      'Ga net iets te ver van je buur staan, zodat het doorgeven lastiger wordt.',
+      'Neem kleine handjes zand als jij aan de zandhoop staat.',
+    ],
+    detective: [
+      'Kijk naar wie er veel zand verliest bij het doorgeven.',
+      'Let op wie net te ver van zijn buur staat.',
+      'Hoeveel zand schept degene aan de zandhoop telkens?',
     ],
     photo: 'De zandketting in actie.',
   },
@@ -547,9 +626,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [25] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Zet je voet net een klein beetje naast de voetstap.',
-      'Neem als eerste heel grote of rare stappen.',
-      'Wiebel als je op één been staat.',
+      'Zet één keer je voet net een klein beetje naast de voetstap.',
+      'Ben jij de eerste? Zet stappen die net iets te groot zijn voor de kleinsten.',
+      'Stap net iets te snel achter je voorganger, zodat je minder goed kan mikken.',
+    ],
+    detective: [
+      'Kijk achterom: wie zet zijn voet naast de afdruk?',
+      'Zijn de stappen van de eerste niet te groot voor iedereen?',
+      'Let op wie er haast maakt in de rij.',
     ],
     photo: 'Het ene spoor met de hele groep op een rij.',
   },
@@ -576,8 +660,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{aantal}', unit: 'dingen juist' },
     sabotage: [
       'Hou vol dat er nog iets anders lag dat er niet bij was.',
-      'Wissel stiekem de volgorde van twee dingen.',
+      'Leg één keer twee dingen in de verkeerde volgorde, alsof je het vergeten was.',
       'Breng iets mee dat er bijna op lijkt.',
+    ],
+    detective: [
+      'Let op wie zeker weet dat er iets lag wat jij niet gezien hebt.',
+      'Kijk of de volgorde nog klopt nadat iemand iets gelegd heeft.',
+      'Lijkt wat iemand meebrengt echt op het origineel?',
     ],
     dilemma: true,
     photo: 'Het origineel naast de kopie.',
@@ -618,9 +707,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'vragen' },
     sabotage: [
-      'Zeg heel zeker een fout aantal.',
-      'Leid de anderen tijdens de wandeling af met grapjes, zodat ze minder rondkijken.',
+      'Zeg bij een telvraag heel zeker een getal dat net niet klopt.',
+      'Begin tijdens de wandeling een leuk gesprek, zodat de anderen minder rondkijken.',
       'Zeg "nee, dat was links!" als het rechts was.',
+    ],
+    detective: [
+      'Wie praat er tijdens de wandeling zoveel dat niemand nog rondkijkt?',
+      'Let op wie heel zeker is over een getal dat de anderen anders onthouden.',
+      'Wie spreekt de anderen tegen over waar iets lag?',
     ],
   },
   {
@@ -640,8 +734,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 3, unit: 'rondes juist' },
     sabotage: [
       'Hou vol dat er twee blaadjes na elkaar lagen, ook als dat niet zo was.',
-      'Begin aan de verkeerde kant van de ketting.',
-      'Leg stiekem één ding op de verkeerde plaats.',
+      'Begin "per ongeluk" aan de verkeerde kant van de ketting.',
+      'Leg één ding net op de verkeerde plaats, alsof je je vergist.',
+    ],
+    detective: [
+      'Let op wie heel zeker is over iets wat jij anders onthouden hebt.',
+      'Begint iedereen aan dezelfde kant van de ketting?',
+      'Kijk na elke beurt nog eens of de ketting klopt.',
     ],
   },
   {
@@ -665,7 +764,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Doe alsof je vergeten bent waar die ene schelp lag.',
       'Geef de volgende speler fout advies: "die lag daar, zeker weten!"',
-      'Maak een hoopje stiekem een beetje breder, zodat de plaatsen door elkaar lopen.',
+      'Maak één keer een hoopje open dat al eerder bekeken werd.',
+    ],
+    detective: [
+      'Wie lijkt opvallend vaak te vergeten waar een schelp lag?',
+      'Let op wie een "zeker weten"-tip geeft die niet klopt.',
+      'Wie maakt een hoopje open dat al eens bekeken werd?',
     ],
     dilemma: true,
     photo: 'Alle gevonden paren op een rij.',
@@ -697,7 +801,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Teken jouw stukje net iets groter of kleiner.',
       'Zeg dat er "zeker nog een wolk bij was".',
-      'Teken iets aan de verkeerde kant.',
+      'Teken jouw stukje "per ongeluk" aan de verkeerde kant.',
+    ],
+    detective: [
+      'Let op wie iets wil toevoegen dat jij niet gezien hebt.',
+      'Wie tekent zijn stukje veel groter of kleiner dan de rest?',
+      'Staat alles aan de juiste kant? Kijk na elke tekenaar.',
     ],
     photo: 'De namaaktekening met de trotse tekenaars.',
   },
@@ -721,9 +830,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'takjes' },
     sabotage: [
-      'Adem heel diep uit als iemand bijna klaar is, maar raak niets aan.',
-      'Roep "het bewoog!" als het niet zo was, zodat de groep gaat twijfelen.',
-      'Kies zelf een takje dat stevig onder de andere ligt.',
+      'Kies voor jouw beurt een takje dat net onder een ander ligt.',
+      'Zeg één keer twijfelend "bewoog dat niet een beetje?" als het niet zo was.',
+      'Geef iemand één keer slecht advies over welk takje het makkelijkst is.',
+    ],
+    detective: [
+      'Let op wie takjes kiest die onder andere takjes liggen.',
+      'Wie twijfelt er of iets bewoog, terwijl niemand anders het zag?',
+      'Krijg je advies? Kijk eerst zelf welk takje echt vrij ligt.',
     ],
     dilemma: true,
   },
@@ -748,7 +862,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Gooi net iets te hard, zodat je dennenappel wegrolt.',
       'Geef het advies om "heel hoog" te gooien.',
-      'Raak bij het oprapen "per ongeluk" een goede dennenappel aan.',
+      'Kies voor jezelf een lichte, scheve dennenappel die raar rolt.',
+    ],
+    detective: [
+      'Wie gooit er net te hard?',
+      'Let op wie raad geeft dat niet lijkt te werken.',
+      'Kijk welke dennenappels iemand kiest: rollen die wel goed?',
     ],
   },
   {
@@ -771,6 +890,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Stel voor om een ronde dennenappel in het midden te gebruiken.',
       'Kies voor jouw beurt een bol, rond steentje.',
     ],
+    detective: [
+      'Let op wie zijn stuk een beetje schuin legt.',
+      'Wie wil er ronde of bolle dingen in het midden van de toren?',
+      'Kijk welke steentjes iemand kiest: zijn die wel plat?',
+    ],
     photo: 'Het steenmannetje met de bouwers.',
   },
   {
@@ -792,9 +916,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{rondes}', unit: 'rondes' },
     sabotage: [
-      'Gooi net iets te hoog of te laag.',
-      'Kijk net weg als de frisbee naar jou komt.',
-      'Ga stiekem een stapje verder staan.',
+      'Gooi één keer net iets te hoog of te laag.',
+      'Kijk één keer net te laat op als de frisbee naar jou komt.',
+      'Schuif tussen twee worpen een klein stapje verder van je buur.',
+    ],
+    detective: [
+      'Let op wie de frisbee net te hoog of te laag gooit.',
+      'Wie is er net te laat klaar om te vangen?',
+      'Kijk of de afstanden tussen iedereen nog kloppen.',
     ],
     photo: 'De frisbee in de lucht, met iedereen klaar om te vangen.',
   },
@@ -820,6 +949,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wis "per ongeluk" een lijntje van de sjoelbak met je voet.',
       'Raad de anderen af om platte schelpen te gebruiken, terwijl die net het best glijden.',
     ],
+    detective: [
+      'Wie schiet zijn schelp net over de vakjes?',
+      'Kijk of de lijntjes van de sjoelbak nog goed te zien zijn.',
+      'Let op wie raad geeft over welke schelpen je moet nemen.',
+    ],
   },
 
   // ─────────────── Creatief ───────────────
@@ -839,9 +973,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     vars: { ringen: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Meng stiekem een ander materiaal in een ring.',
+      'Leg één ding van een ander materiaal in een ring, alsof je het niet zag.',
       'Maak jouw stuk van de ring net iets te breed of te smal.',
       'Stel voor om opnieuw te beginnen, want "het is niet rond genoeg".',
+    ],
+    detective: [
+      'Kijk of elke ring echt maar uit één materiaal bestaat.',
+      'Wie maakt zijn stuk van de ring anders dan de rest?',
+      'Let op wie alles opnieuw wil doen terwijl de tijd loopt.',
     ],
     photo: 'De mandala van bovenaf.',
   },
@@ -868,8 +1007,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Vergeet "per ongeluk" één verplicht onderdeel.',
-      'Blijf heel lang twijfelen over de naam.',
-      'Maak jouw deel zo groot dat het niet meer bij de rest past.',
+      'Kom bij de naam nog met een paar extra ideeën, zodat het lang duurt.',
+      'Maak jouw deel net iets te groot, zodat het niet goed bij de rest past.',
+    ],
+    detective: [
+      'Tel samen of alle verplichte onderdelen er echt zijn.',
+      'Wie blijft nieuwe namen bedenken als de tijd loopt?',
+      'Let op wie een deel maakt dat niet bij de rest past.',
     ],
     photo: 'Iedereen naast het bosmonster, met een monstergezicht.',
   },
@@ -896,8 +1040,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Bouw jouw muurtje zo dat het dak er net niet op past.',
-      'Neem heel veel tijd om "het perfecte takje" te zoeken.',
-      'Vergeet het hekje, en zeg dat het er al staat.',
+      'Neem lang de tijd om "het perfecte takje" te zoeken.',
+      'Zeg dat een onderdeel al klaar is, terwijl het nog niet af is.',
+    ],
+    detective: [
+      'Kijk zelf of elk onderdeel echt af is.',
+      'Wie blijft lang weg om een takje te zoeken?',
+      'Past alles wat iemand bouwt nog bij de rest van het huisje?',
     ],
     photo: 'Het kabouterhuisje met de bouwers op hun hurken ernaast.',
   },
@@ -927,6 +1076,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Leg de schelpen "per ongeluk" op de verkeerde plaats.',
       'Zeg dat het "meer op een hond lijkt" en stel voor om alles te veranderen.',
     ],
+    detective: [
+      'Let op wie een stuk maakt dat niet op het dier lijkt.',
+      'Liggen de schelpen en veertjes op plaatsen die kloppen?',
+      'Wie wil er nog alles veranderen terwijl de tijd loopt?',
+    ],
     photo: 'Het zandbeest met iedereen eromheen.',
   },
   {
@@ -948,9 +1102,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Leg schelpen die niet bij het thema passen.',
-      'Tel luidop verkeerd als jullie de schelpen tellen.',
+      'Leg een paar schelpen zo dat het thema minder goed te zien is.',
+      'Tel luidop een paar schelpen te veel als jullie ze tellen.',
       'Zeg dat het schilderij nog niet klaar is en blijf dingen verleggen.',
+    ],
+    detective: [
+      'Tel zelf ook de schelpen: komen jullie op hetzelfde?',
+      'Wie legt schelpen die het thema minder duidelijk maken?',
+      'Let op wie blijft verleggen als het al klaar lijkt.',
     ],
     photo: 'Het mozaïek van bovenaf, met ieders tenen aan de rand.',
   },
@@ -1014,9 +1173,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 6, unit: 'weetjes' },
     sabotage: [
-      'Wandel heel zeker als eerste naar de verkeerde boom.',
+      'Wandel één keer heel zeker als eerste naar de verkeerde boom.',
       'Zeg "dat heb ik in een boek gelezen" bij een fout antwoord.',
       'Blijf twijfelen tussen de twee bomen tot iedereen onzeker wordt.',
+    ],
+    detective: [
+      'Wie loopt er heel zeker als eerste naar een boom?',
+      'Let op wie zich op een boek of de tv beroept om een antwoord te steunen.',
+      'Wie maakt de groep onzeker als jullie het bijna eens zijn?',
     ],
   },
   {
@@ -1054,7 +1218,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Roep meteen een heel groot of heel klein getal, zodat de groep gaat twijfelen.',
       'Tel "per ongeluk" een paar dennenappels dubbel.',
-      'Zet heel kleine of heel grote stappen als jullie gaan nameten.',
+      'Zet net iets kleinere of grotere stappen als jullie gaan nameten.',
+    ],
+    detective: [
+      'Wie roept er meteen een getal dat ver van de rest ligt?',
+      'Tel zelf ook mee bij het natellen.',
+      'Kijk of de stappen bij het nameten echt gewone grote stappen zijn.',
     ],
     dilemma: true,
     photo: 'De hele groep die samen de dikste boom omarmt.',
@@ -1110,9 +1279,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'dieren' },
     sabotage: [
-      'Steek heel zeker je duim de verkeerde kant op.',
+      'Steek één keer heel zeker je duim de verkeerde kant op.',
       'Vertel een "weetje" dat niet klopt: "mijn nonkel heeft er vorige week nog één gezien!"',
       'Wissel op het laatste moment van mening.',
+    ],
+    detective: [
+      'Wie steekt zijn duim heel snel en zeker op?',
+      'Let op wie verhaaltjes vertelt om een antwoord te steunen.',
+      'Wie verandert vlak voor het antwoord nog van mening?',
     ],
   },
   {
@@ -1172,9 +1346,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 6, unit: 'vragen' },
     sabotage: [
-      'Ga als eerste heel zeker in het verkeerde vak staan.',
-      'Wis met je voet stiekem een stukje van een letter, zodat er verwarring komt.',
+      'Ga één keer als eerste heel zeker in het verkeerde vak staan.',
+      'Twijfel hardop tussen twee antwoorden en kies dan het foute.',
       'Zeg "dat heb ik op tv gezien!" bij het foute antwoord.',
+    ],
+    detective: [
+      'Wie gaat er heel snel en zeker in een vak staan?',
+      'Let op wie zich op de tv of een boek beroept om een antwoord te steunen.',
+      'Wie twijfelt luidop en kiest dan toch het andere antwoord?',
     ],
     dilemma: true,
   },
@@ -1226,9 +1405,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'antwoorden' },
     sabotage: [
-      'Zeg heel zeker een foute badplaats.',
+      'Zeg één keer heel zeker een fout antwoord, alsof je het echt weet.',
       'Vertel een "echte" vakantieherinnering die het foute antwoord steunt.',
       'Laat de anderen twijfelen: "dat dacht ik eerst ook, maar het is iets anders".',
+    ],
+    detective: [
+      'Let op wie heel zeker klinkt, maar het toch fout heeft.',
+      'Wie vertelt er vakantieverhalen bij een antwoord?',
+      'Wie zaait twijfel als iemand het juiste antwoord zegt?',
     ],
   },
 
@@ -1253,8 +1437,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{rondes}', unit: 'bomen' },
     sabotage: [
       'Als Beschrijver: vertel één ding dat net niet klopt, zoals "hij staat links van het pad".',
-      'Wijs heel zeker naar de verkeerde boom.',
-      'Stel veel vragen door elkaar, zodat de Beschrijver in de war raakt.',
+      'Stel heel zeker een boom voor die maar half bij de beschrijving past.',
+      'Stel een paar vragen tegelijk, zodat de Beschrijver in de war raakt.',
+    ],
+    detective: [
+      'Past alles wat de Beschrijver zei bij de juiste boom? Vergelijk na de ronde.',
+      'Wie kiest er een boom die maar half klopt?',
+      'Let op wie de Beschrijver in de war brengt met vragen.',
     ],
   },
   {
@@ -1283,6 +1472,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Maak verwarrende gebaren: steek drie vingers op als je vier bedoelt.',
       'Roep "oehoe" net op het moment dat iemand iets wil uitleggen.',
     ],
+    detective: [
+      'Kijk goed naar ieders vingers: kloppen de getallen?',
+      'Let op wie op een rare plek blijft staan.',
+      'Wie roept er "oehoe" net als iemand iets duidelijk wil maken?',
+    ],
     photo: 'De uilenrij, met iedereen in uilenpose.',
   },
   {
@@ -1302,9 +1496,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     roles: [{ name: 'Voeler', count: 1, hint: 'Doe je ogen dicht en steek je handen uit.' }],
     scoring: { type: 'aantal', target: '{rondes}', unit: 'rondes' },
     sabotage: [
-      'Als Voeler: zeg "zacht" als het eigenlijk ruw is.',
+      'Als Voeler: kies één keer een woord dat net niet klopt, zoals "glad" voor iets ruws.',
       'Breng iets mee dat er een beetje op lijkt en zeg dat het precies hetzelfde is.',
-      'Zoek heel ver weg, waar het ding zeker niet ligt, maar blijf bij de volwassene.',
+      'Zoek op een plek waar het ding waarschijnlijk niet ligt, maar blijf bij de volwassene.',
+    ],
+    detective: [
+      'Past wat de Voeler zei bij de schat? Kijk na de ronde.',
+      'Lijkt wat iemand meebrengt echt op de schat?',
+      'Wie zoekt er op plekken waar het niet kan liggen?',
     ],
   },
   {
@@ -1332,9 +1531,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 3, unit: 'tekeningen' },
     sabotage: [
-      'Teken heel snel en een beetje slordig.',
+      'Teken net iets te snel, zodat het moeilijker te voelen is.',
       'Voeg stiekem een klein streepje extra toe.',
       'Zeg dat je "niets voelde" en vraag om het opnieuw te doen, zodat het langer duurt.',
+    ],
+    detective: [
+      'Kijk na afloop waar in de rij de tekening veranderde.',
+      'Wie vraagt er om de tekening opnieuw te doen?',
+      'Let op wie wel heel snel tekent.',
     ],
     photo: 'De zandtekening naast het origineel op de tablet.',
   },
@@ -1365,8 +1569,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 3, unit: 'rondes' },
     sabotage: [
       'Stel een vraag waarvan je het antwoord al weet, zodat er een vraag verloren gaat.',
-      'Als Denker: twijfel bij een vraag en zeg "euh... ja?" als het eigenlijk nee is.',
-      'Roep snel een paar wilde gokjes, zodat de vragen sneller op zijn.',
+      'Als Denker: twijfel één keer en zeg "euh... ja?" als het eigenlijk nee is.',
+      'Doe één of twee wilde gokjes, zodat de vragen sneller op zijn.',
+    ],
+    detective: [
+      'Let op wie vragen stelt waarvan het antwoord al duidelijk is.',
+      'Twijfelt de Denker bij een makkelijke vraag?',
+      'Wie gokt er al terwijl jullie nog bijna niets weten?',
     ],
     dilemma: true,
   },
@@ -1388,9 +1597,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     vars: { lengte: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Leg de dingen met grote gaten ertussen, zodat de slang niet telt.',
-      'Laat de slang een rare bocht maken, zodat ze korter wordt.',
-      'Zoek heel lang naar "de perfecte ogen".',
+      'Laat bij jouw stuk een klein gaatje open tussen twee dingen.',
+      'Stel voor om de slang veel te laten kronkelen, zodat ze minder ver reikt.',
+      'Zoek lang naar "de perfecte ogen".',
+    ],
+    detective: [
+      'Kijk of alles echt tegen elkaar ligt, ook achteraan.',
+      'Wie wil de slang laten kronkelen?',
+      'Let op wie lang wegblijft om iets te zoeken.',
     ],
     photo: 'De bosslang met iedereen op een rij ernaast.',
   },
@@ -1418,7 +1632,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Leg de blaadjes zo dat er net een gaatje open blijft.',
       'Schuif "per ongeluk" een takje van het vierkant naar buiten, zodat het groter wordt.',
-      'Breng heel traag telkens één klein blaadje.',
+      'Breng kleine blaadjes, ook als er grote liggen.',
+    ],
+    detective: [
+      'Kijk goed of er nog ergens grond tussen de blaadjes te zien is.',
+      'Is het vierkant nog even groot als in het begin?',
+      'Let op wie alleen piepkleine blaadjes brengt.',
     ],
     photo: 'Het volle vierkant van bovenaf.',
   },
@@ -1462,8 +1681,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'rondes' },
     sabotage: [
       'Raak iets aan dat er net niet bij hoort en zeg dat het klopt.',
-      'Twijfel heel lang en tik pas op het allerlaatste moment.',
-      'Roep "nee, dat telt niet!" bij iemand die het goed doet.',
+      'Tik één keer net na de laatste tel, alsof je te lang twijfelde.',
+      'Wijs een ander iets aan dat net niet klopt: "kijk, dat is ook goed!"',
+    ],
+    detective: [
+      'Kijk wat iemand aantikt: past dat echt bij de opdracht?',
+      'Wie is er net te laat bij het tikken?',
+      'Let op wie anderen naar iets verkeerds stuurt.',
     ],
     dilemma: true,
   },
@@ -1483,9 +1707,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     vars: { lengte: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Graaf zand weg vlak naast de dijk, zodat hij afbrokkelt.',
+      'Neem je zand van vlak naast de dijk, zodat die kant afbrokkelt.',
       'Maak jouw stuk van de dijk net iets lager.',
       'Stel voor om eerst "een mooi torentje" op de dijk te bouwen.',
+      'Druk jouw stuk niet stevig aan, zodat het los blijft.',
+    ],
+    detective: [
+      'Kijk waar iemand zand haalt: brokkelt de dijk daar af?',
+      'Is de dijk overal even hoog en stevig?',
+      'Let op wie tijd steekt in versiering in plaats van in de dijk.',
     ],
     photo: 'De dijkbouwers achter hun dijk.',
   },
@@ -1515,7 +1745,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Leg een schelp "per ongeluk" in het verkeerde groepje.',
       'Zeg bij een twijfelschelp dat hij zeker bij het andere groepje hoort.',
-      'Sorteer heel precies, en dus heel traag.',
+      'Sorteer extra precies, en dus wat trager.',
+    ],
+    detective: [
+      'Kijk af en toe in de groepjes: ligt er iets verkeerd?',
+      'Wie is heel zeker bij twijfelschelpen?',
+      'Let op wie veel trager sorteert dan de rest.',
     ],
   },
 
@@ -1541,6 +1776,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Loop snel voorop, net voorbij een pijl.',
       'Stel voor om "de kortste weg" te nemen in plaats van het spoor te volgen.',
     ],
+    detective: [
+      'Kijk zelf goed naar elk teken: is het echt van de spelleider?',
+      'Wie loopt voorop en mist er tekens?',
+      'Let op wie het spoor wil verlaten voor een "kortere weg".',
+    ],
     dilemma: true,
     photo: 'De speurders bij het laatste teken.',
   },
@@ -1564,6 +1804,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Hou het kompas "per ongeluk" vlak bij iets van metaal, zoals een rits of een sleutel.',
       'Tel de stappen luidop mee en tel er stiekem eentje bij.',
       'Zeg "noord is toch die kant?" en wijs de verkeerde kant op.',
+    ],
+    detective: [
+      'Kijk of de kompasdrager het kompas plat houdt, weg van ritsen en sleutels.',
+      'Tel zelf stilletjes de stappen mee.',
+      'Kijk zelf op het kompas als iemand een richting aanwijst.',
     ],
     photo: 'De kompasdrager met de gevonden verrassing.',
   },
@@ -1622,6 +1867,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Tel het aantal teentjes luidop verkeerd.',
       'Zeg "ik heb dat dier hier net nog gezien!" bij een fout antwoord.',
     ],
+    detective: [
+      'Tel zelf de teentjes van het spoor.',
+      'Let op wie heel zeker klinkt, maar niet uitlegt waarom.',
+      'Wie vertelt er verhaaltjes om een dier te steunen?',
+    ],
   },
   {
     id: 'n-wiens-voetstap',
@@ -1643,8 +1893,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: '{rondes}', unit: 'juist' },
     sabotage: [
       'Zet je voeten een beetje naar binnen, zodat je spoor op dat van een ander lijkt.',
-      'Geef de Detective een fout tipje.',
-      'Stap stiekem net naast het echte spoor, zodat de afdrukken door elkaar lopen.',
+      'Als Detective: kies "per ongeluk" iemand met bijna dezelfde schoenen.',
+      'Stap bij het rondstappen net naast het echte spoor, zodat de afdrukken door elkaar lopen.',
+    ],
+    detective: [
+      'Kijk wie zijn voeten anders zet dan bij de eerste afdruk.',
+      'Wie stapt bij het rondstappen precies naast het echte spoor?',
+      'Twijfelt de Detective tussen twee schoenen? Kijk mee naar de hiel en de tenen.',
     ],
   },
   {
@@ -1671,9 +1926,15 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 7, unit: 'dingen' },
     sabotage: [
-      'Zeg dat je iets ziet en wijs heel vaag naar de verte.',
+      'Zeg één keer dat je iets ziet en wijs heel vaag naar de verte.',
       'Hou de verrekijker lang vast en draai "per ongeluk" aan het wieltje, zodat hij onscherp wordt.',
       'Zeg dat iets niet telt, want "het was te ver weg".',
+    ],
+    detective: [
+      'Zegt iemand dat hij iets ziet? Vraag waar precies.',
+      'Wie houdt de verrekijker opvallend lang vast?',
+      'Is de verrekijker nog scherp als jij hem krijgt?',
+      'Wie wil een vondst niet laten tellen?',
     ],
     photo: 'Iemand met de verrekijker, en de rest die dezelfde kant op wijst.',
   },
@@ -1699,6 +1960,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Stuur de groep naar een plek waar je al keek en niets zag.',
       'Laat de spelleider een foto nemen van iets waar echt geen gezicht in zit, en hou vol dat je het ziet.',
     ],
+    detective: [
+      'Wie keurt gezichten af die jij wel goed vindt?',
+      'Let op wie de groep naar lege plekken stuurt.',
+      'Zie jij het gezicht ook meteen, of moet je het echt zoeken?',
+    ],
     photo: 'Het grappigste bosgezicht, met de ontdekker die hetzelfde gezicht trekt.',
   },
   {
@@ -1720,9 +1986,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Blijf nieuwe ideeën geven, zodat het verhaal nooit af raakt.',
-      'Sta net verkeerd of met je rug naar de camera.',
+      'Kom met een nieuw idee net als het verhaal bijna vastligt.',
+      'Sta één keer net verkeerd of met je rug naar de camera.',
       'Lach net als de foto genomen wordt.',
+    ],
+    detective: [
+      'Let op wie het verhaal blijft veranderen.',
+      'Kijk mee op de foto’s: staat iemand net verkeerd?',
+      'Wie begint te lachen net als de foto genomen wordt?',
     ],
     dilemma: true,
     photo: 'De laatste foto van het verhaal.',
@@ -1766,6 +2037,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Beweeg net als de foto genomen wordt.',
       'Geef enthousiast fout advies: "nog dichterbij!"',
     ],
+    detective: [
+      'Kijk of iedereen op de juiste afstand staat.',
+      'Wie beweegt er net als de foto genomen wordt?',
+      'Let op wie raad geeft waardoor de truc juist mislukt.',
+    ],
     photo: 'De beste trucfoto.',
   },
   {
@@ -1791,8 +2067,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Stap "per ongeluk" dwars door een stuk van de tekening.',
-      'Maak jouw stuk veel te groot, zodat de rest niet meer klopt.',
+      'Maak jouw stuk net iets te groot, zodat de rest niet meer klopt.',
       'Stel voor om er nog iets extra bij te maken, net als het af is.',
+    ],
+    detective: [
+      'Let op wie door de tekening stapt.',
+      'Past ieders stuk nog bij de rest?',
+      'Wie wil er nog iets bij maken als het al af is?',
     ],
     photo: 'De voetstappenkunst van zo hoog mogelijk.',
   },
@@ -1822,6 +2103,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Beweeg op het moment dat de foto genomen wordt.',
       'Stel voor om het "nog iets beter" te doen, net als het perfect is.',
     ],
+    detective: [
+      'Kijk naar de schaduw, niet naar de kinderen: waar zit een raar bultje?',
+      'Wie beweegt er net bij de foto?',
+      'Let op wie wil herbeginnen als het al goed is.',
+    ],
     photo: 'De schaduwfiguur, met de echte kinderen er ook op.',
   },
 
@@ -1841,9 +2127,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Stap "per ongeluk" op een droog takje, net naast iemand anders.',
+      'Stap één keer "per ongeluk" op een droog takje.',
       'Giechel zachtjes als iemand bijna bij de uil is.',
       'Fluister "sneller, sneller!" zodat de anderen te veel lawaai maken.',
+    ],
+    detective: [
+      'Luister goed: van wie komt het gekraak?',
+      'Wie giechelt er als iemand bijna bij de uil is?',
+      'Let op wie de anderen aanspoort om sneller te gaan.',
     ],
     dilemma: true,
     photo: 'De sluipers op hun tenen, vlak achter de uil.',
@@ -1884,9 +2175,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Doe het dier heel traag na, maar wel netjes.',
+      'Doe het dier net iets trager na, maar wel netjes.',
       'Doe "per ongeluk" nog even het vorige dier.',
       'Maak iedereen aan het lachen met een heel gek dierengeluid.',
+    ],
+    detective: [
+      'Wie blijft er achter de groep hangen?',
+      'Let op wie nog het vorige dier doet.',
+      'Wie maakt de groep aan het lachen als jullie moeten opschieten?',
     ],
     photo: 'De dierenparade in volle actie.',
   },
@@ -1910,6 +2206,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Stoot "per ongeluk" een dennenappel van de slalom om.',
       'Loop net iets te traag als het jouw beurt is.',
     ],
+    detective: [
+      'Is er een hindernis veel moeilijker dan de rest? Wie bouwde die?',
+      'Let op wie iets omstoot in het parcours.',
+      'Wie neemt opvallend veel tijd?',
+    ],
     photo: 'Iemand midden in de moeilijkste hindernis.',
   },
   {
@@ -1932,6 +2233,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Laat je schelp "per ongeluk" vallen, maar niet te vaak.',
       'Stel voor om een grotere, bollere schelp te nemen.',
     ],
+    detective: [
+      'Let op wie de rij scheef laat lopen.',
+      'Wie laat er zijn schelp vallen?',
+      'Kijk welke schelp iemand kiest: ligt die wel stil op je hand?',
+    ],
     photo: 'Het krabbenleger met de scharen omhoog.',
   },
   {
@@ -1952,6 +2258,11 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Neem "per ongeluk" net het vakje dat een ander wilde nemen.',
       'Wiebel een beetje en giechel, zodat de anderen ook moeten lachen.',
       'Zeg dat een opdracht "voor iedereen" was, als ze maar voor één iemand was.',
+    ],
+    detective: [
+      'Wie neemt er vakjes in die een ander nodig had?',
+      'Let op wie de anderen aan het lachen brengt.',
+      'Luister zelf goed naar de opdracht van de spelleider.',
     ],
     photo: 'De grootste knoop van armen en benen.',
   },

@@ -17,6 +17,8 @@ describe('alle ingebouwde opdrachten', () => {
   it.each(ALL_BUILTIN.map((t) => [t.id, t] as const))('%s is geldig en veilig', (_id, t) => {
     for (const s of t.supplies) expect(SUPPLY_IDS.has(s), `benodigdheid ${s}`).toBe(true);
     expect(t.sabotage.length).toBeGreaterThanOrEqual(3);
+    // Speurderstips die bij deze opdracht passen, niet de algemene lijst.
+    expect(t.detective?.length ?? 0).toBeGreaterThanOrEqual(3);
     expect(t.locations.length).toBeGreaterThan(0);
     expect(t.minutes).toBeGreaterThanOrEqual(2);
     expect(t.minutes).toBeLessThanOrEqual(20);

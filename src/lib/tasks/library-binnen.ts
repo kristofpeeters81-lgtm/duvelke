@@ -30,10 +30,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Vind je een post-it? Laat hem hangen en zeg dat je daar al gekeken hebt.',
+      'Zie je een post-it? Laat hem één keer stilletjes hangen en zoek gewoon verder.',
       'Stel heel overtuigd een verkeerd woord voor met dezelfde letters.',
       'Leg twee letters stiekem van plaats als de rest aan het zoeken is.',
       'Zeg "we hebben ze zeker allemaal" als er nog één ontbreekt.',
+    ],
+    detective: [
+      'Vind je een post-it op een plek waar iemand al zocht? Onthoud wie daar zocht.',
+      'Kijk af en toe of de gelegde letters nog op dezelfde plek liggen.',
+      'Wie wil er snel stoppen met zoeken, terwijl het woord nog niet klopt?',
     ],
     dilemma: true,
     photo: 'Het geheime woord in post-its, met de speurders erachter.',
@@ -58,9 +63,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Hou de kaart "per ongeluk" verkeerd gedraaid en wijs een verkeerde kant aan.',
-      'Til snel een kussen op dat zeker niet klopt, zodat er een kans verloren gaat.',
+      'Hou de kaart één keer "per ongeluk" verkeerd gedraaid als jij hem vasthebt.',
+      'Stel twijfelend een plek voor die net naast het kruisje ligt.',
       'Zeg dat de tafel op de kaart eigenlijk de zetel is.',
+    ],
+    detective: [
+      'Wie draait de kaart anders als hij hem vastheeft?',
+      'Let op wie de groep naar een plek stuurt die niet bij het kruisje past.',
+      'Wie twijfelt over wat er op de kaart staat, net als jullie bijna zeker zijn?',
     ],
     photo: 'De schatzoekers met de kaart en de schat.',
   },
@@ -89,9 +99,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 8, unit: 'letters' },
     sabotage: [
-      'Breng iets met een woord dat maar half klopt (een "zetel" voor de B van bank) en hou vol dat het telt.',
+      'Breng één keer iets dat net met een andere letter begint, zoals een zetel voor de B.',
       'Leg een voorwerp dat al voor een letter gebruikt is, stiekem bij een andere letter.',
-      'Zoek heel lang op één plek en roep "ik heb bijna iets!".',
+      'Zoek lang naar iets voor een moeilijke letter en kom met lege handen terug.',
+    ],
+    detective: [
+      'Check bij elk voorwerp of het echt met de juiste letter begint.',
+      'Let op of een voorwerp ineens bij een andere letter ligt.',
+      'Wie komt er vaak terug zonder iets, terwijl de anderen wel iets vinden?',
     ],
     photo: 'Alle voorwerpen op een rij, van A tot Z.',
   },
@@ -112,10 +127,16 @@ export const TASKS_BINNEN: TaskDef[] = [
     roles: [{ name: 'Zoeker', count: 1, hint: 'Ga even de kamer uit en luister daarna goed naar het neuriën.' }],
     scoring: { type: 'aantal', target: '{aantal}', unit: 'voorwerpen' },
     sabotage: [
-      'Neurie net iets luider als de Zoeker de verkeerde kant op loopt.',
-      'Neurie altijd even hard, zodat de Zoeker geen verschil hoort.',
+      'Neurie één keer net iets luider als de Zoeker de verkeerde kant op loopt.',
+      'Wacht een tel te lang voor je luider of zachter gaat neuriën.',
       'Stel een extra moeilijke verstopplek voor.',
-      'Ben jij Zoeker? Loop traag en doe alsof je het neuriën niet goed hoort.',
+      'Ben jij Zoeker? Loop één keer de verkeerde kant op, alsof je het neuriën verkeerd hoorde.',
+    ],
+    detective: [
+      'Luister wie er luider neuriet als de Zoeker juist verder weg loopt.',
+      'Wie reageert telkens net te laat met zijn neuriën?',
+      'Wie stelt er verstopplekken voor die bijna niet te vinden zijn?',
+      'Loopt de Zoeker de verkeerde kant op terwijl het neuriën duidelijk is?',
     ],
   },
   {
@@ -135,9 +156,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { aantal: { makkelijk: [5], normaal: [7], pittig: [10] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Laat een gevonden kaart liggen en zeg dat je daar al gezocht hebt.',
+      'Zie je een kaart? Laat hem één keer liggen en zoek gewoon verder.',
       'Tel luidop mee en maak één klein rekenfoutje.',
-      'Stel voor om te stoppen met zoeken omdat "we ze zeker al allemaal hebben".',
+      'Tel de gevonden kaarten één keer verkeerd, zodat het lijkt alsof jullie ze allemaal hebben.',
+    ],
+    detective: [
+      'Reken de som zelf ook na, en let op wie zich verrekent.',
+      'Tel zelf hoeveel kaarten er al gevonden zijn.',
+      'Vindt iemand een kaart op een plek die al doorzocht was? Wie zocht daar eerst?',
     ],
     dilemma: true,
   },
@@ -193,9 +219,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 4, unit: 'voorwerpen' },
     sabotage: [
-      'Kom af met iets dat bijna past en hou vol dat Windy dat bedoelde.',
-      'Ren niet, maar wandel wel extra traag naar de juiste kamer.',
-      'Roep snel een fout antwoord als iemand net het juiste wil zeggen.',
+      'Breng iets dat bijna past en zeg "misschien bedoelde Windy dit?".',
+      'Zoek één keer in de verkeerde kamer, alsof je het raadsel anders begreep.',
+      'Bedenk een slimme, maar foute uitleg voor een raadsel en zeg ze als eerste.',
+    ],
+    detective: [
+      'Wie brengt dingen die maar half bij het raadsel passen?',
+      'Let op wie de groep een andere kamer in stuurt dan nodig.',
+      'Luister of iemand vaak als eerste een foute uitleg geeft.',
     ],
     photo: 'Alle raadselboodschappen samen op tafel.',
   },
@@ -228,8 +259,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'dieren' },
     sabotage: [
       'Roep snel een dier dat bijna dezelfde letters heeft.',
-      'Vraag de spelleider om de letters nog eens te spellen, en nog eens.',
+      'Vraag één keer om de letters nog eens te spellen, ook al weet je ze.',
       'Zeg "dat kan niet, er zit geen ... in" bij het juiste antwoord.',
+    ],
+    detective: [
+      'Wie roept vaak dieren waarbij de letters net niet kloppen?',
+      'Let op wie twijfel zaait bij een antwoord dat eigenlijk goed is.',
+      'Wie laat de spelleider opnieuw spellen als het al duidelijk was?',
     ],
   },
   {
@@ -278,6 +314,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Schrijf het alfabet op en sla stiekem één letter over, zodat alles verschuift.',
       'Lees een getal verkeerd voor ("was dat een 15 of een 16?").',
       'Stel heel zeker een woord voor dat er een beetje op lijkt.',
+    ],
+    detective: [
+      'Controleer of het opgeschreven alfabet klopt, letter per letter.',
+      'Wie leest getallen verkeerd voor of twijfelt over een getal dat duidelijk is?',
+      'Past het voorgestelde woord bij álle getallen, of maar bij een paar?',
     ],
     dilemma: true,
   },
@@ -328,10 +369,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'mysteries' },
     sabotage: [
-      'Stel vragen die niets met het mysterie te maken hebben.',
-      'Herhaal een vraag die al gesteld is.',
+      'Stel af en toe een vraag die de groep naar een verkeerd spoor stuurt.',
+      'Stel één keer een vraag opnieuw die al gesteld is, alsof je het niet hoorde.',
       'Zeg "nee, dat kan zeker niet" als iemand dicht bij de oplossing komt.',
       'Bedenk een heel ingewikkelde uitleg en blijf die verdedigen.',
+    ],
+    detective: [
+      'Wie stuurt de vragen weg van de goede kant?',
+      'Luister wie een idee afkraakt dat eigenlijk heel dicht bij de oplossing zat.',
+      'Wie houdt vast aan een ingewikkelde uitleg, ook als de antwoorden niet passen?',
     ],
   },
   {
@@ -359,9 +405,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Leg zelf een kaart die net fout ligt en roep snel "klaar!".',
-      'Beweer dat het onmogelijk is en stel voor om op te geven.',
+      'Leg één kaart net verkeerd en zeg "ik denk dat het klopt".',
+      'Zeg dat het misschien onmogelijk is, zodat de anderen gaan twijfelen.',
       'Zeg dat een goede rij fout is: "4 en 6, dat mag toch niet?"',
+    ],
+    detective: [
+      'Controleer zelf elke buur in de rij voor jullie "klaar" zeggen.',
+      'Wie zegt dat een goede rij fout is?',
+      'Wie wil er snel opgeven terwijl er nog tijd is?',
     ],
     dilemma: true,
     photo: 'De opgeloste kaartenrij met de slimme koppen erachter.',
@@ -422,8 +473,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: 4, unit: 'raadsels' },
     sabotage: [
       'Kies snel een woord en verzin er een overtuigende, maar foute uitleg bij.',
-      'Zeg "ze horen er allemaal bij" en hou dat lang vol.',
+      'Weet je het juiste woord? Zeg het niet en kies een ander woord met een goeie reden.',
       'Twijfel luidop over de juiste uitleg: "nee, het gaat zeker over de kleur".',
+    ],
+    detective: [
+      'Klinkt een uitleg slim, maar past ze maar bij twee van de vier woorden?',
+      'Wie stuurt de groep weg van een uitleg die eigenlijk klopt?',
+      'Let op wie snel antwoordt, maar zelden juist.',
     ],
   },
   {
@@ -461,9 +517,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'woorden' },
     sabotage: [
-      'Schrijf de letters stiekem in de lucht in de verkeerde volgorde en zeg het foute woord.',
+      'Draai in je hoofd één of twee letters om en zeg zeker het foute woord.',
       'Roep heel snel een woord dat er een beetje op lijkt.',
-      'Vraag steeds opnieuw om te spellen, zodat de tijd wegtikt.',
+      'Vraag één keer om opnieuw te spellen als de tijd bijna om is.',
+    ],
+    detective: [
+      'Wie roept snel een woord dat bijna klopt, maar niet helemaal?',
+      'Tel zelf mee: klopt het aantal letters met het woord dat geroepen wordt?',
+      'Wie laat de spelleider opnieuw spellen als het al duidelijk was?',
     ],
   },
 
@@ -486,7 +547,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Leg jouw stuk karton net niet in het midden.',
       'Stel voor om de rollen plat te leggen, "want dat is steviger".',
-      'Kies de zwaarste knuffel voor bovenaan.',
+      'Stel voor om een grote knuffel bovenaan te zetten, "want die ziet de spelleider beter".',
+    ],
+    detective: [
+      'Kijk of iedereen zijn stuk karton mooi in het midden legt.',
+      'Wie geeft bouwtips die de toren wiebeliger maken?',
+      'Wie wil er een zware knuffel bovenop?',
     ],
     dilemma: true,
     photo: 'De toren met de knuffel op de top.',
@@ -513,6 +579,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zeg "bij mij is het een perfecte hoek" als dat niet zo is.',
       'Laat het touw stiekem door je handen glijden, zodat jouw stuk langer wordt.',
     ],
+    detective: [
+      'Voel je het touw de verkeerde kant op trekken? Onthoud waar dat vandaan komt.',
+      'Luister wie zegt dat zijn stuk perfect is. Klopt dat op de grond?',
+      'Kijk na afloop waar de vorm scheef is: wie stond daar?',
+    ],
     photo: 'De vorm op de grond, met trotse (of verbaasde) makers.',
   },
   {
@@ -535,9 +606,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Hou je vinger een heel klein beetje hoger dan de anderen.',
-      'Roep "hij valt!" als het net goed gaat, zodat iedereen schrikt.',
-      'Zeg dat iemand anders de staaf niet meer raakt, ook als dat wel zo is.',
+      'Laat je vinger één keer heel even los van de staaf, alsof het per ongeluk is.',
+      'Ga net iets sneller of trager omlaag dan de rest, alsof je niet goed oplet.',
       'Begin te giechelen als het net spannend wordt.',
+    ],
+    detective: [
+      'Kijk naar de vingers: bij wie komt de staaf telkens omhoog?',
+      'Bij welke vinger komt de staaf los, en gebeurt dat vaker?',
+      'Wie gaat telkens in een ander tempo dan de rest?',
     ],
     dilemma: true,
   },
@@ -563,10 +639,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Toon met je vingers een verkeerd getal.',
+      'Toon één keer met je vingers een getal dat net één te veel of te weinig is.',
       'Ga heel zelfzeker op een verkeerde plek staan.',
       'Wijs iemand anders een verkeerde plek in de rij aan.',
-      'Doe alsof je de gebaren van de anderen niet begrijpt.',
+      'Doe één keer alsof je een gebaar niet begrijpt, zodat het langer duurt.',
+    ],
+    detective: [
+      'Onthoud welke getallen iedereen met zijn vingers toonde. Klopt dat bij de rij?',
+      'Wie stuurt anderen naar een plek die niet logisch lijkt?',
+      'Wie staat heel zeker op een plek, maar wil nooit opschuiven?',
     ],
     photo: 'De stille rij, van begin tot einde.',
   },
@@ -590,6 +671,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Geef onhandige tips over hoe je hem best vastneemt.',
       'Kies de grootste, lastigste knuffel om mee te beginnen.',
     ],
+    detective: [
+      'Bij wie valt de knuffel het vaakst?',
+      'Wie geeft tips die het eigenlijk moeilijker maken?',
+      'Wie kiest de lastigste knuffels om door te geven?',
+    ],
     photo: 'Een knuffel tussen twee kinnen.',
   },
   {
@@ -611,7 +697,12 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Hou een stukje dat past lang op je schoot en doe alsof je het niet ziet.',
       'Wijs naar een verkeerde plek voor iemands stukje.',
       'Leg een stukje bijna goed, maar net verkeerd gedraaid.',
-      'Schud nee als iemand een juist stukje wil leggen.',
+      'Schud één keer nee als iemand een juist stukje wil leggen.',
+    ],
+    detective: [
+      'Wie houdt er stukjes vast die al lang hadden kunnen liggen?',
+      'Wie wijst naar plekken waar het stukje niet past?',
+      'Kijk na of de stukjes van iedereen echt goed liggen.',
     ],
     photo: 'De afgewerkte puzzel met alle handen erop.',
   },
@@ -633,10 +724,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { paren: { makkelijk: [6], normaal: [8], pittig: [10] }, beurten: { makkelijk: [14], normaal: [16], pittig: [18] } },
     scoring: { type: 'aantal', target: '{paren}', unit: 'paren' },
     sabotage: [
-      'Roep "die lag hier!" en wijs een verkeerde kaart aan.',
+      'Roep één keer "die lag hier!" en wijs een verkeerde kaart aan.',
       'Is het jouw beurt? Draai een kaart om die jullie al kennen.',
       'Leg kaarten na het terugdraaien een klein beetje anders neer.',
       'Twijfel luidop over waar een kaart lag.',
+    ],
+    detective: [
+      'Wie draait kaarten om die jullie al kenden?',
+      'Wie wijst heel zeker naar een kaart die dan fout blijkt?',
+      'Liggen de kaarten na een beurt nog op precies dezelfde plek?',
     ],
     dilemma: true,
   },
@@ -684,6 +780,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zeg "dat hebben we al gehad" bij iets dat nog niet genoemd is.',
       'Verwar twee dingen: "was het niet peren in plaats van appels?"',
     ],
+    detective: [
+      'Wie noemt dingen die jij helemaal niet gehoord hebt?',
+      'Wie zegt dat iets al genoemd is, terwijl dat niet zo is?',
+      'Wie maakt de groep in de war met "of was het..."?',
+    ],
   },
   {
     id: 'b-kaartenrij',
@@ -702,7 +803,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Zeg de kleur van een kaart verkeerd: "was dat geen ruiten?"',
       'Wissel luidop twee kaarten van plaats in je opsomming.',
-      'Maak een grapje tijdens de 20 seconden, zodat de anderen minder goed kijken.',
+      'Maak één keer een grapje tijdens de 20 seconden, zodat de anderen minder goed kijken.',
+    ],
+    detective: [
+      'Wie twijfelt over een kleur die jij zeker wist?',
+      'Wie maakt de anderen aan het lachen net als jullie moeten kijken?',
+      'Zegt iemand twee kaarten in de verkeerde volgorde? Let of dat vaker gebeurt.',
     ],
   },
   {
@@ -726,6 +832,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Vertel over jezelf heel gewone dingen die snel vergeten worden.',
       'Antwoord snel en zeker met het antwoord van iemand anders.',
       'Zeg "neenee, dat was van iemand anders" als iemand het juiste antwoord geeft.',
+    ],
+    detective: [
+      'Wie haalt de antwoorden van twee mensen door elkaar?',
+      'Wie twijfelt aan een antwoord dat jij ook juist vond?',
+      'Wie vertelde over zichzelf dingen die bijna niemand onthoudt?',
     ],
   },
   {
@@ -777,6 +888,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zeg heel zeker een verkeerd aantal: "er waren zeker vijf sterren".',
       'Kijk tijdens de flits net iets te laat, en stel daarna veel vragen.',
     ],
+    detective: [
+      'Vergelijk na afloop: wie tekende iets op een andere plek dan op het origineel?',
+      'Wie is heel zeker van een aantal dat jij anders onthouden hebt?',
+      'Wie keek niet goed tijdens de flits?',
+    ],
     photo: 'Het origineel naast de namaak.',
   },
   {
@@ -797,8 +913,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Leg een voorwerp heel zelfzeker op de verkeerde plek.',
-      'Wissel stiekem twee voorwerpen van plaats als het bijna klaar is.',
+      'Wissel twee voorwerpen van plaats als het bijna klaar is en niemand kijkt.',
       'Zeg "dat lag zeker hier, ik weet het honderd procent" bij een fout.',
+    ],
+    detective: [
+      'Kijk vlak voor het einde nog eens of alles nog ligt waar jullie het legden.',
+      'Wie is heel zeker over een plek die jij anders onthouden hebt?',
+      'Wie zit nog aan de voorwerpen als het eigenlijk al klaar is?',
     ],
     dilemma: true,
   },
@@ -822,7 +943,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Tik net iets te hard, zodat de knikker ver doorrolt.',
       'Geef richtingadvies dat net een beetje scheef is.',
-      'Zet je voet "per ongeluk" in de baan zodat de knikker afketst.',
+      'Mik één keer net naast het poortje, alsof het per ongeluk is.',
+    ],
+    detective: [
+      'Wie tikt de knikker vaak veel te ver?',
+      'Volgen jullie iemands richtingtips? Kijk of die echt kloppen.',
+      'Wie mist poortjes die eigenlijk makkelijk waren?',
     ],
     photo: 'De laatste slag richting de hole.',
   },
@@ -843,9 +969,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { doel: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'aantal', target: '{doel}', unit: 'goals' },
     sabotage: [
-      'Blaas net van de verkeerde kant.',
-      'Blaas heel hard, zodat de bal van de tafel vliegt.',
-      'Roep "wacht, wacht!" als iemand net gaat scoren.',
+      'Blaas één of twee keer net van de verkeerde kant.',
+      'Blaas één keer te hard, zodat de bal van de tafel rolt.',
+      'Blaas net tegelijk met iemand anders, zodat jullie elkaar tegenwerken.',
+    ],
+    detective: [
+      'Van wie komt de wind als de bal de verkeerde kant op gaat?',
+      'Bij wie rolt de bal van de tafel?',
+      'Wie blaast telkens tegen de anderen in?',
     ],
     photo: 'Iedereen met bolle wangen rond de tafel.',
   },
@@ -865,9 +996,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { kaarten: { makkelijk: [6], normaal: [10], pittig: [15] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Zucht diep in de buurt van het kasteel, maar raak het niet aan.',
+      'Stel voor om met de moeilijkste verdieping te beginnen, "dan is dat al gedaan".',
       'Stel voor om er nog "eentje extra" bovenop te zetten als het net staat.',
-      'Zet jouw kaarten net iets te rechtop.',
+      'Zet jouw kaarten net iets te rechtop, zodat ze makkelijk omvallen.',
+    ],
+    detective: [
+      'Wie zet kaarten zo dat ze meteen weer omvallen?',
+      'Wie wil er nog iets bijzetten als het huis net stevig staat?',
+      'Wie geeft bouwtips die het huis eigenlijk wiebeliger maken?',
     ],
     dilemma: true,
     photo: 'Het kaartenkasteel met trotse bouwers.',
@@ -891,7 +1027,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Knijp jouw wasknijper maar half vast.',
       'Hang hem net scheef, zodat de ketting begint te draaien.',
-      'Roep "voorzichtig!" net als iemand de laatste wil hangen.',
+      'Zeg één keer "voorzichtig!" net als iemand de laatste wil hangen.',
+    ],
+    detective: [
+      'Op welke plek breekt de ketting? Wie hing daar zijn knijper?',
+      'Wie hangt zijn knijpers zo dat de ketting draait?',
+      'Wie laat de anderen schrikken op het spannendste moment?',
     ],
     photo: 'De langste knijperketting ooit.',
   },
@@ -914,7 +1055,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Laat je vis net boven de rand terugvallen.',
       'Zwaai de hengel zodat het touwtje in de knoop raakt.',
-      'Tel de 20 tellen van iemand anders heel snel af.',
+      'Tel de 20 tellen van iemand anders net iets te snel.',
+    ],
+    detective: [
+      'Bij wie valt de vis vaak net terug in de mand?',
+      'Wie zorgt dat het touwtje telkens in de knoop zit?',
+      'Tel zelf stil mee met de 20 tellen.',
     ],
     dilemma: true,
     photo: 'De visser met de grootste vangst.',
@@ -936,7 +1082,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Rol net naast de kegels, maar doe alsof je heel goed mikt.',
       'Rol heel zachtjes, zodat de bal net niet aankomt.',
-      'Zet een omgevallen kegel "per ongeluk" weer recht als je de bal gaat halen.',
+      'Mik op een kegel die alleen staat in plaats van op een groepje.',
+    ],
+    detective: [
+      'Wie mikt op één kegel als er een groepje naast staat?',
+      'Wie rolt vaak net te zacht of net naast?',
+      'Wie geeft rare tips over waar je moet mikken?',
     ],
     photo: 'Strike! Alle kegels om.',
   },
@@ -961,7 +1112,12 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Plak jouw stukje net iets te los.',
       'Stel voor om geen steunen te maken, "want dat is lelijk".',
       'Verspil plakband met veel te lange stukken.',
-      'Kies de zwaarste knuffel om de brug te testen.',
+      'Stel voor om de brug te testen met een grote knuffel, "voor de zekerheid".',
+    ],
+    detective: [
+      'Wie plakt zijn stukjes zo los dat ze er weer afvallen?',
+      'Wie wil er geen steunen in de brug?',
+      'Gaat het plakband snel op? Kijk wie er veel te lange stukken neemt.',
     ],
     dilemma: true,
     photo: 'De brug met de knuffel erop.',
@@ -986,9 +1142,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     roles: [{ name: 'Model', count: 1, hint: 'Jij bent het model: sta stil en poseer!' }],
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Maak jouw kledingstuk zo dat het er meteen weer afvalt.',
+      'Plak jouw kledingstuk net te los, zodat het tijdens de catwalk kan afvallen.',
       'Twijfel heel lang over welke krantenpagina het mooist is.',
-      'Maak iets dat totaal niet bij het thema past.',
+      'Maak iets dat maar een klein beetje bij het thema past.',
+    ],
+    detective: [
+      'Van wie is het kledingstuk dat er telkens afvalt?',
+      'Wie twijfelt lang en laat de anderen wachten?',
+      'Past elk kledingstuk bij het thema? Wie maakte iets dat er niet bij hoort?',
     ],
     photo: 'Het Model in de mooiste pose op de catwalk.',
   },
@@ -1024,9 +1185,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Stel een slogan voor die helemaal niet rijmt.',
+      'Stel een slogan voor die bijna rijmt, maar net niet.',
       'Vergeet je tekst tijdens het optreden.',
-      'Blijf steeds nieuwe ideeën voorstellen, zodat er nooit geoefend wordt.',
+      'Kom vlak voor het einde met een nieuw idee, zodat er minder geoefend wordt.',
+    ],
+    detective: [
+      'Wie stelt slogans voor die net niet rijmen?',
+      'Wie komt met nieuwe ideeën als er eigenlijk geoefend moet worden?',
+      'Wie wist zijn tekst bij het oefenen wel, maar bij het optreden niet?',
     ],
     photo: 'De acteurs met hun wonderproduct.',
   },
@@ -1054,9 +1220,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'figuren' },
     sabotage: [
-      'Hou je hand net voor de lamp, zodat alles zwart wordt.',
-      'Maak een ander dier dan afgesproken.',
+      'Sta één keer net in het licht, zodat een stuk van de schaduw wegvalt.',
+      'Maak jouw stukje van de figuur net een beetje anders dan afgesproken.',
       'Beweeg net als de spelleider kijkt.',
+    ],
+    detective: [
+      'Wie staat er vaak in de weg van het licht?',
+      'Kijk welk stukje van de schaduw niet klopt, en van wie dat is.',
+      'Wie beweegt er net als de spelleider gaat raden?',
     ],
     photo: 'De mooiste schaduw op de muur.',
   },
@@ -1079,9 +1250,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Laat jouw knuffel dingen zeggen die niet in het verhaal passen.',
+      'Laat jouw knuffel één keer iets zeggen dat net niet in het verhaal past.',
       'Vergeet wanneer het jouw beurt is.',
-      'Stel voor om het verhaal op het laatste moment helemaal te veranderen.',
+      'Stel vlak voor de voorstelling voor om nog iets aan het verhaal te veranderen.',
+    ],
+    detective: [
+      'Wie laat zijn knuffel dingen zeggen die het verhaal in de war brengen?',
+      'Wie wil op het laatste moment nog dingen veranderen?',
+      'Wie wist bij het oefenen wel wanneer het zijn beurt was, maar bij de voorstelling niet?',
     ],
     photo: 'Alle knuffels boven het laken voor de buiging.',
   },
@@ -1104,9 +1280,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Laat de lijntjes van de nek expres heel ver uit elkaar lopen.',
+      'Laat de lijntjes van de nek een beetje te ver uit elkaar lopen.',
       'Vergeet het verplichte ding dat jij moest tekenen.',
       'Vouw jouw stuk zo dat de volgende niet ziet waar hij moet beginnen.',
+    ],
+    detective: [
+      'Kijk bij het openvouwen: welk stuk sluit niet aan?',
+      'Wie moest een verplicht ding tekenen, en staat het er ook echt?',
+      'Was het moeilijk om verder te tekenen? Wie had het stuk daarvoor gevouwen?',
     ],
     photo: 'Het monster met zijn makers.',
   },
@@ -1144,9 +1325,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 3, unit: 'geraden' },
     sabotage: [
-      'Raad heel snel iets fout, zodat er een kans verloren gaat.',
+      'Raad één keer snel iets, voor de anderen goed konden overleggen.',
       'Hou vol dat een hint "zeker" op iets anders wijst.',
-      'Praat door de spelleider heen als die een hint geeft.',
+      'Weet je het al? Stel voor om nog één hint te wachten, "voor de zekerheid".',
+    ],
+    detective: [
+      'Wie raadt er snel, nog voor jullie samen overlegd hebben?',
+      'Wie stuurt de groep naar een antwoord dat niet bij alle hints past?',
+      'Wie wil er nog wachten, terwijl jullie het eigenlijk al weten?',
     ],
   },
   {
@@ -1213,7 +1399,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Zeg heel zeker "dat heb ik op tv gezien" bij het foute antwoord.',
       'Verander op het laatste moment van mening en neem de anderen mee.',
-      'Zeg "Windy liegt altijd" bij een weetje dat wél waar is.',
+      'Zeg "dat klinkt te straf om waar te zijn" bij een weetje dat wél waar is.',
+    ],
+    detective: [
+      'Wie zegt heel zeker iets te weten, maar zit vaak fout?',
+      'Wie laat de groep op het laatste moment nog van antwoord veranderen?',
+      'Wie twijfelt aan weetjes die wél waar blijken?',
     ],
   },
   {
@@ -1280,6 +1471,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Verzin een straf weetje dat je antwoord lijkt te bewijzen.',
       'Laat de groep twijfelen tot de spelleider moet aandringen.',
     ],
+    detective: [
+      'Wie roept heel snel een antwoord, maar zit er vaak naast?',
+      'Klinkt iemands weetje straf? Vraag je af of het wel klopt.',
+      'Wie zorgt dat jullie lang blijven twijfelen?',
+    ],
   },
   {
     id: 'b-neuriequiz',
@@ -1322,8 +1518,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'liedjes' },
     sabotage: [
       'Ben jij Neurier? Neurie net een beetje vals of veel te traag.',
-      'Roep steeds titels van liedjes die er een beetje op lijken.',
-      'Neurie zachtjes een ander liedje mee, zodat het verwarrend wordt.',
+      'Roep af en toe titels van liedjes die er een beetje op lijken.',
+      'Ben jij Neurier? Begin bij een minder bekend stukje van het liedje.',
+    ],
+    detective: [
+      'Klinkt het neuriën raar of heel traag? Misschien doet de Neurier dat expres.',
+      'Wie roept titels die er maar een beetje op lijken?',
+      'Begint de Neurier bij het bekendste stukje van het liedje?',
     ],
     dilemma: true,
   },
@@ -1371,6 +1572,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Stel woorden voor die met de juiste klank maar een andere letter beginnen (zoals "cirkel" bij de S).',
       'Laat de schrijver twijfelen over de spelling.',
       'Beweer dat een goed woord niet telt.',
+    ],
+    detective: [
+      'Begint elk woord echt met de juiste letter, of klinkt het alleen zo?',
+      'Wie laat de schrijver twijfelen bij woorden die gewoon goed zijn?',
+      'Wie wil goede woorden schrappen?',
     ],
   },
   {
@@ -1431,6 +1637,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Bedenk een ingewikkelde regel die tot een fout antwoord leidt.',
       'Tel luidop verkeerd mee met de reeks.',
     ],
+    detective: [
+      'Wie roept snel een antwoord dat net niet klopt?',
+      'Is iemands regel heel ingewikkeld? Check of die echt bij de hele reeks past.',
+      'Tel zelf stil mee met de reeks.',
+    ],
   },
 
   // ─────────────── Communicatie ───────────────
@@ -1461,7 +1672,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Teken de figuur net een beetje anders door.',
       'Teken heel snel en heel klein.',
-      'Draai de tekening ondersteboven als je ze doorgeeft.',
+      'Draai de tekening één keer ondersteboven als je ze doorgeeft.',
+    ],
+    detective: [
+      'Vergelijk na elke ronde wat iedereen voelde: bij wie veranderde de tekening?',
+      'Voelde de tekening op jouw rug heel snel of heel klein? Onthoud wie achter je zat.',
+      'Stond de eindtekening ondersteboven? Zoek uit waar dat begon.',
     ],
     photo: 'De rij rugtekenaars met de eindtekening.',
   },
@@ -1535,8 +1751,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'woorden' },
     sabotage: [
       'Ben jij Uitlegger? Zeg "per ongeluk" bijna een verboden woord, zodat je moet stoppen.',
-      'Raad heel vaak en heel luid verkeerd.',
+      'Raad af en toe iets dat er dicht bij ligt, zodat de Uitlegger in de war raakt.',
       'Geef als Uitlegger een uitleg die klopt, maar eerst naar iets anders wijst.',
+    ],
+    detective: [
+      'Zegt de Uitlegger bijna een verboden woord? Onthoud wie dat was.',
+      'Wie raadt dingen die de Uitlegger in de war brengen?',
+      'Begint een uitleg bij iets heel anders? Dat kan expres zijn.',
     ],
     dilemma: true,
   },
@@ -1563,9 +1784,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 2, unit: 'thema’s' },
     sabotage: [
-      'Kies elke keer een heel raar woord dat niemand zou zeggen.',
+      'Kies één keer een woord dat net naast het populairste ligt.',
       'Roep net iets te laat, zodat de poging niet telt.',
       'Kies het woord van iemand die alleen stond, niet dat van de meesten.',
+    ],
+    detective: [
+      'Wie kiest bij een nieuwe poging niet het woord dat de meesten zeiden?',
+      'Wie roept net te laat?',
+      'Onthoud ieders woorden: wie gaat telkens een andere kant op?',
     ],
   },
   {
@@ -1609,6 +1835,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zeg zelf één keer "per ongeluk" ja, maar niet meteen.',
       'Knik stiekem als iemand anders antwoordt, zodat die ook begint te knikken.',
       'Antwoord heel traag, zodat de volgende zenuwachtig wordt.',
+    ],
+    detective: [
+      'Wie zegt ja of nee terwijl dat makkelijk te vermijden was?',
+      'Kijk wie knikt of schudt als iemand anders aan de beurt is.',
+      'Wie neemt zoveel tijd dat de volgende zenuwachtig wordt?',
     ],
   },
   {
@@ -1659,6 +1890,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Doe snel iets anders en roep "dat bedoelt hij zeker!".',
       'Begrijp de gebaren expres verkeerd, maar heel enthousiast.',
     ],
+    detective: [
+      'Wie begrijpt de gebaren telkens anders dan de rest?',
+      'Wie neemt de groep mee naar iets wat de Boodschapper niet bedoelde?',
+      'Laat de Boodschapper jullie iets fout doen zonder te reageren? Dat is verdacht.',
+    ],
     photo: 'De uitgevoerde geheime opdracht.',
   },
   {
@@ -1686,7 +1922,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Maak af en toe het geluid van een ander dier.',
       'Maak jouw geluid heel zacht.',
-      'Blijf bij een verkeerde familie staan en zeg "ik hoor bij jullie!".',
+      'Blijf één keer even bij een verkeerde familie staan, alsof je het niet goed hoorde.',
+    ],
+    detective: [
+      'Hoor je een geluid veranderen? Onthoud waar dat vandaan kwam.',
+      'Wie maakt zijn geluid zo zacht dat je hem bijna niet hoort?',
+      'Staat er iemand bij jouw familie die niet hetzelfde geluid maakt?',
     ],
     photo: 'De dierenfamilies, trots samen.',
   },
@@ -1717,7 +1958,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Leg een kaart stiekem op de verkeerde stapel.',
       'Hou een paar kaarten "per ongeluk" in je hand.',
-      'Vraag steeds "was dit nu de boer of de heer?".',
+      'Vraag één keer "was dit nu de boer of de heer?" als de tijd tikt.',
+    ],
+    detective: [
+      'Kijk op het einde snel door een stapel: ligt er een kaart verkeerd?',
+      'Wie heeft er nog kaarten in zijn hand als de rest klaar is?',
+      'Wie stelt vragen die jullie ophouden?',
     ],
   },
   {
@@ -1740,6 +1986,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zet jouw beker net niet goed aan de rand.',
       'Roep "bijna!" op een zenuwachtig moment.',
     ],
+    detective: [
+      'Bij wie vliegt de beker vaak te ver?',
+      'Kijk of elke beker goed aan de rand staat voor iemand flipt.',
+      'Wie roept iets net als iemand anders gaat flippen?',
+    ],
     photo: 'Het moment van de laatste flip.',
   },
   {
@@ -1760,8 +2011,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Schud extra lang voor je gooit.',
-      'Leg een zes "per ongeluk" terug bij de dobbelstenen die nog moeten.',
+      'Leg een zes "per ongeluk" terug bij de dobbelstenen die nog moeten, als niemand kijkt.',
       'Geef de dobbelstenen onhandig door, zodat er een wegrolt.',
+    ],
+    detective: [
+      'Tel na elke worp hoeveel zessen er apart liggen.',
+      'Wie schudt er heel lang voor hij gooit?',
+      'Bij wie rollen de dobbelstenen weg bij het doorgeven?',
     ],
     dilemma: true,
   },
@@ -1787,6 +2043,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Roep woorden die net een letter te veel gebruiken.',
       'Verzin een woord dat niet bestaat en zeg dat het "echt bestaat, in het West-Vlaams".',
       'Roep een woord dat al op de lijst staat.',
+    ],
+    detective: [
+      'Check bij elk woord of de letters echt in het grote woord staan.',
+      'Wie roept woorden die niemand kent?',
+      'Wie roept woorden die al opgeschreven zijn?',
     ],
   },
   {
@@ -1828,9 +2089,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 8, unit: 'opdrachtjes' },
     sabotage: [
-      'Doe jouw opdrachtje heel traag.',
+      'Doe jouw opdrachtje net iets trager dan nodig.',
       'Stel voor om alles samen te doen in plaats van te verdelen.',
       'Doe een opdrachtje maar half en zeg dat het klaar is.',
+    ],
+    detective: [
+      'Wie is opvallend lang bezig met een klein opdrachtje?',
+      'Wie wil het verdelen tegenhouden?',
+      'Is elk opdrachtje echt helemaal gedaan? Kijk mee.',
     ],
   },
   {
@@ -1853,6 +2119,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Hou de wekker net iets langer vast voor je doorgeeft.',
       'Zeg je getal heel stil, zodat de volgende moet vragen wat je zei.',
     ],
+    detective: [
+      'Reken zelf stil mee: wie zegt er een fout getal?',
+      'Wie houdt de wekker net te lang vast?',
+      'Wie praat zo stil dat jullie moeten vragen wat hij zei?',
+    ],
   },
 
   // ─────────────── Speuren ───────────────
@@ -1874,8 +2145,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'voorwerpen' },
     sabotage: [
       'Voel lang aan een sok en zeg dan overtuigd iets fout.',
-      'Zeg "dat is zeker een lepel" bij elk langwerpig voorwerp.',
+      'Noem één keer iets met dezelfde vorm, zoals een pen in plaats van een lepel.',
       'Hou een sok heel lang vast voor je hem doorgeeft.',
+    ],
+    detective: [
+      'Voel zelf ook aan de sok voor je iemands antwoord gelooft.',
+      'Wie is heel zeker, maar zit vaak fout?',
+      'Wie houdt sokken lang vast, zodat anderen minder kunnen voelen?',
     ],
     photo: 'De speurneuzen met hun voelsokken.',
   },
@@ -1900,6 +2176,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Stel een verkeerde plek voor en loop er zelf al naartoe.',
       'Steek een gevonden briefje even in je zak en "vind" het pas later terug.',
     ],
+    detective: [
+      'Lees zelf mee als iemand een briefje voorleest.',
+      'Wie loopt naar een plek die niet bij het raadsel past?',
+      'Wie vindt een briefje, maar zegt het pas later?',
+    ],
     dilemma: true,
     photo: 'De speurders bij de verrassing, met alle briefjes.',
   },
@@ -1919,9 +2200,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { tijd: { makkelijk: [4], normaal: [3], pittig: [2] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Tik zachtjes met je voet of neurie een beetje, zodat het tikken moeilijker te horen is.',
+      'Schuifel één keer met je voeten of schraap je keel als het tikken net te horen is.',
       'Wijs heel zeker naar de verkeerde hoek.',
       'Stel voor om eerst "heel grondig" de verkeerde helft van de kamer te doorzoeken.',
+    ],
+    detective: [
+      'Wie maakt geluid net als het tikken goed te horen is?',
+      'Wie wijst naar een hoek waar je zelf niets hoort?',
+      'Wie stuurt de groep naar de verkeerde kant van de kamer?',
     ],
     dilemma: true,
   },
@@ -1943,8 +2229,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{aantal}', unit: 'knuffels' },
     sabotage: [
       'Schijn met je zaklamp net naast een knuffel.',
-      'Hou je zaklamp naar het plafond gericht, "om meer te zien".',
+      'Zoek lang in een hoek waar je al weet dat er niets ligt.',
       'Zeg dat een plek al doorzocht is, ook als dat niet zo is.',
+    ],
+    detective: [
+      'Wie schijnt net naast plekken waar iets kan liggen?',
+      'Zegt iemand dat een plek doorzocht is? Kijk er zelf nog eens.',
+      'Wie zoekt lang op een plek waar niets ligt?',
     ],
     photo: 'De speurders in het donker met hun zaklampen.',
   },
@@ -1967,7 +2258,12 @@ export const TASKS_BINNEN: TaskDef[] = [
     sabotage: [
       'Wijs vol overtuiging iets aan dat erop lijkt, maar het niet is.',
       'Zeg dat het "zeker in een andere kamer" is.',
-      'Ga voor het juiste ding staan, zodat de anderen het niet zien.',
+      'Ga één keer net voor het juiste ding staan, zodat de anderen het niet zien.',
+    ],
+    detective: [
+      'Vergelijk zelf de foto met wat iemand aanwijst.',
+      'Wie stuurt de groep naar een andere kamer?',
+      'Wie staat vaak net in de weg?',
     ],
   },
   {
@@ -1990,6 +2286,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Breng iets dat er gewoon thuishoort en hou vol dat het een indringer is.',
       'Kijk expres niet in de hoek waar je iets raars zag.',
       'Zeg over een indringer: "dat ligt daar altijd".',
+    ],
+    detective: [
+      'Wie brengt dingen die eigenlijk gewoon op hun plaats lagen?',
+      'Zegt iemand "dat ligt daar altijd"? Kijk er toch nog eens naar.',
+      'Welke hoek wordt door niemand goed bekeken? Ga daar zelf eens kijken.',
     ],
     photo: 'Alle indringers op een rij.',
   },
@@ -2028,8 +2329,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: 2, unit: 'scènes' },
     sabotage: [
       'Kijk net weg van de camera als de foto genomen wordt.',
-      'Stel voor om een heel andere film te spelen.',
-      'Blijf veel te lang naar spullen zoeken.',
+      'Stel een idee voor dat net niet op de echte filmscène lijkt.',
+      'Zoek net iets te lang naar spullen.',
+    ],
+    detective: [
+      'Kijk op de foto: wie kijkt de verkeerde kant op?',
+      'Wie stelt ideeën voor die niet echt bij de film passen?',
+      'Wie blijft lang weg om spullen te zoeken?',
     ],
     photo: 'De filmscène als echte filmposter.',
   },
@@ -2064,8 +2370,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Blijf net niet stilstaan tijdens de foto.',
-      'Kies verkleedkleren die helemaal niet passen.',
+      'Kies verkleedkleren die net niet passen.',
       'Kijk recht in de camera als je opzij moet kijken.',
+    ],
+    detective: [
+      'Wie beweegt er tijdens de 5 tellen?',
+      'Passen de verkleedkleren van iedereen bij het schilderij?',
+      'Kijkt iedereen dezelfde kant op als op het schilderij?',
     ],
     dilemma: true,
     photo: 'Het levende schilderij, klaar voor het museum.',
@@ -2096,6 +2407,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Beweeg je hand net weg als de foto genomen wordt.',
       'Geef de spelleider verkeerde tips over waar de camera moet.',
     ],
+    detective: [
+      'Wie staat telkens op een andere afstand dan afgesproken?',
+      'Kijk op de foto’s: wiens hand of houding klopt niet?',
+      'Wie geeft camera-tips die de truc net laten mislukken?',
+    ],
     photo: 'De beste truc-foto.',
   },
   {
@@ -2117,6 +2433,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Laat stiekem een beetje te veel van jezelf zien.',
       'Verstop je zo goed dat er niets meer van je te zien is.',
       'Beweeg net als de foto genomen wordt.',
+    ],
+    detective: [
+      'Kijk vlak voor de foto rond: van wie zie je te veel of niets?',
+      'Wie beweegt er net als de foto genomen wordt?',
+      'Kijk op de foto van wie er niet precies één deel te zien is.',
     ],
     photo: 'De camouflagefoto: wie vindt iedereen?',
   },
@@ -2144,8 +2465,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Leg de mond net verkeerd, zodat het gezicht een andere emotie krijgt.',
-      'Haal steeds voorwerpen die veel te klein zijn.',
+      'Haal een voorwerp dat net te klein is, zodat het onderdeel bijna niet opvalt.',
       'Vergeet één van de verplichte onderdelen.',
+    ],
+    detective: [
+      'Past de mond nog bij de emotie? Kijk wie hem als laatste legde.',
+      'Wie brengt voorwerpen die bijna niet te zien zijn?',
+      'Tel voor de foto of alle verplichte onderdelen er liggen.',
     ],
     photo: 'Het voorwerpengezicht van bovenaf, met iedereen die dezelfde emotie trekt.',
   },
@@ -2188,6 +2514,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Maak een grappig geluidje bij een moeilijke houding.',
       'Zet je voet net te vroeg neer.',
     ],
+    detective: [
+      'Wie begint te wiebelen bij een houding die makkelijk is?',
+      'Wie maakt de anderen aan het lachen?',
+      'Wie zet zijn voet net te vroeg neer?',
+    ],
     photo: 'Iedereen tegelijk in de flamingohouding.',
   },
   {
@@ -2206,9 +2537,14 @@ export const TASKS_BINNEN: TaskDef[] = [
     vars: { kansen: { makkelijk: [2], normaal: [3], pittig: [4] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Kijk heel opvallend naar de Leider.',
+      'Kijk af en toe net iets te lang naar de Leider.',
       'Doe een nieuwe beweging als laatste, heel traag.',
       'Ben jij de Leider? Verander net van beweging als de spelleider naar jou kijkt.',
+    ],
+    detective: [
+      'Wie kijkt er vaak recht naar de Leider?',
+      'Wie volgt een nieuwe beweging opvallend traag?',
+      'Is de Leider ’t Duvelke? Let op wanneer hij van beweging verandert.',
     ],
   },
   {
@@ -2231,6 +2567,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Kruip extra traag door de tunnel en "blijf haken".',
       'Tik de volgende net iets te laat aan.',
       'Wijs de volgende de verkeerde richting van de slalom.',
+    ],
+    detective: [
+      'Wie blijft vaak haken in de tunnel?',
+      'Wie tikt de volgende net te laat aan?',
+      'Wie geeft richtingtips die niet kloppen?',
     ],
     dilemma: true,
     photo: 'Een kruiper halverwege de tunnel.',
@@ -2255,6 +2596,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Knijp net te zacht, zodat de ballon wegglipt.',
       'Waggel met heel kleine pasjes.',
       'Laat je ballon net naast de mand vallen.',
+    ],
+    detective: [
+      'Bij wie glipt de ballon vaak weg?',
+      'Wie waggelt opvallend traag?',
+      'Wie mist de mand van heel dichtbij?',
     ],
     photo: 'De pinguïnwandeling met ballon.',
   },
@@ -2302,6 +2648,11 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Doe een bevel zonder "Windy zegt" "per ongeluk" mee, maar niet meteen.',
       'Begin een heel klein beetje te bewegen, zodat anderen twijfelen.',
       'Doe een bevel net iets anders dan gevraagd.',
+    ],
+    detective: [
+      'Wie doet een bevel mee zonder "Windy zegt", net als het goed ging?',
+      'Wie beweegt een heel klein beetje, zodat anderen twijfelen?',
+      'Doet iemand een bevel net anders dan gevraagd?',
     ],
   },
 ];

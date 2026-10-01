@@ -107,6 +107,7 @@ export function validateTask(
 
   const sabotage = strList(raw.sabotage, 6).filter((s) => s.length > 8);
   if (sabotage.length < 2) errors.push('Er zijn minstens 2 sabotagetips nodig.');
+  const detective = strList(raw.detective, 6).filter((s) => s.length > 8);
 
   const difficulties = strList(raw.difficulties).filter((d): d is Difficulty => DIFFICULTIES.includes(d as Difficulty));
 
@@ -158,7 +159,7 @@ export function validateTask(
         .slice(0, 3)
     : [];
 
-  const allText = [title, explain, ...sabotage, str(raw.prep, 400)].join(' ');
+  const allText = [title, explain, ...sabotage, ...detective, str(raw.prep, 400)].join(' ');
   if (UNSAFE.test(withoutNegations(allText))) errors.push('Deze opdracht lijkt niet veilig genoeg voor kinderen.');
 
   if (errors.length > 0) return { task: null, errors, warnings };
@@ -185,6 +186,7 @@ export function validateTask(
     source: options.source,
   };
   if (timer !== undefined) task.timer = timer;
+  if (detective.length >= 2) task.detective = detective;
   const prep = str(raw.prep, 400);
   if (prep) task.prep = prep;
   if (Object.keys(vars).length > 0) task.vars = vars;

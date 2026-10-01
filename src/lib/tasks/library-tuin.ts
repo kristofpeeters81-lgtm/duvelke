@@ -28,9 +28,15 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{aantal}', unit: 'bladeren' },
     sabotage: [
       'Leg een blad van een soort die er al ligt erbij en zeg dat het "echt een andere" is.',
-      'Wissel stiekem twee bladeren van plaats als de rij bijna klaar is.',
-      'Zeg dat een mooi groot blad "niet meetelt, want er zit een scheurtje in".',
-      'Blijf heel lang onder één en dezelfde struik zoeken.',
+      'Leg jouw blad in de rij op een plek waar het net niet past, alsof je je vergist.',
+      'Zeg één keer dat een mooi blad "niet meetelt, want er zit een scheurtje in".',
+      'Zoek vooral onder de struik waar de anderen al bladeren vonden.',
+    ],
+    detective: [
+      'Let op wie bladeren brengt die heel hard lijken op een blad dat er al ligt.',
+      'Kijk de rij nog eens na: ligt elk blad echt tussen een kleiner en een groter blad?',
+      'Wie vindt goede bladeren opeens "niet goed genoeg"?',
+      'Wie zoekt op plekken waar al gezocht is?',
     ],
     photo: 'De bladerenladder met alle zoekers erachter.',
   },
@@ -51,10 +57,16 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { aantal: { makkelijk: [6], normaal: [10], pittig: [14] } },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'eieren' },
     sabotage: [
-      'Vind je een ei? Leg het stiekem op een andere, moeilijkere plek.',
-      'Verspil een "warm of koud"-vraag op een plek waar jij weet dat er niets ligt.',
-      'Draag je ei extra traag en maak een omweg naar het nest.',
-      'Roep "Daar heb ik al gekeken!" bij een plek die je niet bekeken hebt.',
+      'Zie je een ei en kijkt niemand? Laat het liggen en zoek "verder".',
+      'Stel voor om een "warm of koud"-vraag te stellen op een plek waar al gezocht is.',
+      'Neem met je ei een klein omweggetje naar het nest, alsof je nog rondkijkt.',
+      'Zeg één keer "Daar heb ik al gekeken!" bij een plek die je niet goed bekeken hebt.',
+    ],
+    detective: [
+      'Let op wie lang op één plek zoekt en toch met lege handen terugkomt.',
+      'Wie wil een "warm of koud"-vraag gebruiken op een plek die al doorzocht is?',
+      'Wie loopt met een ei niet de kortste weg naar het nest?',
+      'Kijk zelf nog eens op een plek waarvan iemand zegt dat die leeg is.',
     ],
     dilemma: true,
     photo: 'Iedereen rond het nest met de geredde eieren.',
@@ -85,8 +97,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'aantal', target: 7, unit: 'vormen' },
     sabotage: [
       'Wijs iets aan dat bijna de juiste vorm heeft en hou vol dat het klopt.',
-      'Blijf luidop twijfelen of iets "wel echt rond genoeg" is.',
-      'Stuur de groep naar een hoek waarvan je al weet dat er niets te vinden is.',
+      'Twijfel één of twee keer luidop of een goede vorm "wel echt rond genoeg" is.',
+      'Stel voor om te zoeken in een hoek waar bijna niets staat.',
+    ],
+    detective: [
+      'Kijk goed mee: heeft wat iemand aanwijst echt de juiste vorm?',
+      'Wie twijfelt luidop bij vormen die eigenlijk goed zijn?',
+      'Wie stuurt de groep naar plekken waar weinig te zien is?',
     ],
     photo: 'De groep die samen de moeilijkste vorm uitbeeldt.',
   },
@@ -110,9 +127,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'kaarten' },
     sabotage: [
-      'Vind je een kaart? Schuif ze stiekem onder een blad en zoek verder.',
-      'Leg twee kaarten in de rij verkeerd om.',
-      'Zeg dat de 7 er al ligt, ook al is dat niet zo.',
+      'Zie je een kaart en kijkt niemand? Laat ze liggen en zoek ergens anders.',
+      'Leg één kaart op de verkeerde plek in de rij, bv. de 6 en de 9 omgewisseld.',
+      'Zeg één keer dat een kaart "al in de rij ligt", ook al is dat niet zo.',
+    ],
+    detective: [
+      'Let op wie lang op één plek zoekt maar niets vindt.',
+      'Kijk de rij zelf na: ligt elke kaart op de juiste plaats?',
+      'Tel zelf na als iemand zegt dat een kaart er al ligt.',
     ],
     photo: 'De volledige kaartenrij met de speurders.',
   },
@@ -143,8 +165,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'aantal', target: 6, unit: 'dingen' },
     sabotage: [
       'Leg iets op de handdoek dat net niet goed voelt en zeg dat het perfect is.',
-      'Neem stiekem een ding van de handdoek mee "om het nog eens te voelen".',
+      'Breng iets voor een gevoel dat al gevonden is, zodat een ander vakje leeg blijft.',
       'Zeg van een goed ding dat het "eigenlijk eerder glad dan ruw" is.',
+    ],
+    detective: [
+      'Voel zelf eens aan wat iemand anders op de handdoek legt.',
+      'Wie brengt dingen voor een gevoel dat al op de handdoek ligt?',
+      'Wie praat goede dingen af, zodat jullie gaan twijfelen?',
     ],
     photo: 'De handdoek vol voelschatten.',
   },
@@ -173,9 +200,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 8, unit: 'vakjes' },
     sabotage: [
-      'Roep "BINGO!" bij iets dat er maar een beetje op lijkt.',
-      'Blijf lang bij één toestel hangen en doe alsof je daar nog iets zoekt.',
+      'Roep één keer "BINGO!" bij iets dat er maar een beetje op lijkt.',
+      'Blijf even bij een toestel staan kijken, alsof je daar nog iets zoekt.',
       'Zeg dat je iets gezien hebt aan de andere kant, zodat de groep voor niets gaat kijken (maar blijf zelf bij de groep).',
+    ],
+    detective: [
+      'Kijk goed mee als iemand BINGO roept: klopt het echt?',
+      'Wie blijft achter bij een toestel terwijl de groep verder gaat?',
+      'Wie stuurt jullie ergens naartoe waar dan niets blijkt te zijn?',
     ],
     photo: 'De hele groep bij het leukste vakje van de kaart.',
   },
@@ -195,9 +227,14 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { woord: { makkelijk: ['BOOM', 'ZON', 'BAL'], normaal: ['KENZO', 'WINDY', 'TUINEN'], pittig: ['DUVELKE', 'SPEELTUIN', 'GLIJBAAN'] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Kom af met iets dat met een verkeerde letter begint en zeg het in het Engels, zodat het "toch klopt".',
-      'Zeg dat een letter "onmogelijk" is, zodat de groep hem wil overslaan.',
+      'Breng iets dat net niet met de juiste letter begint en zeg vrolijk dat het klopt.',
+      'Zeg dat een letter "bijna onmogelijk" is, zodat de groep hem wil overslaan.',
       'Leg jouw ding op de verkeerde plek in de rij.',
+    ],
+    detective: [
+      'Zeg de naam van elk ding hardop: begint het echt met de juiste letter?',
+      'Wie wil een letter snel opgeven?',
+      'Kijk op het einde of de rij in de juiste volgorde ligt.',
     ],
     photo: 'Het woord op een rij, met alle dingen erbij.',
   },
@@ -231,7 +268,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Tel "per ongeluk" één letter te ver in het alfabet.',
       'Roep heel zeker een woord dat bijna klopt.',
-      'Stel voor om te beginnen tellen bij 0 in plaats van bij 1.',
+      'Lees één keer een getal als twee losse cijfers, zoals 14 als 1 en 4.',
+    ],
+    detective: [
+      'Reken zelf mee: tel het alfabet af op je vingers.',
+      'Wie roept heel zeker een woord dat niet helemaal klopt?',
+      'Let op wie meer dan één "telfoutje" maakt.',
     ],
     dilemma: true,
     photo: 'De ontcijferaars naast de krijtcode.',
@@ -285,9 +327,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 4, unit: 'raadsels' },
     sabotage: [
-      'Loop heel enthousiast naar het verkeerde ding.',
+      'Loop één keer heel enthousiast naar het verkeerde ding.',
       'Zeg het juiste antwoord heel zacht en een fout antwoord heel luid.',
-      'Blijf twijfelen tot de tijd bijna op is.',
+      'Twijfel één keer lang tussen twee antwoorden, terwijl de tijd doortikt.',
+    ],
+    detective: [
+      'Wie loopt als eerste weg naar een fout antwoord?',
+      'Luister ook naar de stille antwoorden: wie fluisterde het juiste?',
+      'Wie laat de groep twijfelen als jullie het bijna hebben?',
     ],
   },
   {
@@ -316,7 +363,12 @@ export const TASKS_TUIN: TaskDef[] = [
       'Stel heel overtuigd een oversteek voor waarbij de geit alleen blijft met de wolf of de kool.',
       'Tel het aantal overtochten "per ongeluk" verkeerd.',
       'Zeg dat de boer "zeker niemand" mag terugbrengen (dat mag wel!).',
-      'Stel als raadgever drie keer dezelfde vraag, zodat de groep in de war raakt.',
+      'Ben jij de Boer? Neem één keer "per ongeluk" de verkeerde passagier mee.',
+    ],
+    detective: [
+      'Volg een voorstel pas als je zelf gecheckt hebt wie er alleen achterblijft.',
+      'Tel zelf de overtochten mee.',
+      'Wie zegt dat iets "niet mag", terwijl het in de uitleg wel mag?',
     ],
     dilemma: true,
     photo: 'De boer, de wolf, de geit en de kool veilig aan de overkant.',
@@ -346,9 +398,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 3, unit: 'dingen geraden' },
     sabotage: [
-      'Stel een vraag die al gesteld is.',
+      'Stel één keer een vraag die al gesteld is.',
       'Roep heel snel een gok, zodat er een vraag verloren gaat.',
-      'Stel vragen over iets totaal anders, zoals "Is het een olifant?".',
+      'Stel een vraag waar jullie weinig aan hebben, zoals "Is het mooi?".',
+    ],
+    detective: [
+      'Wie stelt vragen waar jullie niets mee opschieten?',
+      'Wie vraagt iets wat al gevraagd was?',
+      'Wie gokt snel, nog voor jullie samen overlegd hebben?',
     ],
   },
 
@@ -377,8 +434,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Schuif je stukje touw stiekem een beetje de verkeerde kant op.',
       'Zeg dat jouw hoek "zeker al recht" is.',
-      'Stel voor om een andere vorm te maken "omdat dat makkelijker is".',
-      'Loer heel even en geef dan net fout advies.',
+      'Zeg heel zeker dat de vorm al klaar is, ook al denk je van niet.',
+    ],
+    detective: [
+      'Voel goed aan het touw: trekt iemand het een andere kant op?',
+      'Wie zegt heel snel dat het al klaar is?',
+      'Kijk na afloop welk stuk scheef ligt, en wie daar stond.',
     ],
     dilemma: true,
     photo: 'De touwfiguur met alle blinde bouwers erbij.',
@@ -402,7 +463,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Laat je vinger net iets zakken, zodat de frisbee scheef hangt.',
       'Wandel net iets sneller of trager dan de rest.',
-      'Roep "stop!" net op het moment dat het goed loopt.',
+      'Roep één keer "wacht even!" als het goed loopt, alsof er een bal wiebelt.',
+    ],
+    detective: [
+      'Naar welke kant hangt de frisbee scheef? Wiens vinger zit daar?',
+      'Wie loopt net niet in hetzelfde tempo als de rest?',
+      'Wie laat jullie stoppen terwijl er niets aan de hand was?',
     ],
     photo: 'Het dienblad onderweg, met alle vingers eronder.',
   },
@@ -426,6 +492,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wandel net iets te snel voor wie voor je loopt, maar duw nooit.',
       'Laat je buik een beetje inzakken, zodat de bal wiebelt.',
       'Stel voor om een heel scherpe bocht te nemen.',
+    ],
+    detective: [
+      'Kijk bij welke speler de bal het vaakst wiebelt of valt.',
+      'Wie wil een moeilijke bocht nemen?',
+      'Let op wie het tempo van de rups niet volgt.',
     ],
     photo: 'De rups in volle actie.',
   },
@@ -451,8 +522,13 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Stap net van je karton af als niemand kijkt, zodat de spelleider het mag afpakken.',
       'Laat een stuk karton even los op het moment dat het doorgegeven wordt.',
-      'Stel voor om een omweg te maken.',
+      'Stel een "veiligere" weg voor die eigenlijk langer is.',
       'Ga op het stuk karton staan dat de volgende net nodig heeft.',
+    ],
+    detective: [
+      'Let op wie zijn karton even alleen laat liggen.',
+      'Wie stelt een langere weg voor dan nodig?',
+      'Kijk wie op de stapsteen gaat staan die een ander nodig had.',
     ],
     dilemma: true,
     photo: 'Iedereen samen op de laatste stapstenen.',
@@ -484,6 +560,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Leun een klein beetje de verkeerde kant op, maar nooit zo dat iemand pijn heeft.',
       'Begin te giechelen op het moment dat iedereen zich moet concentreren.',
     ],
+    detective: [
+      'Kijk naar de voeten: wie zit er anders dan de rest?',
+      'Wie roept het teken net niet tegelijk met de anderen?',
+      'Bij welk groepje zakt het telkens in, en aan wiens kant?',
+    ],
     photo: 'Het moment dat iedereen net rechtkomt.',
   },
   {
@@ -503,10 +584,16 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { aantal: { makkelijk: [5], normaal: [8], pittig: [12] }, afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'ballen' },
     sabotage: [
-      'Zet "per ongeluk" een klein stapje met de bal in je hand.',
+      'Zet één keer "per ongeluk" een klein stapje met de bal in je hand.',
       'Geef de bal door op een moment dat je buur net niet kijkt.',
-      'Loop heel traag naar voren als je aan de beurt bent.',
-      'Leg de bal naast de emmer in plaats van erin.',
+      'Loop net iets trager naar voren als je aan de beurt bent.',
+      'Leg één bal net naast de emmer, alsof je mis mikte.',
+    ],
+    detective: [
+      'Kijk naar de voeten van wie een bal vast heeft.',
+      'Wie geeft de bal door als de ander nog niet klaar is?',
+      'Wie neemt zijn tijd om naar vooraan te lopen?',
+      'Kijk of elke bal echt in de emmer belandt.',
     ],
     dilemma: true,
   },
@@ -529,7 +616,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Raak "per ongeluk" een draad met je mouw.',
       'Kies een gat dat eigenlijk perfect was voor iemand anders.',
-      'Zeg dat je een draad zag bewegen toen iemand er netjes door ging.',
+      'Stel voor om eerst de grote gaten te gebruiken, zodat er later enkel kleine overblijven.',
+    ],
+    detective: [
+      'Let op wie meer dan eens "per ongeluk" een draad raakt.',
+      'Wie kiest een gat dat beter bij iemand anders paste?',
+      'Wie heeft een plan waarbij de makkelijke gaten te snel op zijn?',
     ],
     dilemma: true,
     photo: 'Iemand halverwege door het spinnenweb.',
@@ -551,8 +643,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Schuif je handen stiekem een klein beetje over het touw.',
-      'Stel voor om het touw "gewoon heel even" los te laten.',
+      'Stel voor om onder het touw door te gaan op een plek waar dat niet helpt.',
       'Stap net de verkeerde kant op als de knoop bijna lukt.',
+    ],
+    detective: [
+      'Kijk naar de handen: blijven ze op dezelfde plek op het touw?',
+      'Wie stapt de andere kant op als het bijna lukt?',
+      'Wie stelt bewegingen voor die de knoop niet dichterbij brengen?',
     ],
     photo: 'De knoop, met iedereen er nog aan vast.',
   },
@@ -577,7 +674,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Kom af met een tweeling die er niet echt op lijkt.',
       'Zeg dat er "zeker ook een eikel" lag, terwijl dat niet zo is.',
-      'Blijf zoeken naar iets dat al gevonden is.',
+      'Zoek naar iets waarvan de tweeling al gevonden is.',
+    ],
+    detective: [
+      'Leg elke tweeling naast het origineel: lijkt het echt?',
+      'Wie herinnert zich iets onder de handdoek dat niemand anders zag?',
+      'Wie zoekt naar iets dat al gevonden is?',
     ],
     photo: 'De originelen naast hun tweelingen.',
   },
@@ -596,9 +698,14 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { stappen: { makkelijk: [4], normaal: [6], pittig: [8] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Doe een stap in de verkeerde volgorde en kijk er heel zeker bij.',
+      'Doe één stap in de verkeerde volgorde en kijk er heel zeker bij.',
       'Voeg een extra stap toe die er niet bij was.',
       'Zeg "nee, het was twee keer hinken!" terwijl het maar één keer was.',
+    ],
+    detective: [
+      'Onthoud zelf de volgorde en vergelijk met wat de groep doet.',
+      'Wie voegt er iets toe dat jij je niet herinnert?',
+      'Wie verbetert anderen heel zeker, maar fout?',
     ],
   },
   {
@@ -633,6 +740,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Stap zelf één keer bewust op een vakje waarvan je weet dat het fout is.',
       'Verwar links en rechts als je uitlegt welke vakjes veilig waren.',
     ],
+    detective: [
+      'Onthoud zelf welke vakjes veilig waren en welke BOEM.',
+      'Wie gaf er advies net voor een BOEM?',
+      'Wie stapt op een vakje dat al eens BOEM was?',
+    ],
     dilemma: true,
     photo: 'Het rooster met een speler op het laatste vakje.',
   },
@@ -651,9 +763,14 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { aantal: { makkelijk: [4], normaal: [6], pittig: [8] }, doel: { makkelijk: [8], normaal: [12], pittig: [15] } },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Doe met veel overtuiging de beweging van een ander woord.',
+      'Doe één keer met veel overtuiging de beweging van een ander woord.',
       'Stel een beweging voor die heel erg lijkt op een andere.',
       'Wacht net te lang, zodat je buren beginnen te twijfelen.',
+    ],
+    detective: [
+      'Let op wie bewegingen voorstelt die op elkaar lijken.',
+      'Wie begint net later dan de rest?',
+      'Wie vergist zich, maar doet het wel heel zeker?',
     ],
     photo: 'Iedereen tegelijk in de "boom"-pose.',
   },
@@ -681,7 +798,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Gooi net over de hoepel heen.',
       'Geef mikadvies over "de wind" dat helemaal niet klopt.',
-      'Schuif een hoepel stiekem een halve stap verder als je de frisbee gaat halen.',
+      'Tel de punten één keer "per ongeluk" te laag.',
+    ],
+    detective: [
+      'Wie gooit telkens net te ver of te kort?',
+      'Klopt het advies dat iemand geeft met wat er echt gebeurt?',
+      'Tel zelf de punten mee.',
     ],
     photo: 'De frisbee in volle vlucht.',
   },
@@ -707,6 +829,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Rol de bal net iets te hard, zodat hij naast de kegels vliegt.',
       'Geef als "coach" het advies om meer naar links te mikken als het naar rechts moet.',
       'Tel de worpen luidop verkeerd, zodat de groep denkt dat er meer over zijn.',
+    ],
+    detective: [
+      'Wie rolt harder dan nodig?',
+      'Kijk of het advies van de coach klopt met waar de bal naartoe ging.',
+      'Tel zelf de worpen mee.',
     ],
     photo: 'Iemand die door de benen mikt.',
   },
@@ -736,6 +863,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Zeg "voorzichtig!" net op het moment dat iemand in evenwicht is.',
       'Leg de knuffel net iets scheef op het hoofd van de volgende.',
     ],
+    detective: [
+      'Wie verlegt het touw, en wordt het daardoor makkelijker of moeilijker?',
+      'Wie roept iets net op het spannendste moment?',
+      'Kijk hoe iemand de knuffel op het hoofd van de volgende legt.',
+    ],
     photo: 'Een koorddanser met de knuffel op het hoofd.',
   },
   {
@@ -758,6 +890,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Tel de trappen luidop verkeerd.',
       'Stel een "slimme" route voor die eigenlijk langer is.',
     ],
+    detective: [
+      'Wie trapt de bal harder dan nodig?',
+      'Tel zelf de trappen mee.',
+      'Kijk of de route die iemand voorstelt echt de kortste is.',
+    ],
   },
   {
     id: 't-stenenmannetje',
@@ -776,8 +913,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Kies een ronde, wiebelige steen voor jouw beurt.',
-      'Adem heel diep uit vlak naast de toren (maar raak hem niet aan!).',
+      'Leg jouw steentje niet in het midden, maar een beetje op de rand.',
       'Stel voor om de grootste steen bovenaan te leggen.',
+    ],
+    detective: [
+      'Wie kiest wiebelige of ronde steentjes?',
+      'Kijk hoe iemand zijn steen neerlegt: mooi in het midden of op de rand?',
+      'Wie wil de grote stenen bovenaan?',
     ],
     photo: 'Het stenenmannetje met de bouwers.',
   },
@@ -801,6 +943,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Raak het touw "per ongeluk" met je neus of je haar.',
       'Maak iemand aan het lachen net als die onder het touw gaat.',
     ],
+    detective: [
+      'Kijk of het touw aan beide kanten even hoog hangt.',
+      'Wie raakt het touw met een "foutje"?',
+      'Wie doet grappig net als iemand onder het touw gaat?',
+    ],
     dilemma: true,
     photo: 'Iemand die heel diep onder het touw door gaat.',
   },
@@ -821,8 +968,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Blaas net schuin, zodat het blaadje van het pad af waait.',
-      'Tel je drie keer blazen heel traag.',
+      'Neem je tijd tussen je drie keer blazen.',
       'Adem stiekem in in plaats van uit, dan gebeurt er niets.',
+    ],
+    detective: [
+      'Naar welke kant gaat het blaadje na iemands beurt?',
+      'Wie neemt opvallend veel tijd voor drie keer blazen?',
+      'Beweegt het blaadje echt als iemand blaast?',
     ],
     photo: 'Alle bladerblazers op hun knieën bij het blaadje.',
   },
@@ -844,6 +996,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Rol je knikker net iets te hard.',
       'Tik "per ongeluk" een goede knikker weg met die van jou.',
       'Geef het advies om "lekker hard" te rollen.',
+    ],
+    detective: [
+      'Wie rolt zijn knikker telkens over de schijf heen?',
+      'Wie mikt op een plek waar al een goede knikker ligt?',
+      'Wie geeft advies dat de knikkers verder van het midden brengt?',
     ],
     photo: 'De schietschijf vol knikkers.',
   },
@@ -875,6 +1032,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Stel een naam voor die niemand kan uitspreken.',
       'Leg een onderdeel net op de verkeerde plek.',
     ],
+    detective: [
+      'Tel op het einde samen na of alle kenmerken erbij zijn.',
+      'Wie legt onderdelen op een rare plek?',
+      'Wie maakt het moeilijk om samen een naam te kiezen?',
+    ],
     photo: 'Het fabeldier met zijn makers, die allemaal zijn geluid maken.',
   },
   {
@@ -896,9 +1058,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Speel steeds net uit de maat.',
+      'Speel één of twee keer net uit de maat.',
       'Vergeet je zin als het jouw beurt is.',
       'Kies een instrument dat bijna geen geluid maakt.',
+    ],
+    detective: [
+      'Luister goed: wie speelt er net naast de maat?',
+      'Wie weet zijn zin opeens niet meer?',
+      'Wie koos een instrument dat je bijna niet hoort?',
     ],
     photo: 'Het volledige orkest met zijn instrumenten.',
   },
@@ -920,7 +1087,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Teken een station dat net iets te moeilijk is.',
       'Maak de uitleg bij jouw station onduidelijk.',
-      'Treuzel heel lang bij het tekenen van jouw stuk.',
+      'Neem je tijd bij het tekenen van jouw stuk, alsof het extra mooi moet worden.',
+    ],
+    detective: [
+      'Welk station is veel moeilijker dan de rest? Wie tekende dat?',
+      'Bij welk station snapt niemand de uitleg?',
+      'Wie is nog altijd aan het tekenen als de rest klaar is?',
     ],
     photo: 'Het hele parcours van bovenaf.',
   },
@@ -942,7 +1114,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Leg een takje zo dat het nest scheef wordt.',
       'Stel voor om enkel grote, stijve takken te gebruiken.',
-      'Blijf heel lang zoeken naar "het perfecte blaadje".',
+      'Zoek lang naar "het perfecte blaadje" in plaats van mee te bouwen.',
+    ],
+    detective: [
+      'Kijk welk stukje van het nest scheef staat: wie legde dat?',
+      'Wie wil materiaal gebruiken dat slecht in een nest past?',
+      'Wie is aan het zoeken terwijl de rest bouwt?',
     ],
     photo: 'De knuffel in zijn nieuwe nest.',
   },
@@ -1005,7 +1182,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Loop heel zeker naar de verkeerde boom, zodat anderen je volgen.',
       'Zeg "dat hebben we op school geleerd" bij een fout antwoord.',
-      'Blijf twijfelen tot de spelleider zegt dat jullie moeten kiezen.',
+      'Twijfel één keer zo lang dat de spelleider moet zeggen dat jullie moeten kiezen.',
+    ],
+    detective: [
+      'Wie loopt als eerste naar een boom, en had die gelijk?',
+      'Wie gebruikt "dat leerden we op school" bij een fout antwoord?',
+      'Wie houdt de groep op als jullie bijna gekozen hebben?',
     ],
     dilemma: true,
   },
@@ -1041,9 +1223,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'schattingen' },
     sabotage: [
-      'Stel een belachelijk groot of klein getal voor en blijf het verdedigen.',
+      'Stel een getal voor dat een stuk te hoog of te laag is, en klink heel zeker.',
       'Tel mee bij het natellen, maar tel "per ongeluk" verkeerd.',
-      'Zet heel kleine stapjes als je de afstand mag nameten.',
+      'Zet net iets kleinere stapjes als je de afstand mag nameten.',
+    ],
+    detective: [
+      'Wie wil een getal dat ver van de andere schattingen ligt?',
+      'Tel zelf mee bij het natellen.',
+      'Kijk hoe groot de stappen zijn van wie er nameet.',
     ],
   },
   {
@@ -1094,9 +1281,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 3, unit: 'dieren' },
     sabotage: [
-      'Roep snel een dier dat totaal niet past, zodat er een beurt verloren gaat.',
+      'Roep snel een dier dat bij één hint past, maar niet bij de andere.',
       'Zeg "ik weet het!" en noem dan het verkeerde dier.',
       'Doe alsof een hint eigenlijk over een ander dier gaat.',
+    ],
+    detective: [
+      'Wie roept een dier voor jullie samen overlegd hebben?',
+      'Past het dier dat iemand roept echt bij alle hints?',
+      'Wie stuurt de groep naar een dier dat niet klopt?',
     ],
   },
   {
@@ -1162,8 +1354,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'antwoorden' },
     sabotage: [
       'Spring met veel zelfvertrouwen als eerste in de verkeerde hoepel.',
-      'Blijf twijfelen tussen twee hoepels tot iedereen zenuwachtig wordt.',
-      'Zet "per ongeluk" één voet in een andere hoepel, zodat de vraag niet telt.',
+      'Twijfel luidop tussen twee hoepels, zodat de groep zenuwachtig wordt.',
+      'Zet één keer "per ongeluk" een voet in een andere hoepel, zodat de vraag niet telt.',
+    ],
+    detective: [
+      'Wie springt als eerste, en was dat de juiste hoepel?',
+      'Kijk naar de voeten: staat iedereen echt in dezelfde hoepel?',
+      'Wie laat jullie twijfelen als je het antwoord eigenlijk weet?',
     ],
     photo: 'Iedereen samen in één hoepel.',
   },
@@ -1188,8 +1385,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Geef een tikje "per ongeluk" op de verkeerde schouder door.',
-      'Geef de tikjes heel traag door.',
+      'Geef een tikje net iets te laat door.',
       'Als Machinist: tik één keer links als het rechts moet, en verbeter het snel.',
+    ],
+    detective: [
+      'Voel goed: geef je zelf exact door wat je kreeg?',
+      'Kijk na afloop waar de trein de verkeerde kant op ging.',
+      'Komen de tikjes op tijd, of opvallend laat?',
     ],
     dilemma: true,
     photo: 'De blinde trein met de Machinist achteraan.',
@@ -1221,8 +1423,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'aantal', target: 3, unit: 'woorden' },
     sabotage: [
       'Als Seiner: maak één letter spiegelverkeerd.',
-      'Roep heel luid een foute letter.',
+      'Roep één keer heel zeker een letter die erop lijkt, zoals een P bij een R.',
       'Zeg dat het woord "zeker Engels" is.',
+    ],
+    detective: [
+      'Kijk zelf goed naar elke letter voor je de anderen gelooft.',
+      'Wie roept heel zeker letters die niet kloppen?',
+      'Wie stuurt de groep naar een verkeerd soort woord?',
     ],
     photo: 'De Seiner midden in een letter.',
   },
@@ -1250,8 +1457,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Maak een geluid dat op twee dieren tegelijk lijkt.',
-      'Zwijg even als de Boer dichtbij komt.',
+      'Wees even stil als de Boer dichtbij komt.',
       'Kies stiekem hetzelfde dier als iemand anders.',
+    ],
+    detective: [
+      'Welk dier is moeilijk te herkennen aan zijn geluid?',
+      'Wie wordt opeens stil als de Boer in de buurt komt?',
+      'Hoor je twee keer hetzelfde dier? Wie koos als laatste?',
     ],
     photo: 'De Boer met zijn hele kudde in de stal.',
   },
@@ -1279,7 +1491,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Toon met je vingers "per ongeluk" een verkeerde verjaardag of letter.',
       'Ga op een plek staan waar je niet hoort en blijf daar tevreden staan.',
-      'Stap net met je hiel naast het touw.',
+      'Stap één keer net met je hiel naast het touw.',
+    ],
+    detective: [
+      'Wie toont iets met de vingers dat niet klopt?',
+      'Wie blijft tevreden op een verkeerde plek staan?',
+      'Kijk naar de voeten: wie stapt er naast het touw?',
     ],
     dilemma: true,
     photo: 'De hele rij op de brug, in de juiste volgorde.',
@@ -1304,7 +1521,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Als Robot: doe een commando net iets té letterlijk.',
       'Roep een commando tegelijk met iemand anders, zodat er één verloren gaat.',
-      'Zeg "stap naar links" als je rechts bedoelt.',
+      'Zeg één keer "stap naar links" als je rechts bedoelt.',
+    ],
+    detective: [
+      'Doet de Robot echt wat er gezegd werd, of net iets anders?',
+      'Wie roept door anderen heen, zodat er commando’s verloren gaan?',
+      'Wie verwart links en rechts?',
     ],
     dilemma: true,
     photo: 'De Robot die de bal in de emmer legt.',
@@ -1328,9 +1550,14 @@ export const TASKS_TUIN: TaskDef[] = [
     vars: { aantal: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'spullen' },
     sabotage: [
-      'Hink extra traag en neem een omweg.',
+      'Hink net iets trager en neem een klein omweggetje.',
       'Leg een ding net buiten de hoepel.',
-      'Draag stiekem niets en doe alsof je nog zoekt.',
+      'Doe alsof je nog zoekt, terwijl je niets meeneemt.',
+    ],
+    detective: [
+      'Wie komt lang niet terug naar de hoepel?',
+      'Kijk of alles echt in de hoepel ligt.',
+      'Wie loopt rond zonder iets te dragen?',
     ],
   },
   {
@@ -1351,7 +1578,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Stap op een schaduw die al geteld is en roep er een andere naam bij.',
       'Zeg dat een schaduw "niet echt" meetelt.',
-      'Loop naar iets dat helemaal geen schaduw heeft.',
+      'Stuur de groep naar dingen ver weg, terwijl er dichtbij ook schaduwen zijn.',
+    ],
+    detective: [
+      'Hou bij welke schaduwen al geteld zijn.',
+      'Wie zegt dat goede schaduwen niet meetellen?',
+      'Wie stuurt de groep naar ver weg, terwijl het dichtbij kan?',
     ],
     photo: 'Iedereen die op dezelfde grote schaduw staat.',
   },
@@ -1378,9 +1610,14 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     scoring: { type: 'gelukt' },
     sabotage: [
-      'Raak net hetzelfde ding aan als iemand anders.',
-      'Twijfel heel lang, tot de tijd bijna om is.',
+      'Raak één keer net hetzelfde ding aan als iemand anders.',
+      'Twijfel lang, tot de tijd bijna om is.',
       'Raak iets aan dat er alleen een beetje op lijkt.',
+    ],
+    detective: [
+      'Wie raakt hetzelfde ding aan als een ander?',
+      'Wie is telkens als laatste klaar?',
+      'Klopt wat iedereen aanraakt echt met de opdracht?',
     ],
   },
   {
@@ -1401,8 +1638,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Laat een bekertje "per ongeluk" omvallen bij het oppakken.',
-      'Neem een ding alleen mee, zodat het niet telt.',
+      'Laat jouw kant van iets net wat lager hangen, zodat de bekertjes scheef staan.',
       'Loop eerst naar de verkeerde schuilplaats.',
+    ],
+    detective: [
+      'Bij wie vallen de bekertjes om?',
+      'Kijk of iedereen zijn kant even hoog houdt.',
+      'Wie loopt de verkeerde kant op?',
     ],
     photo: 'De geredde picknick in de schuilplaats.',
   },
@@ -1428,6 +1670,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Tel het aantal fluitsignalen luidop verkeerd mee.',
       'Ga op de verkeerde plek in de rij staan.',
       'Neem net te laat de hand van je buur vast.',
+    ],
+    detective: [
+      'Tel zelf de fluitsignalen, en luister wie anders telt.',
+      'Wie staat op een verkeerde plek in de rij?',
+      'Wie is net te laat in de kring?',
     ],
     photo: 'De liggende ster van bovenaf.',
   },
@@ -1456,6 +1703,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wijs enthousiast een valse pijl aan.',
       'Onthoud een letter "per ongeluk" fout en zeg die heel zeker.',
       'Loop een beetje voorop en sla een pijl over.',
+    ],
+    detective: [
+      'Kijk zelf goed of een pijl een kruisje heeft.',
+      'Onthoud zelf de letters en vergelijk.',
+      'Wie loopt voorop en loopt een pijl voorbij?',
     ],
     dilemma: true,
     photo: 'De speurders bij de laatste pijl.',
@@ -1489,6 +1741,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Stuur de groep naar het midden van het gras, waar weinig te zien is.',
       'Zeg dat een spoor "te klein om mee te tellen" is.',
     ],
+    detective: [
+      'Kijk goed mee als iemand "Spoor!" roept: is het echt een spoor?',
+      'Wie stuurt jullie naar plekken waar weinig te zien is?',
+      'Wie zegt van goede sporen dat ze niet meetellen?',
+    ],
     photo: 'De speurneuzen bij hun mooiste spoor.',
   },
   {
@@ -1511,6 +1768,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Zet net iets kleinere of grotere stappen dan de anderen.',
       'Hou het kompas scheef als jij het mag vasthouden.',
       'Zeg dat het oosten links is (als je naar het noorden kijkt, is het rechts).',
+    ],
+    detective: [
+      'Kijk hoe groot de stappen zijn van wie er telt.',
+      'Wijst de naald echt naar de N als iemand anders het kompas vasthoudt?',
+      'Wie haalt de windrichtingen door elkaar?',
     ],
     dilemma: true,
     photo: 'De vinders met de schat en het kompas.',
@@ -1542,6 +1804,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Zeg dat je iets ziet en geef de verrekijker dan scheef door.',
       'Draai "per ongeluk" aan het wieltje, zodat alles wazig wordt.',
       'Hou de verrekijker lang vast en beschrijf alles heel traag.',
+    ],
+    detective: [
+      'Wie geeft de verrekijker door, maar kan jij het dan niet vinden?',
+      'Is het beeld opeens wazig nadat iemand de verrekijker had?',
+      'Wie houdt de verrekijker lang vast?',
     ],
     photo: 'Iemand die door de verrekijker tuurt, met de anderen die wijzen.',
   },
@@ -1583,6 +1850,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Beweeg op het moment van de foto.',
       'Kijk net in de verkeerde richting.',
     ],
+    detective: [
+      'Bekijk de foto: wie staat er net naast de juiste plek?',
+      'Wie beweegt er op het moment van de foto?',
+      'Wie kijkt de verkeerde kant op?',
+    ],
     photo: 'De grappigste toverfoto.',
   },
   {
@@ -1610,6 +1882,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Ga net iets te ver weg staan, zodat jouw schaduw loskomt van de rest.',
       'Beweeg je armen op het moment van de foto.',
       'Stel voor om met je gezicht naar de zon te staan (dan valt je schaduw achter je en zie je niets).',
+    ],
+    detective: [
+      'Welke schaduw hangt los van de rest?',
+      'Wie beweegt er net als de foto genomen wordt?',
+      'Wie stelt een plek of richting voor waar het niet lukt?',
     ],
     photo: 'De schaduwfiguur met de makers erbij.',
   },
@@ -1640,6 +1917,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Knipper met je ogen net als de foto genomen wordt.',
       'Stel een pose voor die niemand begrijpt.',
     ],
+    detective: [
+      'Bekijk de foto: wie past niet bij de titel?',
+      'Wie heeft de ogen dicht op de foto?',
+      'Wie maakt het moeilijk om een pose te kiezen?',
+    ],
     photo: 'Het beste filmaffiche, met de titel luid voorgelezen.',
   },
   {
@@ -1660,7 +1942,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Hou vol dat iets op een gezicht lijkt, terwijl het nergens op lijkt.',
       'Loop weg van de plek waar de groep net iets goeds vond.',
-      'Zeg bij elk gevonden gezicht: "Dat is maar een half gezicht."',
+      'Zeg één keer van een goed gezicht dat het "eigenlijk maar een half gezicht" is.',
+    ],
+    detective: [
+      'Wie wil foto’s van dingen die niet op een gezicht lijken?',
+      'Wie trekt de groep weg van een goede plek?',
+      'Wie praat goede gezichten af?',
     ],
     photo: 'Het grappigste natuurgezicht, met iedereen die het nadoet.',
   },
@@ -1693,6 +1980,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wacht net iets te lang bij een echte "Windy zegt".',
       'Fluister "dat was Windy, hoor" als het ’t Duvelke was.',
     ],
+    detective: [
+      'Wie beweegt een beetje bij "’t Duvelke zegt"?',
+      'Wie is telkens net te laat?',
+      'Wie fluistert er tips die niet kloppen?',
+    ],
   },
   {
     id: 't-dierenestafette',
@@ -1719,8 +2011,13 @@ export const TASKS_TUIN: TaskDef[] = [
     scoring: { type: 'gelukt' },
     sabotage: [
       'Doe je dier extra traag, "omdat het zo hoort".',
-      'Vergeet de volgende aan te tikken en loop gewoon door.',
+      'Tik de volgende maar heel licht aan, zodat die twijfelt of hij mag vertrekken.',
       'Keer net vóór het keerpunt al om, zodat je opnieuw moet.',
+    ],
+    detective: [
+      'Wie doet zijn dier veel trager dan nodig?',
+      'Kijk of de volgende echt goed aangetikt wordt.',
+      'Gaat iedereen echt helemaal tot aan het keerpunt?',
     ],
     photo: 'Het gekste dierenloopje in actie.',
   },
@@ -1744,6 +2041,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Spring net een tikje te laat.',
       'Tel luidop af, maar net te vroeg.',
     ],
+    detective: [
+      'Kronkelt de slang wilder bij de ene Slangenbezweerder dan bij de andere?',
+      'Wie springt er net te laat?',
+      'Wie telt af in een raar tempo?',
+    ],
     photo: 'Iemand hoog boven de springslang.',
   },
   {
@@ -1765,6 +2067,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Spring net iets vroeger dan je tweelingbroer of -zus.',
       'Laat heel even los in een bocht en doe alsof er niets gebeurde.',
       'Zet een pion net iets moeilijker als je meehelpt bouwen.',
+    ],
+    detective: [
+      'Bij welke tweeling loopt het springen niet gelijk?',
+      'Kijk naar de handen in de bochten: blijven ze vast?',
+      'Wie zet de pionnen moeilijker dan nodig?',
     ],
     dilemma: true,
     photo: 'Een tweeling hand in hand in de hoepels.',
@@ -1795,7 +2102,12 @@ export const TASKS_TUIN: TaskDef[] = [
     sabotage: [
       'Tel luidop net een getal te snel.',
       'Doe een beweging die net niet klopt, zodat anderen gaan twijfelen.',
-      'Gooi de dobbelsteen "per ongeluk" ver weg, zodat jullie tijd verliezen.',
+      'Gooi de dobbelsteen net iets te hard, zodat hij in het gras wegrolt.',
+    ],
+    detective: [
+      'Wie telt net sneller dan de rest?',
+      'Wie doet een andere beweging dan op de lijst?',
+      'Wie gooit zo dat jullie de dobbelsteen moeten zoeken?',
     ],
     photo: 'Iedereen tegelijk in een sterrensprong.',
   },
@@ -1817,6 +2129,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Ga midden in een hoepel staan, zodat er minder plaats is voor de rest.',
       'Kom net na de vijf tellen aan.',
       'Stel voor dat iedereen naar hetzelfde eiland loopt, ook als er nog andere zijn.',
+    ],
+    detective: [
+      'Wie neemt veel plaats in op een eiland?',
+      'Wie is telkens net te laat?',
+      'Wie stuurt iedereen naar hetzelfde eiland, terwijl er nog andere vrij zijn?',
     ],
     photo: 'Iedereen samengepropt op het laatste eiland.',
   },
@@ -1840,6 +2157,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Fluister net iets te luid een tip.',
       'Begin te giechelen als iemand bijna bij de schat is.',
     ],
+    detective: [
+      'Wie stapt op plekken waar het kraakt of ritselt?',
+      'Wie fluistert er net te luid?',
+      'Wie maakt geluid op het spannendste moment?',
+    ],
     dilemma: true,
   },
   {
@@ -1861,6 +2183,11 @@ export const TASKS_TUIN: TaskDef[] = [
       'Roep "helpend" een fout cijfer als iemand twijfelt.',
       'Wijs een vakje aan dat net naast het juiste ligt.',
       'Doe alsof je de code vergeten bent als jij moet helpen onthouden.',
+    ],
+    detective: [
+      'Onthoud zelf de code en vergelijk met wat de helpers roepen.',
+      'Wie wijst een vakje aan net naast het juiste?',
+      'Wie is de code opeens vergeten?',
     ],
     photo: 'Een springer midden in de code.',
   },

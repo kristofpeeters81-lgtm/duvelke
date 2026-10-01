@@ -47,7 +47,8 @@ export function buildPrompt(o: PromptOptions): string {
     explain: 'Leg uit wat de groep moet doen, in 2 tot 4 zinnen. Gebruik {doel} voor een getal dat per moeilijkheid verschilt.',
     vars: { doel: { makkelijk: [3], normaal: [5], pittig: [8] } },
     scoring: { type: 'aantal', target: '{doel}', unit: 'keer' },
-    sabotage: ['Een stiekeme, veilige sabotagetip.', 'Nog een tip.', 'En nog een.'],
+    sabotage: ['Tik de ballon één keer net iets te scheef, zodat hij wegdrijft.', 'Nog een tip.', 'En nog een.'],
+    detective: ['Let op wie de ballon vaak net te hard of te scheef tikt.', 'Nog een tip.', 'En nog een.'],
     photo: 'Idee voor een leuke bewijsfoto.',
     dilemma: false,
   };
@@ -61,7 +62,12 @@ export function buildPrompt(o: PromptOptions): string {
       ? `- Benodigdheden die beschikbaar zijn (gebruik ENKEL deze ids, of geen): ${supplies.join(', ')}.`
       : '- Er zijn geen speciale benodigdheden: gebruik supplies: [].',
     '- Veilig: niets vies of nat, geen water, geen vuur, geen messen, niet duwen of trekken, niets kapotmaken. Op straat, in het dorp, bos of strand blijft de groep bij een volwassene.',
-    '- Sabotagetips (3 of 4): stiekem, subtiel en VEILIG, in de je-vorm.',
+    '- Sabotagetips (3 of 4), in de je-vorm. Elke tip moet aan ALLE vier deze eisen voldoen:',
+    '  1. Hij past binnen de regels van de opdracht (bv. bij "iedereen zegt één woord" geen tip met twee woorden).',
+    '  2. Hij valt niet op, ook niet als je hem twee of drie keer doet. Liever een klein foutje dat ook per ongeluk had kunnen gebeuren dan iets wat je steeds herhaalt.',
+    '  3. Een kind van 10 kan hem uitvoeren.',
+    '  4. Hij is VEILIG en maakt niemand verdrietig.',
+    '- Speurderstips (3 of 4), in de je-vorm: waar let je bij DEZE opdracht op om de saboteur te betrappen? Ze passen bij de manieren waarop je deze opdracht kan saboteren, maar verraden de sabotagetips niet letterlijk.',
     '- Geen wedstrijd tussen kinderen: de groep werkt samen tegen de tijd of voor een doel.',
     '- category is één van: zoeken, raadsels, samenwerken, geheugen, behendigheid, creatief, communicatie, tijdsdruk, speuren, foto, beweging.',
     '- scoring is {"type":"gelukt"} of {"type":"aantal","target":<getal of "{variabele}">,"unit":"..."}.',

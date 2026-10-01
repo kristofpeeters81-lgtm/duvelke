@@ -76,8 +76,13 @@ export interface TaskDef {
   scoring: Scoring;
   /** Maximum aantal edelstenen (standaard 10). */
   gems?: number;
-  /** Sabotagetips voor 't Duvelke: stiekem, veilig en niet te opvallend. */
+  /**
+   * Sabotagetips voor 't Duvelke. Elke tip past binnen de regels van deze opdracht,
+   * valt niet op als je hem een paar keer doet, en is haalbaar voor een kind van 10.
+   */
   sabotage: string[];
+  /** Speurderstips bij deze opdracht: waar let je op? Ontbreken ze, dan krijg je een algemene tip. */
+  detective?: string[];
   /** Kan er na deze opdracht een dilemma (schat of Kijk-joker) komen? */
   dilemma?: boolean;
   /** Idee voor een bewijsfoto. */

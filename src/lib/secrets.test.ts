@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { PROFILE_QUESTIONS } from './data/profile';
 import { gossipSentence, makeBriefing, makeGossip, pickInnocent, type Gossip, type SecretPlayer } from './secrets';
 import { BUILTIN_TASKS } from './tasks/library';
+import { DETECTIVE_TIPS } from './tasks/quiz';
 
 function seeded(seed: number): () => number {
   let a = seed;
@@ -41,6 +42,17 @@ describe('makeBriefing', () => {
     expect(task.sabotage).toContain(cards['s']!.tip);
     for (const id of ['n', 'b', 'x']) expect(task.sabotage).not.toContain(cards[id]!.tip);
     expect(Object.keys(cards)).toHaveLength(4);
+  });
+
+  it('geeft speurders de speurderstips van deze opdracht', () => {
+    const cards = makeBriefing(players, task, { speurneusTurn: false, known: {} }, seeded(2));
+    for (const id of ['n', 'b', 'x']) expect(task.detective).toContain(cards[id]!.tip);
+  });
+
+  it('valt terug op algemene speurderstips als de opdracht er geen heeft', () => {
+    const own = { ...task, detective: undefined };
+    const cards = makeBriefing(players, own, { speurneusTurn: false, known: {} }, seeded(3));
+    for (const id of ['n', 'b', 'x']) expect(DETECTIVE_TIPS).toContain(cards[id]!.tip);
   });
 
   it('geeft de Speurneus een onschuldige naam, nooit zichzelf of de saboteur', () => {
