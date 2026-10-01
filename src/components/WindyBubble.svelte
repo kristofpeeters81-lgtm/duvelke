@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte';
+  import { untrack, type Snippet } from 'svelte';
   import { app, lineTemplate } from '../lib/store.svelte';
-  import { speak, stopAll } from '../lib/speech';
+  import { machineOn, speak, stopAll, type Speaker } from '../lib/speech';
+  import Machine from './Machine.svelte';
   import Neighbour from './Neighbour.svelte';
   import Windy, { type WindyMood } from './Windy.svelte';
 
@@ -23,6 +24,10 @@
 
   let talking = $state(false);
   let runId = 0;
+  // Eerste gok, bijgewerkt zodra het geluid start. Zonder opname-id is er geen opname: dan spreekt het machien.
+  let who = $state<Speaker>(
+    untrack(() => (speaker === 'buurvrouw' ? 'buurvrouw' : !lineId && machineOn(app.settings.voice, app.recordedLineIds) ? 'machien' : 'windy')),
+  );
 
   async function say(line: string): Promise<void> {
     const id = ++runId;
@@ -33,7 +38,11 @@
       playerId,
       template: lineId ? lineTemplate(lineId) : undefined,
       voice: speaker === 'buurvrouw' ? { piperVoice: app.settings.voice.neighbourVoice, piperPitch: app.settings.voice.neighbourPitch } : undefined,
-      onStart: () => id === runId && (talking = true),
+      onStart: (w) => {
+        if (id !== runId) return;
+        who = w;
+        talking = true;
+      },
     });
     if (id === runId) talking = false;
   }
@@ -49,9 +58,9 @@
 
 <div class="stage">
   <div class="host">
-    {#if speaker === 'buurvrouw'}<Neighbour {size} {talking} />{:else}<Windy {mood} {size} {talking} />{/if}
+    {#if who === 'buurvrouw'}<Neighbour {size} {talking} />{:else if who === 'machien'}<Machine {size} {talking} />{:else}<Windy {mood} {size} {talking} />{/if}
   </div>
-  <div class="bubble" class:nb={speaker === 'buurvrouw'} aria-live="polite">
+  <div class="bubble" class:nb={who === 'buurvrouw'} class:mc={who === 'machien'} aria-live="polite">
     <p>{text}</p>
     {#if app.settings.voice.enabled}
       <button type="button" class="replay" aria-label="Nog eens voorlezen" onclick={() => say(text)}>🔊</button>
@@ -89,6 +98,14 @@
 
   .bubble.nb::before {
     border-bottom-color: #ffe3ef;
+  }
+
+  .bubble.mc {
+    background: #e2f1ff;
+  }
+
+  .bubble.mc::before {
+    border-bottom-color: #e2f1ff;
   }
 
   .bubble::before {

@@ -4,6 +4,7 @@
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { afterGossip, multipleSaboteursPossible } from '../../lib/game';
   import { gossipSentence } from '../../lib/secrets';
+  import { machineOn } from '../../lib/speech';
   import { app, windySays } from '../../lib/store.svelte';
 
   const game = $derived(app.game);
@@ -16,7 +17,10 @@
   const sentence = $derived(gossip && game ? gossipSentence(gossip, game.settings.saboteurName, multiple) : '');
   const nbName = $derived(game?.settings.neighbourName ?? 'De buurvrouw');
 
-  const windyText = $derived(`Ik heb het ZELF gezien! ${sentence}`);
+  // Met eigen opnames leest Kenzo zijn machien de roddels die altijd kloppen: een machien liegt niet.
+  const machine = $derived(machineOn(app.settings.voice, app.recordedLineIds));
+  const machineName = $derived(`${game?.settings.sonName ?? 'Kenzo'} zijn machien`);
+  const windyText = $derived(machine ? `Bliep! Opname gevonden. ${sentence}` : `Ik heb het ZELF gezien! ${sentence}`);
   const neighbourText = $derived(`Hallo schatjes, ${nbName} hier! Ik heb gehoord dat... ${sentence.charAt(0).toLowerCase()}${sentence.slice(1)} Maar dat heb je niet van mij hé!`);
 
   const log = $derived(game?.gossipLog ?? []);
@@ -29,7 +33,11 @@
       {#if intro}{#key intro.id}<WindyBubble text={intro.text} lineId={intro.id} mood="stiekem" size={180} />{/key}{/if}
       <BigButton variant="gold" size="large" full onclick={() => (stage = 'roddel')}>Vertel! ▶</BigButton>
     {:else if gossip.source === 'windy'}
-      <div class="badge ok">👀 {game.settings.hostName} zag het zelf: dit klopt altijd!</div>
+      {#if machine}
+        <div class="badge ok">🤖 {machineName} heeft het opgenomen: dit klopt altijd!</div>
+      {:else}
+        <div class="badge ok">👀 {game.settings.hostName} zag het zelf: dit klopt altijd!</div>
+      {/if}
       {#key sentence}<WindyBubble text={windyText} mood="geschokt" size={180} />{/key}
       <BigButton variant="primary" size="large" full onclick={() => app.game && afterGossip(app.game)}>Oei! Verder ▶</BigButton>
     {:else}

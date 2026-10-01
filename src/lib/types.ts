@@ -26,6 +26,9 @@ export interface CustomSupply {
   emoji: string;
 }
 
+/** Hoe Kenzo zijn machien klinkt: van bijna gewoon tot een blikken doos. */
+export type MachineSound = 'licht' | 'robot' | 'blik';
+
 export interface VoiceSettings {
   enabled: boolean;
   /** 'piper' = Vlaamse AI-stem op de tablet zelf; 'toestel' = voorleesstem van Android/Windows. */
@@ -35,6 +38,12 @@ export interface VoiceSettings {
   piperPitch: number;
   /** Zelf ingesproken uitspraken afspelen als ze bestaan. */
   useRecordings: boolean;
+  /**
+   * Kenzo zijn machien leest voor wat niet ingesproken is (enkel samen met eigen opnames).
+   * Zo hoor je nooit een AI-stem die doet alsof ze Windy is naast de echte opnames.
+   */
+  machine: boolean;
+  machineSound: MachineSound;
   /** Aparte stem voor de buurvrouw. */
   neighbourVoice: PiperVoiceId;
   neighbourPitch: number;

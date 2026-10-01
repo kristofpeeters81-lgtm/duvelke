@@ -23,7 +23,7 @@
       <li><strong>Geheim dossier:</strong> iedereen krijgt in het geheim te zien wie hij is. Vertel het aan niemand!</li>
       <li><strong>Opdrachten:</strong> de hele groep werkt samen. Lukt het, dan komen er edelstenen in de schatkist.</li>
       <li><strong>Geheime tips:</strong> voor een opdracht krijgt iedereen stiekem een tipje. {s.saboteurName} krijgt een sabotagetip, de anderen een speurderstip.</li>
-      <li><strong>Roddels:</strong> {s.hostName} vertelt wat ze zelf zag: dat klopt altijd. {s.neighbourName} vertelt ook dingen... maar die liegt soms!</li>
+      <li><strong>Roddels:</strong> {s.hostName} (of {s.sonName} zijn machien) vertelt wat ze zelf zag: dat klopt altijd. {s.neighbourName} vertelt ook dingen... maar die liegt soms!</li>
       <li><strong>Kijk-joker:</strong> soms kan de groep edelstenen ruilen voor een joker. Wie een joker heeft, mag stiekem één naam zien die zeker onschuldig is.</li>
       <li><strong>De Test:</strong> op het einde beantwoordt iedereen apart vragen over {s.saboteurName}. Wie het meest juist heeft, wint!</li>
       <li><strong>De schat:</strong> haalt de groep minder dan de helft van de edelstenen, dan wint {s.saboteurName} de schat.</li>
@@ -50,7 +50,7 @@
       <li><strong>Tablet per ongeluk dicht?</strong> Geen probleem: het spel gaat verder waar het was, ook de timer.</li>
       <li><strong>Iemand even weg</strong> bij het doorgeven? Tik op "later": die speler komt achteraan.</li>
       <li><strong>Speelt het hulpje niet mee?</strong> Stel een pincode in: dan kan het hulpje stiekem alle rollen bekijken.</li>
-      <li><strong>Zelf inspreken:</strong> bij <strong>{s.hostName} → Uitspraken</strong> kan je bij elke zin 🎤 tikken. Namen spreek je in bij <strong>Spelers</strong>.</li>
+      <li><strong>Zelf inspreken:</strong> bij <strong>{s.hostName} → Uitspraken</strong> kan je bij elke zin 🎤 tikken. Namen spreek je in bij <strong>Spelers</strong>. Vanaf je eerste opname leest 🤖 {s.sonName} zijn machien voor wat niet ingesproken is, zodat je geen AI-{s.hostName} naast je eigen stem hoort.</li>
       <li><strong>Meer opdrachten:</strong> bij <strong>📚 Opdrachten</strong> kan je zelf opdrachten maken of er laten bedenken door een gratis AI.</li>
       <li><strong>Duimpjes:</strong> na elke opdracht 👍 of 👎. Leuke opdrachten komen vaker terug.</li>
     </ul>

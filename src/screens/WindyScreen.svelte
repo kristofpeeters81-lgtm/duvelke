@@ -9,10 +9,12 @@
   import Toggle from '../components/Toggle.svelte';
   import RecordPanel from '../components/RecordPanel.svelte';
   import TopBar from '../components/TopBar.svelte';
+  import Machine from '../components/Machine.svelte';
   import Windy, { type WindyMood } from '../components/Windy.svelte';
   import { LINE_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
   import { newId } from '../lib/ids';
   import { PIPER_VOICES, storedVoices } from '../lib/piper';
+  import { MACHINE_SOUNDS } from '../lib/robot';
   import { defaultVoice, PIPER_PITCH_RANGE, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
   import { speak, stopAll } from '../lib/speech';
   import { app, deleteRecording, go, lineContext, showToast } from '../lib/store.svelte';
@@ -58,7 +60,8 @@
   async function testVoice(text?: string, lineId?: string): Promise<void> {
     const line = text ?? pickLine('intro', app.windyLines, lineContext())?.text ?? 'Hallo schatjes, het is hier Windy!';
     testing = true;
-    await speak(line, { ...$state.snapshot(app.settings.voice), enabled: true }, {
+    // Windy zelf testen, dus niet via het machien.
+    await speak(line, { ...$state.snapshot(app.settings.voice), enabled: true, machine: false }, {
       lineId,
       onStart: () => {
         testing = false;
@@ -67,6 +70,17 @@
     });
     testing = false;
     talking = false;
+  }
+
+  let machineTalking = $state(false);
+  async function testMachine(): Promise<void> {
+    const s = app.settings;
+    const line = `Bliep bloep. Ik ben ${s.sonName} zijn machien. Ik lees alles voor wat ${s.hostName} niet zelf ingesproken heeft. En ik lieg nooit.`;
+    await speak(line, { ...$state.snapshot(s.voice), enabled: true }, {
+      machine: true,
+      onStart: () => (machineTalking = true),
+    });
+    machineTalking = false;
   }
 
   function preset(pitch: number, rate: number): void {
@@ -188,6 +202,40 @@
         onchange={(on) => (app.settings.voice.useRecordings = on)}
       />
     </section>
+
+    {#if v.useRecordings}
+      <section class="section">
+        <h2>🤖 {app.settings.sonName} zijn machien</h2>
+        <div class="machine-row">
+          <Machine size={80} talking={machineTalking} />
+          <p class="hint">
+            Wat {app.settings.hostName} niet zelf ingesproken heeft (de uitleg van de opdrachten, de roddels die altijd kloppen...),
+            leest het machien voor. Zo hoor je nooit een AI-stem die doet alsof ze {app.settings.hostName} is. Het machien doet pas mee
+            zodra je minstens één uitspraak ingesproken hebt. Spreek bij Uitspraken ook "Het machien" in: daarmee stelt
+            {app.settings.hostName} het machien voor.
+          </p>
+        </div>
+        <Toggle
+          label="Het machien leest voor wat niet ingesproken is"
+          description="Uit: dan leest de AI-stem van {app.settings.hostName} die stukken."
+          checked={v.machine}
+          onchange={(on) => (app.settings.voice.machine = on)}
+        />
+        {#if v.machine}
+          <span class="field-label">Hoe klinkt het?</span>
+          <Segmented
+            label="Klank van het machien"
+            value={v.machineSound}
+            options={MACHINE_SOUNDS.map((m) => ({ value: m.id, label: m.label, sub: m.sub }))}
+            onchange={(m) => {
+              app.settings.voice.machineSound = m;
+              void testMachine();
+            }}
+          />
+          <BigButton variant="secondary" full onclick={testMachine}>🔊 Laat het machien iets zeggen</BigButton>
+        {/if}
+      </section>
+    {/if}
 
     {#if v.engine === 'piper'}
       <section class="section">
@@ -402,6 +450,16 @@
 {/if}
 
 <style>
+  .machine-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .machine-row p {
+    margin: 0;
+  }
+
   .tabs {
     margin-bottom: 18px;
   }

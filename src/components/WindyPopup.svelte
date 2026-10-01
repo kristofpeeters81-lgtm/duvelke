@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import { speak, stopAll } from '../lib/speech';
+  import { speak, stopAll, type Speaker } from '../lib/speech';
+  import Machine from './Machine.svelte';
   import { app, lineTemplate } from '../lib/store.svelte';
   import Windy from './Windy.svelte';
 
@@ -13,6 +14,7 @@
 
   let visible = $state(false);
   let talking = $state(false);
+  let who = $state<Speaker>('windy');
   let hideTimer: ReturnType<typeof setTimeout> | undefined;
   let shown = -1;
 
@@ -21,12 +23,13 @@
     shown = line.key;
     const current = line;
     visible = true;
+    who = 'windy';
     clearTimeout(hideTimer);
     void (async () => {
       await speak(current.text, $state.snapshot(app.settings.voice), {
         lineId: current.id,
         template: lineTemplate(current.id),
-        onStart: () => (talking = true),
+        onStart: (w) => ((who = w), (talking = true)),
       });
       talking = false;
       hideTimer = setTimeout(() => (visible = false), 2500);
@@ -41,7 +44,7 @@
 
 {#if visible && line}
   <button type="button" class="popup" aria-live="polite" onclick={() => ((visible = false), stopAll())}>
-    <span class="who"><Windy mood="stiekem" size={70} {talking} animated={false} /></span>
+    <span class="who">{#if who === 'machien'}<Machine size={70} {talking} animated={false} />{:else}<Windy mood="stiekem" size={70} {talking} animated={false} />{/if}</span>
     <span class="bubble">{line.text}</span>
   </button>
 {/if}

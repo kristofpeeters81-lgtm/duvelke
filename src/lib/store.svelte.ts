@@ -1,6 +1,7 @@
 import * as db from './db';
 import { isValidPin, normalizeGame, normalizeProgram, type Game } from './game';
 import { sortPlayers } from './players';
+import { setRecordedIds } from './speech';
 import { defaultSettings, normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import { setExtraTasks } from './tasks/registry';
@@ -50,6 +51,11 @@ export const app = $state({
   customTasks: [] as TaskDef[],
   /** Gemini-sleutel: blijft op dit toestel, nooit in een back-up. */
   ai: { geminiKey: '', model: '' },
+});
+
+// speak() moet weten of Windy met een opgenomen stem spreekt: dan leest het machien de rest.
+$effect.root(() => {
+  $effect(() => setRecordedIds(app.recordedLineIds));
 });
 
 export const toast = $state({ message: '', kind: 'info' as 'info' | 'error', id: 0 });

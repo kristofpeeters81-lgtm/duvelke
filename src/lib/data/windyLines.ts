@@ -21,7 +21,8 @@ export type LineCategory =
   | 'schat-gewonnen'
   | 'schat-verloren'
   | 'ontmaskerd'
-  | 'winnaar';
+  | 'winnaar'
+  | 'machien';
 
 export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; hint: string }[] = [
   { id: 'intro', label: 'Begin van het spel', emoji: '👋', hint: 'Als Windy binnenstormt.' },
@@ -40,6 +41,12 @@ export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; 
   { id: 'schat-verloren', label: 'Schat verloren', emoji: '😈', hint: "Minder dan de helft: 't Duvelke wint de schat." },
   { id: 'ontmaskerd', label: 'De ontmaskering', emoji: '🎭', hint: '{speler} = wie het Duvelke was.' },
   { id: 'winnaar', label: 'De winnaar', emoji: '🏆', hint: '{speler} = de winnaar van De Test.' },
+  {
+    id: 'machien',
+    label: 'Het machien',
+    emoji: '🤖',
+    hint: 'Eén keer bij het begin: Windy stelt het machien voor dat alles voorleest wat niet ingesproken is. Enkel als het machien aan staat.',
+  },
 ];
 
 export interface BuiltInLine {
@@ -154,6 +161,11 @@ const lines: [LineCategory, string][] = [
   ['winnaar', 'Proficiat {speler}! De beste speurder van vandaag! Ik ben zo trots, ik moet ervan wenen.'],
   ['winnaar', 'Hoera voor {speler}! Zo slim, dat hebt ge zeker van mij geleerd.'],
   ['winnaar', '{speler} wint! Dat verdient een dikke knuffel van {windy}. Kom hier!'],
+
+  // Kenzo zijn machien. Nieuwe uitspraken altijd achteraan: de ids (en dus de opnames) hangen aan de volgorde.
+  ['machien', 'Ik heb mijn bril weer nergens liggen. Dus de opdrachten laat ik voorlezen door {zoon} zijn machien. Dat heeft hij zelf gemaakt. Van een doos! Ik ben zo trots.'],
+  ['machien', 'Ziet ge die doos? Dat is {zoon} zijn machien. Dat leest alles voor wat ik niet kan onthouden. En dat machien liegt nooit, hé. Niet zoals de buurvrouw.'],
+  ['machien', 'Als ik efkes geen tijd heb, dan praat {zoon} zijn machien. Luister daar goed naar. Dat ding weet alles, en het heeft alles gezien!'],
 ];
 
 

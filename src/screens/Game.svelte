@@ -6,6 +6,7 @@
   import type { WindyMood } from '../components/Windy.svelte';
   import type { LineCategory } from '../lib/data/windyLines';
   import { treasure } from '../lib/gameplay';
+  import { machineOn } from '../lib/speech';
   import { app, windySays } from '../lib/store.svelte';
   import { getTask } from '../lib/tasks/registry';
   import { keepScreenOn } from '../lib/wakelock';
@@ -20,10 +21,11 @@
   const total = $derived(game ? treasure(game.program, game.results, getTask) : { gems: 0, max: 0 });
   let menuOpen = $state(false);
 
-  // De intro: twee begin-uitspraken en één over de geheime dossiers.
+  // De intro: twee begin-uitspraken, eventueel het machien voorstellen, en één over de geheime dossiers.
   const introPlan: { category: LineCategory; mood: WindyMood }[] = [
     { category: 'intro', mood: 'blij' },
     { category: 'intro', mood: 'geschokt' },
+    ...(untrack(() => machineOn(app.settings.voice, app.recordedLineIds)) ? [{ category: 'machien' as const, mood: 'blij' as const }] : []),
     { category: 'rollen', mood: 'stiekem' },
   ];
   let introStep = $state(0);

@@ -14,8 +14,9 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import BigButton from '../../components/BigButton.svelte';
+  import Machine from '../../components/Machine.svelte';
   import Windy from '../../components/Windy.svelte';
-  import { speak, stopAll } from '../../lib/speech';
+  import { machineOn, speak, stopAll } from '../../lib/speech';
   import { app } from '../../lib/store.svelte';
 
   interface Props {
@@ -67,7 +68,7 @@
 {:else}
 <div class="read">
   <div class="head">
-    <Windy mood={showAnswer ? 'geschokt' : 'stiekem'} size={90} {talking} />
+    {#if machineOn(app.settings.voice, app.recordedLineIds)}<Machine size={90} {talking} />{:else}<Windy mood={showAnswer ? 'geschokt' : 'stiekem'} size={90} {talking} />{/if}
     <span class="count">{index + 1} van {items.length} · ✓ {correct} juist</span>
   </div>
   <p class="q">{current.question}</p>
