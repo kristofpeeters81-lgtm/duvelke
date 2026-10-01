@@ -685,6 +685,21 @@ export function answerTest(game: Game, value: string, elapsedMs: number): void {
   else f.stage = 'klaar';
 }
 
+/**
+ * Eén vraag terug, om een per ongeluk gekozen antwoord te verbeteren. Kan enkel zolang de tablet
+ * nog bij dezelfde speler is (ook vanaf "Klaar!"), nooit naar de test van iemand anders.
+ */
+export function testBack(game: Game): void {
+  const f = game.finale;
+  if (!f) return;
+  if (f.stage === 'klaar') {
+    f.stage = 'vragen';
+    f.qIndex = f.questions.length - 1;
+  } else if (f.stage === 'vragen' && f.qIndex > 0) {
+    f.qIndex -= 1;
+  }
+}
+
 /** Tablet naar de volgende speler; na de laatste speler naar de schat. */
 export function nextTestPlayer(game: Game): void {
   const f = game.finale;

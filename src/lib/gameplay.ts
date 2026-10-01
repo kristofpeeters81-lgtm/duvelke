@@ -118,3 +118,24 @@ export function pickQuiz(difficulty: Difficulty, count: number, alreadyAsked: re
   const pool = fresh.length >= count ? fresh : all;
   return shuffle(pool, rng).slice(0, count);
 }
+
+/** Vanaf hoeveel resterende tijd Windy roept dat de tijd bijna om is (enkel bij timers van 45 s of meer). */
+export function hurryAtMs(totalSeconds: number): number | null {
+  const total = totalSeconds * 1000;
+  return total >= 45000 ? Math.min(30000, total / 4) : null;
+}
+
+/**
+ * Wanneer Windy zich tijdens een timer komt moeien: ongeveer elke minuut (45 tot 90 s, naar de lengte
+ * van de timer), en niet vlak voor "de tijd is bijna om". Geeft de resterende tijd (ms) per moment.
+ */
+export function meddleMoments(totalSeconds: number): number[] {
+  const total = totalSeconds * 1000;
+  if (total < 60000) return [];
+  const hurry = hurryAtMs(totalSeconds) ?? 0;
+  const interval = Math.min(90000, Math.max(45000, total / 4));
+  const out: number[] = [];
+  for (let left = total - interval; left > hurry + 15000; left -= interval) out.push(left);
+  if (out.length === 0) out.push(total / 2);
+  return out;
+}

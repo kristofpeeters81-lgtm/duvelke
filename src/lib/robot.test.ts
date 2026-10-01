@@ -49,6 +49,6 @@ describe('Kenzo zijn machien', () => {
     const { machine: _m, machineSound: _s, ...old } = d.voice;
     const upgraded = normalizeSettings({ ...d, voice: { ...old, machineSound: 'raar' } });
     expect(upgraded.voice.machine).toBe(true);
-    expect(upgraded.voice.machineSound).toBe('robot');
+    expect(upgraded.voice.machineSound).toBe('licht');
   });
 });

@@ -166,6 +166,23 @@ const lines: [LineCategory, string][] = [
   ['machien', 'Ik heb mijn bril weer nergens liggen. Dus de opdrachten laat ik voorlezen door {zoon} zijn machien. Dat heeft hij zelf gemaakt. Van een doos! Ik ben zo trots.'],
   ['machien', 'Ziet ge die doos? Dat is {zoon} zijn machien. Dat leest alles voor wat ik niet kan onthouden. En dat machien liegt nooit, hé. Niet zoals de buurvrouw.'],
   ['machien', 'Als ik efkes geen tijd heb, dan praat {zoon} zijn machien. Luister daar goed naar. Dat ding weet alles, en het heeft alles gezien!'],
+
+  // Meer moeien tijdens de timer (1/10/2026)
+  ['bemoeien', 'Allee mannekes, dat kan toch beter hé! Ik geloof in jullie. Een beetje.'],
+  ['bemoeien', 'Allee, allee, allee! Onzen {zoon} kan dat zelfs. En die kan nog geen boterham smeren.'],
+  ['bemoeien', 'Ik kijk niet hoor. Ik kijk helemaal niet. Oei, wat doet die daar nu?'],
+  ['bemoeien', 'Schatjes, is dat nu de bedoeling? Ik vraag het maar hé.'],
+  ['bemoeien', 'Hup hup hup! Niet staan dromen. Dat doet onzen {zoon} al genoeg.'],
+  ['bemoeien', 'Amai, als ik zo traag was op mijn werk, dan was ik al lang buiten gevlogen.'],
+  ['bemoeien', 'Komaan, een beetje pit! Ik heb mijn koffie er speciaal voor laten koud worden.'],
+  ['bemoeien', 'Wie is hier aan het treuzelen? Ik noem geen namen. Maar {saboteur} misschien?'],
+  ['bemoeien', 'Oei oei oei, ik kan er niet naar kijken. Ik kijk toch.'],
+  ['bemoeien', 'Dat is al heel goed. Bijna. Een klein beetje. Allee, ge zijt bezig hé.'],
+  ['bemoeien', 'Samen hé! Niet ieder in zijn eigen hoekje, zoals bij ons aan tafel.'],
+  ['bemoeien', 'De buurvrouw zou dat nooit kunnen. Ik wel natuurlijk. Maar ik doe nu niet mee.'],
+  ['tijd', 'Allee mannekes, de klok wacht op niemand! Zelfs niet op mij.'],
+  ['tijd', 'Nog efkes! Rap rap, voor ik moet beginnen aftellen!'],
+  ['tijd', 'Bijna gedaan! Geef alles wat ge hebt, schatjes!'],
 ];
 
 

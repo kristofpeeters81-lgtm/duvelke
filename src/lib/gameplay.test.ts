@@ -4,6 +4,8 @@ import {
   gemsForCount,
   gemsForOutcome,
   gemsForStopwatch,
+  hurryAtMs,
+  meddleMoments,
   pickQuiz,
   targetFor,
   timerSeconds,
@@ -46,6 +48,25 @@ describe('edelstenen', () => {
   it('haalt het doel uit de variabelen', () => {
     expect(targetFor(task('wasknijper-jacht'), item('wasknijper-jacht', { aantal: 15 }))).toBe(15);
     expect(targetFor(task('windy-quiz'), item('windy-quiz'))).toBe(8);
+  });
+});
+
+describe('meddleMoments', () => {
+  it('laat Windy ongeveer elke minuut moeien, niet vlak voor het einde', () => {
+    expect(meddleMoments(240)).toEqual([180000, 120000, 60000]);
+    expect(meddleMoments(120)).toEqual([75000]);
+    expect(meddleMoments(60)).toEqual([30000]);
+    expect(meddleMoments(45)).toEqual([]);
+    // Lange timer: hoogstens elke 90 s
+    const long = meddleMoments(600);
+    expect(long[0]).toBe(510000);
+    expect(long.at(-1)!).toBeGreaterThan(hurryAtMs(600)! + 15000);
+  });
+
+  it('roept "bijna om" op het laatste kwart, hoogstens 30 s voor het einde', () => {
+    expect(hurryAtMs(240)).toBe(30000);
+    expect(hurryAtMs(60)).toBe(15000);
+    expect(hurryAtMs(30)).toBeNull();
   });
 });
 

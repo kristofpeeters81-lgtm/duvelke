@@ -4,6 +4,7 @@ import {
   afterGossip,
   afterTreasure,
   answerTest,
+  testBack,
   briefingSkip,
   assignRoles,
   briefingNext,
@@ -331,6 +332,38 @@ describe('finale', () => {
     expect(Object.keys(f.answers)).toHaveLength(4);
     const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
     expect(back.finale).toEqual(game.finale);
+  });
+
+  it('laat een speler in de eigen test terugkeren om een antwoord te verbeteren', () => {
+    const program: ProgramItem[] = [{ uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] }];
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(8));
+    for (const p of game.players) p.profile = { eten: 'pizza', broerzus: 'geen', onderstuk: 'rok', schoenen: 'laarzen', haarlengte: 'lang', bril: 'nee', haarkleur: 'bruin', bovenstuk: 'rood' };
+    startTasks(game);
+    skipCurrent(game);
+    finaleStep(game, 'test');
+    const f = game.finale!;
+    const pid = f.order[0]!;
+    nextTestPlayer(game);
+    testBack(game); // op de eerste vraag: niets te doen
+    expect(f.qIndex).toBe(0);
+    answerTest(game, f.questions[0]!.options[0]!.value, 500);
+    testBack(game);
+    expect(f.qIndex).toBe(0);
+    answerTest(game, f.questions[0]!.options[1]!.value, 500);
+    expect(f.answers[pid]!.answers[0]).toBe(f.questions[0]!.options[1]!.value);
+    for (let q = 1; q < f.questions.length; q++) answerTest(game, f.questions[q]!.options[0]!.value, 500);
+    expect(f.stage).toBe('klaar');
+    // Vanaf "Klaar!" nog terug naar de laatste vraag
+    testBack(game);
+    expect(f.stage).toBe('vragen');
+    expect(f.qIndex).toBe(f.questions.length - 1);
+    answerTest(game, f.questions.at(-1)!.options[0]!.value, 500);
+    // Na het doorgeven niet meer terug naar de vorige speler
+    nextTestPlayer(game);
+    expect(f.stage).toBe('geef');
+    testBack(game);
+    expect(f.stage).toBe('geef');
+    expect(f.index).toBe(1);
   });
 });
 

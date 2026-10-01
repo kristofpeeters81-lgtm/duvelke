@@ -15,8 +15,8 @@ interface Preset {
 }
 
 export const MACHINE_SOUNDS: { id: MachineSound; label: string; sub: string }[] = [
-  { id: 'licht', label: 'Licht', sub: 'best verstaanbaar' },
-  { id: 'robot', label: 'Robot', sub: 'aanbevolen' },
+  { id: 'licht', label: 'Licht', sub: 'aanbevolen' },
+  { id: 'robot', label: 'Robot', sub: 'meer robot' },
   { id: 'blik', label: 'Blikken doos', sub: 'het grappigst' },
 ];
 

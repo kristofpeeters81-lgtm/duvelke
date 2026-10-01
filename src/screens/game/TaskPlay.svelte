@@ -247,7 +247,7 @@
           ondone={(s) => setResult('score', gemsForStopwatch(task, s, target, marginFor(task, item)), Math.round(s * 10) / 10)}
         />
       {:else if current.timer}
-        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'half' ? 'bemoeien' : 'tijd')} />
+        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
         <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
           <summary>📜 Uitleg en rollen</summary>

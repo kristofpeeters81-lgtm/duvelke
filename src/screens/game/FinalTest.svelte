@@ -1,7 +1,7 @@
 <script lang="ts">
   import BigButton from '../../components/BigButton.svelte';
   import { PROFILE_QUESTIONS } from '../../lib/data/profile';
-  import { answerTest, nextTestPlayer, testLater, testSkip } from '../../lib/game';
+  import { answerTest, nextTestPlayer, testBack, testLater, testSkip } from '../../lib/game';
   import { sfx } from '../../lib/sfx';
   import { app } from '../../lib/store.svelte';
 
@@ -10,6 +10,14 @@
   const pid = $derived(f ? f.order[f.index] : undefined);
   const player = $derived(game?.players.find((p) => p.playerId === pid));
   const question = $derived(f ? f.questions[f.qIndex] : undefined);
+  /** Wat deze speler al koos (na "vorige vraag"). */
+  const chosen = $derived(f && pid ? (f.answers[pid]?.answers[f.qIndex] ?? null) : null);
+
+  function back(): void {
+    if (!app.game) return;
+    sfx.tap();
+    testBack(app.game);
+  }
 
   let shownAt = $state(performance.now());
   $effect(() => {
@@ -65,18 +73,22 @@
         {#each question.options as opt (opt.value)}
           {@const p = question.kind === 'wie' ? game.players.find((x) => x.playerId === opt.value) : undefined}
           {@const l = look(question.id, opt.value)}
-          <button type="button" class="opt" onclick={() => answer(opt.value)}>
+          <button type="button" class="opt" class:chosen={chosen === opt.value} aria-pressed={chosen === opt.value} onclick={() => answer(opt.value)}>
             {#if p}<span class="pav" style="--c:{p.color}">{p.avatar}</span>{:else if l.swatch}<span class="sw" style="background:{l.swatch}"></span>{:else if l.emoji}<span class="em">{l.emoji}</span>{/if}
             <span>{opt.label}</span>
           </button>
         {/each}
       </div>
+      {#if f.qIndex > 0}
+        <button type="button" class="link" onclick={back}>◀ Vorige vraag</button>
+      {/if}
     </div>
   {:else}
     <div class="stack center">
       <div class="big">🤐</div>
       <h2>Klaar, {player.name}!</h2>
       <p class="hint">Je antwoorden zijn geheim tot de onthulling. Geef de tablet door.</p>
+      <button type="button" class="link" onclick={back}>◀ Toch nog iets veranderen</button>
       <BigButton variant="gold" size="large" full onclick={() => app.game && nextTestPlayer(app.game)}>
         {f.index + 1 < f.order.length ? 'Tablet doorgegeven ▶' : 'Iedereen heeft de test gemaakt ▶'}
       </BigButton>
@@ -180,6 +192,11 @@
     font-size: 1.2rem;
     text-align: left;
     cursor: pointer;
+  }
+
+  .opt.chosen {
+    border-color: var(--gold);
+    background: rgba(255, 207, 63, 0.14);
   }
 
   .opt:active {

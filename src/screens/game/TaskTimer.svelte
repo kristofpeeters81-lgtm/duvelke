@@ -1,17 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import BigButton from '../../components/BigButton.svelte';
+  import { hurryAtMs, meddleMoments } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
 
   interface Props {
     timer: { total: number; remainingMs: number; endsAt: number | null };
     ondone: () => void;
-    /** Momenten om Windy te laten moeien: halverwege en als de tijd bijna om is. */
-    onmoment?: (kind: 'half' | 'bijna') => void;
+    /** Momenten om Windy te laten moeien: ongeveer elke minuut, en als de tijd bijna om is. */
+    onmoment?: (kind: 'moeien' | 'bijna') => void;
   }
 
   let { timer, ondone, onmoment }: Props = $props();
-  let firedHalf = false;
+  let meddled = 0;
   let firedBijna = false;
 
   let now = $state(Date.now());
@@ -36,12 +37,15 @@
         else if (s > 0 && s <= 10) sfx.tick();
       }
       if (running && left > 0) {
-        const totalMs = timer.total * 1000;
-        if (!firedHalf && totalMs >= 60000 && left <= totalMs / 2 && left > Math.min(30000, totalMs / 4) + 5000) {
-          firedHalf = true;
-          onmoment?.('half');
+        const moments = meddleMoments(timer.total);
+        const next = moments[meddled];
+        if (next !== undefined && left <= next) {
+          // Meerdere momenten tegelijk voorbij (bv. na herladen)? Dan maar één keer moeien.
+          while (meddled < moments.length && left <= (moments[meddled] ?? 0)) meddled++;
+          onmoment?.('moeien');
         }
-        if (!firedBijna && totalMs >= 45000 && left <= Math.min(30000, totalMs / 4)) {
+        const hurry = hurryAtMs(timer.total);
+        if (!firedBijna && hurry !== null && left <= hurry) {
           firedBijna = true;
           onmoment?.('bijna');
         }
