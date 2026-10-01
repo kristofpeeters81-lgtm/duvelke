@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { encodeWav } from './robot';
+import { encodeWav } from './wav';
 import { defaultSettings, normalizeSettings } from './settings';
 import { machineOn, setRecordedIds } from './speech';
 

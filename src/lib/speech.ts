@@ -11,6 +11,7 @@ import { getRecording } from './db';
 import { BrokenVoiceError, piperSupported, playWav, StaleSpeechError, stopPiper, storedVoices, synthesize } from './piper';
 import { robotize } from './robot';
 import type { VoiceSettings } from './types';
+import { stitch } from './wav';
 import { speak as speakDevice, stopSpeaking } from './voice';
 import { nameRecordingId, recordingParts } from './windy';
 
@@ -98,8 +99,12 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
       const pieces = await recordedPieces(options);
       if (mine !== token) return;
       if (pieces) {
+        // Stilte aan de randen weg en alles aan elkaar: zo loopt de naam vlot in de zin.
+        // Lukt dat niet (oud toestel, raar formaat), dan gewoon de stukjes na elkaar.
+        const joined = await stitch(pieces).catch(() => null);
+        if (mine !== token) return;
         options.onStart?.(options.voice ? 'buurvrouw' : 'windy');
-        for (const piece of pieces) {
+        for (const piece of joined ? [joined] : pieces) {
           if (mine !== token) return;
           await playWav(piece, 1);
         }
