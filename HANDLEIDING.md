@@ -48,7 +48,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 | **Aankondiging** | Windy kondigt de opdracht aan. |
 | **Geheime briefing** | De tablet gaat rond: iedereen krijgt een geheime tip. 't Duvelke krijgt een sabotagetip, de anderen een speurderstip. Beide passen bij die opdracht. Wie een Kijk-joker heeft, kan die hier inzetten. |
 | **Uitleg** | Windy leest voor. Rollen, geheime woorden en lijsten staan op het scherm. Bij vragen, raadsels en weetjes leest Windy ze één voor één voor en zegt ze pas daarna het antwoord, zodat ook een meespelend hulpje niets verklapt. |
-| **Timer / quiz / klok** | De opdracht wordt gespeeld. Windy moeit zich tussendoor ("Allee mannekes, de tijd is bijna om hé!"). 📸 voor een bewijsfoto. |
+| **Timer / quiz / klok** | De opdracht wordt gespeeld. Windy moeit zich ongeveer elke minuut ("Allee, allee, allee! Onzen Kenzo kan dat zelfs.") en roept als de tijd bijna om is. 📸 voor een bewijsfoto. |
 | **Resultaat** | Gelukt / bijna / mislukt of tellen: dat levert edelstenen op. |
 | **Dilemma** (soms) | Edelstenen houden, of een deel ruilen voor een Kijk-joker. |
 | **Duimpje** | 👍 of 👎: leuke opdrachten komen vaker terug. |
@@ -62,7 +62,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 
 ## 4. De finale
 
-1. **De Test**: iedereen beantwoordt apart dezelfde vragen over 't Duvelke. Bij een gelijke stand wint wie 't Duvelke juist had, en daarna wie het snelst was.
+1. **De Test**: iedereen beantwoordt apart dezelfde vragen over 't Duvelke. Per ongeluk verkeerd getikt? Met **◀ Vorige vraag** ga je terug, zolang je de tablet nog niet doorgegeven hebt. Bij een gelijke stand wint wie 't Duvelke juist had, en daarna wie het snelst was.
 2. **De schat**: minstens 50%, dan wint de groep. Anders wint 't Duvelke. Bij een echte schat zegt de app hoeveel iedereen krijgt.
 3. **De ontmaskering**: de onschuldigen vallen één voor één weg.
 4. **De uitslag**, met de Speurneus-medaille als die rol meedeed.
