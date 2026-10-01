@@ -15,14 +15,14 @@ Vite 8, Svelte 5 (runes), TypeScript strict, vite-plugin-pwa (Workbox). Opslag i
 |---|---|
 | `src/screens/` | Schermen. `game/` bevat alles tijdens het spel. |
 | `src/components/` | Herbruikbare onderdelen, waaronder Windy en 't Duvelke (eigen SVG). |
-| `src/lib/` | Logica: `game.ts`, `gameplay.ts`, `finale.ts`, `speech.ts`/`piper.ts`, `db.ts`, `backup.ts`, `ai.ts`. |
+| `src/lib/` | Logica: `game.ts`, `gameplay.ts`, `finale.ts`, `speech.ts`/`piper.ts`/`robot.ts` (Kenzo zijn machien), `db.ts`, `backup.ts`, `ai.ts`. |
 | `src/lib/tasks/` | Opdrachtenbibliotheek (305), programma, `wording.ts` (Windy of het hulpje leest voor). |
 | `src/lib/data/` | Vaste lijsten: Windy-uitspraken, locaties, spullen, stemmen. |
 
 ## Commando's
 
 - `npm run dev` start de ontwikkelserver.
-- `npm test` draait Vitest (435 tests).
+- `npm test` draait Vitest (444 tests).
 - `npm run check` draait svelte-check.
 - `npm run build` maakt de productiebuild.
 
@@ -31,6 +31,7 @@ De browsertests (Playwright-scripts) staan niet in de repo. Zet ze zo nodig opni
 ## Regels
 
 - Alles in het Vlaams. Windy spreekt sappig Kempisch.
+- Nieuwe Windy-uitspraken in `windyLines.ts` komen altijd **achteraan**. De ids (w001, w002…) volgen de volgorde, en de eigen opnames hangen aan die ids.
 - Het spel moet gratis zijn en offline speelbaar. Internet mag enkel voor installatie, de stemdownload en de optionele AI.
 - **Publieke repo:** geen persoonlijke gegevens, geen adres, geen Gemini-sleutel. Windy is een eigen personage. Gebruik nooit de naam, citaten of gelijkenis van het echte typetje waarop ze geïnspireerd is.
 - Bekijk geen oudere versies van dit spel buiten deze repo. Het spel is bewust van nul gestart.
