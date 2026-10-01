@@ -1,7 +1,7 @@
 # Plan: "Wie is 't Duvelke?"
 
 Een 'Wie is de Mol?'-achtig spel voor kinderen (±10 jaar), gespeeld op één gedeelde Android-tablet.
-Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
+Eerste gebruik: slaapfeestje op **31/10/2026** (6 kinderen + 2 volwassenen).
 
 ## Uitgangspunten (vastgelegd)
 
@@ -52,15 +52,15 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
 - **Speurders**: alle anderen.
 - **🔍 Speurneus** (optioneel, standaard uit): krijgt gaandeweg onschuldige namen. Speelt voor een aparte Speurneus-medaille.
 - **🙋 Bemoeial** (optioneel, standaard uit): bemoeit zich ongevraagd met alles.
-- **Spelleider**: meedoen is per spel te kiezen. Speelt die mee, dan ziet die nooit geheime info. Noodknop: "toon enkel mijn eigen rol opnieuw".
+- **Spelleider = Windy.** Een volwassene of kind is haar **hulpje** (bedient de tablet). Het hulpje: meedoen is per spel te kiezen. Speelt die mee, dan ziet die nooit geheime info. Noodknop: "toon enkel mijn eigen rol opnieuw".
 
 ## Verloop
 
 ### A. Voorbereiding
 1. **Spelers**: naam, kleur/avatar, kind of volwassene. De lijst wordt bewaard. Per spel aanvinken wie meedoet (3–16).
-2. **Instellingen**: duur (30 min–2,5 u), moeilijkheid (Makkelijk 6–8 / Normaal 9–12 / Pittig tieners+volwassenen), locaties (aanvinken: binnen, tuin, straat/buurt, bos, speeltuin/park, dorp, strand), schat (virtueel of fysiek met inventaris), namen, optionele rollen, buurvrouw-roddels, spelleider speelt mee.
+2. **Instellingen**: duur (30 min–2,5 u), moeilijkheid (Makkelijk 6–8 / Normaal 9–12 / Pittig tieners+volwassenen), locaties (aanvinken: binnen, tuin, straat/buurt, bos, speeltuin/park, dorp, strand), schat (virtueel of fysiek met inventaris), namen, optionele rollen, buurvrouw-roddels, hulpje speelt mee.
 3. **Benodigdheden**: een checklist, die bewaard wordt.
-4. **Programma**: de app stelt een programma voor. De spelleider kan wisselen, schrappen, herordenen en vastzetten.
+4. **Programma**: de app stelt een programma voor. Het hulpje kan wisselen, schrappen, herordenen en vastzetten.
 5. **Paklijst** van alles wat klaar moet liggen.
 
 ### B. Spel
@@ -90,21 +90,10 @@ Eerste gebruik: verjaardag op **26/10/2026** (6 kinderen + 2 volwassenen).
 - 300+ ingebouwde opdrachten in 12 categorieën, met variaties.
 - Per opdracht: locaties, benodigdheden, min/max spelers, duur, moeilijkheid, uitleg per niveau, 3–5 sabotagetips, rollen, begeleiderslabel.
 - Eigen opdrachten toevoegen en bewerken.
-- AI via **optie A** (kopiëren/plakken met een gratis chatbot) en **optie B** (gratis Gemini-sleutel). Na validatie en goedkeuring door de spelleider komen ze met een ✨-label in de databank op de tablet.
+- AI via **optie A** (kopiëren/plakken met een gratis chatbot) en **optie B** (gratis Gemini-sleutel). Na validatie en goedkeuring door het hulpje komen ze met een ✨-label in de databank op de tablet.
 - Back-up en herstel naar een bestand.
 - Duimpjes beïnvloeden hoe vaak een opdracht gekozen wordt.
 
-## Status (30/09/2026)
+## Stappenplan
 
-Stappen 1 tot en met 5 zijn gebouwd en online, plus de extra's: Vlaamse AI-stem, zelf inspreken (ook namen), de buurvrouw, 305 ingebouwde opdrachten, AI-opdrachten (A + B), eigen opdrachten, back-up, uitlegscherm en [HANDLEIDING.md](HANDLEIDING.md). Rest: proefspel en bijschaven (stap 6).
-
-## Bouwplanning
-
-| Stap | Klaar tegen | Inhoud |
-|---|---|---|
-| 1 | 4/10 | Projectbasis, PWA (offline), spelers, instellingen, benodigdheden |
-| 2 | 8/10 | Rollen verdelen met de tablet die rondgaat, Windy en 't Duvelke, stem-instellingen |
-| 3 | 11/10 | Volledig spel met ±40 opdrachten: briefings, timer, schat, jokers, foto's, roddels |
-| 4 | 14/10 | De Test, onthulling, diavoorstelling |
-| 5 | 17/10 | Bibliotheek 300+, AI (A + B), eigen opdrachten, back-up |
-| 6 | 18–25/10 | Proefspel, bijschaven, handleiding voor de spelleider |
+Wat klaar is, wat nog moet en de ideeën staan in [docs/STAPPENPLAN.md](docs/STAPPENPLAN.md).

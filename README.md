@@ -3,7 +3,7 @@
 Een offline speurspel zoals *Wie is de Mol?*, voor op één gedeelde tablet. Gemaakt voor een kinderfeest (±10 jaar), maar ook speelbaar met volwassenen.
 
 **Spelen:** https://kristofpeeters81-lgtm.github.io/duvelke/ (installeren via Chrome, daarna werkt alles zonder internet).
-**Handleiding:** [HANDLEIDING.md](HANDLEIDING.md) · **Plan en keuzes:** [PLAN.md](PLAN.md)
+**Handleiding:** [HANDLEIDING.md](HANDLEIDING.md) · **Plan en keuzes:** [PLAN.md](PLAN.md) · **Stappenplan:** [docs/STAPPENPLAN.md](docs/STAPPENPLAN.md)
 
 ## Wat zit erin
 
