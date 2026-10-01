@@ -87,8 +87,20 @@ describe('toSpeech', () => {
     expect(toSpeech("'t Is hier Windy! 'k Zeg niks 😈 hé")).toBe('et Is hier Windy! ik Zeg niks hé');
   });
 
+  it('zegt "\'s morgens" als één woord en leest geen losse "es" na een woord', () => {
+    expect(toSpeech("'s Morgens en ’s nachts")).toBe('sMorgens en snachts');
+    expect(toSpeech("Da's Windy's pruik en foto's")).toBe('Das Windys pruik en fotos');
+    expect(toSpeech('’t Duvelke en ’k weet het')).toBe('et Duvelke en ik weet het');
+  });
+
+  it('beklemtoont Kempische verkleinwoorden vooraan', () => {
+    expect(toSpeech('Dag schatteke, efkes mijn zakdoekskes.')).toBe('Dag schattekke, efkus mijn zakdoekskus.');
+    expect(toSpeech('Kom ne keer, mannekes van onzen Kenzo.')).toBe('Kom nen keer, mannekkus van onzn Kenzo.');
+    expect(toSpeech('Een unieke, fysieke opdracht.')).toBe('Een unieke, fysieke opdracht.');
+  });
+
   it('laat klinkerloze tussenwerpsels niet spellen', () => {
-    expect(toSpeech('Psst... kom ne keer dichter.')).toBe('kom ne keer dichter.');
+    expect(toSpeech('Psst... kom ne keer dichter.')).toBe('kom nen keer dichter.');
     expect(toSpeech('Sssst! Stil!')).toBe('Stil!');
     expect(toSpeech('Hmm. Ik ruik hier iets.')).toBe('hum. Ik ruik hier iets.');
     expect(toSpeech('Mmm, lekker. Pfff, moe. Brrr, koud.')).toBe('mjam, lekker. poeh, moe. boe, koud.');

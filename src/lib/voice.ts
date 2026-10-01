@@ -35,11 +35,24 @@ function rankVoice(v: SpeechSynthesisVoice): number {
   return (lang === 'nl-be' ? 2 : 0) + (v.localService ? 1 : 0);
 }
 
+/** Tijdwoorden na 's: "'s morgens" zeg je als "smorgens", niet als "es morgens". */
+const S_TIMES = 'morgens|middags|avonds|nachts|ochtends|namiddags|zondags|maandags|dinsdags|woensdags|donderdags|vrijdags|zaterdags|winters|zomers';
+
 /**
- * Uitspraaklijst: woorden die de voorleesstem anders letter per letter spelt.
+ * Uitspraaklijst: woorden die de voorleesstem anders letter per letter spelt of verkeerd beklemtoont.
  * Woorden zonder klinker ("Psst", "Hmm") spelt ze als afkorting; die vervangen of weglaten.
+ * De Kempische schrijfwijzen zijn nagemeten met de klanken die de stem echt maakt (espeak-ng, Nederlands).
  */
 const PRONUNCIATION: [RegExp, string][] = [
+  [/[’‘]/g, "'"], // gekrulde apostrof als gewone
+  [new RegExp(String.raw`(?<!\p{L})'s (${S_TIMES})\b`, 'giu'), 's$1'],
+  [/(\p{L})'s\b/gu, '$1s'], // Windy's, da's, foto's: geen losse "es"
+  // Kempische verkleinwoorden: de stem legt de klemtoon op "-eeke" en "-kès".
+  [/(?<=[bcdfghjklmnpqrstvwxz])eke\b/gi, 'ekke'], // schatteke → SCHAT-tekke
+  [/(?<=[bcdfghjklmnpqrstvwxz])ekes\b/gi, 'ekkus'], // mannekes
+  [/(?<=\p{L}{2})kes\b/giu, 'kus'], // efkes, zakdoekskes, Duvelkes
+  [/\bne\b/gi, 'nen'], // "kom ne keer": anders "nee keer"
+  [/\bonzen\b/gi, 'onzn'], // onzen Kenzo: klemtoon vooraan
   [/\bp+s+t+\b[.!…]*/gi, ''], // Psst... → gefluister, niet voorlezen
   [/\bs{2,}t*\b[.!…]*/gi, ''], // Sssst
   [/\bsh+t?\b[.!…]*/gi, ''], // Shh
@@ -49,9 +62,9 @@ const PRONUNCIATION: [RegExp, string][] = [
   [/\bbr{2,}\b/gi, 'boe'],
   [/\bgr{2,}\b/gi, 'grom'],
   [/\btsk\b/gi, 'tja'],
-  [/'k\b/gi, 'ik'],
-  [/'t\b/gi, 'et'],
-  [/'s\b/gi, 'es'],
+  [/(?<!\p{L})'k\b/giu, 'ik'],
+  [/(?<!\p{L})'t\b/giu, 'et'],
+  [/(?<!\p{L})'s\b/giu, 'es'],
 ];
 
 /** Kempische schrijfwijze omzetten naar iets wat de voorleesstem fatsoenlijk uitspreekt. */
