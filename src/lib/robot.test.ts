@@ -51,4 +51,15 @@ describe('Kenzo zijn machien', () => {
     expect(upgraded.voice.machine).toBe(true);
     expect(upgraded.voice.machineSound).toBe('licht');
   });
+
+  it('bewaart het vermommen van de eigen stem, begrensd op hele stapjes', () => {
+    const d = defaultSettings();
+    expect(d.voice.disguise).toBe(false);
+    const kept = normalizeSettings({ ...d, voice: { ...d.voice, disguise: true, disguisePitch: -4 } });
+    expect(kept.voice.disguise).toBe(true);
+    expect(kept.voice.disguisePitch).toBe(-4);
+    expect(normalizeSettings({ ...d, voice: { ...d.voice, disguisePitch: 20 } }).voice.disguisePitch).toBe(6);
+    expect(normalizeSettings({ ...d, voice: { ...d.voice, disguisePitch: 2.4 } }).voice.disguisePitch).toBe(2);
+    expect(normalizeSettings({ ...d, voice: { ...d.voice, disguisePitch: 'raar' } }).voice.disguisePitch).toBe(3);
+  });
 });

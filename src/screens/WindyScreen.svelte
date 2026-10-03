@@ -14,10 +14,11 @@
   import { LINE_CATEGORIES, NAMED_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
   import { newId } from '../lib/ids';
   import { PIPER_VOICES, storedVoices } from '../lib/piper';
+  import { PITCH_SEMITONES } from '../lib/pitch';
   import { MACHINE_SOUNDS } from '../lib/robot';
   import { defaultVoice, PIPER_PITCH_RANGE, PITCH_RANGE, RATE_RANGE } from '../lib/settings';
   import { speak, stopAll } from '../lib/speech';
-  import { app, deleteRecording, go, lineContext, showToast } from '../lib/store.svelte';
+  import { app, deleteRecording, go, lineContext, lineTemplate, showToast } from '../lib/store.svelte';
   import { loadDutchVoices, speechSupported } from '../lib/voice';
   import { fillPlaceholders, isFullyRecorded, linesFor, MAX_CUSTOM_LINES, MAX_LINE_LENGTH, pickLine, recordingParts } from '../lib/windy';
 
@@ -70,6 +71,29 @@
     });
     testing = false;
     talking = false;
+  }
+
+  // Stem vermommen: uitproberen met een eigen opname van een zin zonder naam.
+  const disguiseSampleId = $derived(app.recordedLineIds.find((id) => !id.includes(':') && lineTemplate(id) !== undefined));
+  let disguiseBusy = $state(false);
+
+  function disguiseLabel(semitones: number): string {
+    if (semitones === 0) return 'gewoon';
+    const n = Math.abs(semitones);
+    return `${n} ${n === 1 ? 'stapje' : 'stapjes'} ${semitones > 0 ? 'hoger' : 'lager'}`;
+  }
+
+  async function testDisguise(): Promise<void> {
+    const id = disguiseSampleId;
+    const template = id ? lineTemplate(id) : undefined;
+    if (!id || !template) return;
+    disguiseBusy = true;
+    await speak(fillPlaceholders(template, lineContext()), { ...$state.snapshot(app.settings.voice), enabled: true, machine: false }, {
+      lineId: id,
+      template,
+      onStart: () => (disguiseBusy = false),
+    });
+    disguiseBusy = false;
   }
 
   let machineTalking = $state(false);
@@ -201,6 +225,34 @@
         checked={v.useRecordings}
         onchange={(on) => (app.settings.voice.useRecordings = on)}
       />
+      {#if v.useRecordings}
+        <Toggle
+          label="🎭 Mijn stem vermommen"
+          description="Maakt je opnames hoger of lager, met hetzelfde tempo. Zo herkent niemand je stem. Ook de ingesproken namen."
+          checked={v.disguise}
+          onchange={(on) => (app.settings.voice.disguise = on)}
+        />
+        {#if v.disguise}
+          <label class="field-label" for="disguise">Hoeveel: {disguiseLabel(v.disguisePitch)}</label>
+          <input
+            id="disguise"
+            type="range"
+            min={PITCH_SEMITONES.min}
+            max={PITCH_SEMITONES.max}
+            step="1"
+            bind:value={app.settings.voice.disguisePitch}
+            onchange={() => void testDisguise()}
+          />
+          <div class="scale"><span>lager</span><span>gewoon</span><span>hoger</span></div>
+          {#if disguiseSampleId}
+            <BigButton variant="secondary" full onclick={testDisguise}>
+              {disguiseBusy ? '⏳ Even rekenen...' : '🔊 Probeer met een eigen opname'}
+            </BigButton>
+          {:else}
+            <p class="hint">Spreek eerst een uitspraak in bij Uitspraken, dan kan je het hier uitproberen.</p>
+          {/if}
+        {/if}
+      {/if}
     </section>
 
     {#if v.useRecordings}

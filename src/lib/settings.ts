@@ -1,5 +1,6 @@
 import { LOCATION_IDS } from './data/locations';
 import { DEFAULT_PIPER_VOICE, PIPER_VOICE_IDS } from './data/piperVoices';
+import { PITCH_SEMITONES } from './pitch';
 import { SUPPLIES, SUPPLY_IDS } from './data/supplies';
 import { newId } from './ids';
 import { clampNumber, isRecord } from './util';
@@ -28,6 +29,8 @@ export function defaultVoice(): VoiceSettings {
     useRecordings: true,
     machine: true,
     machineSound: 'licht',
+    disguise: false,
+    disguisePitch: 3,
     neighbourVoice: 'nl_BE-nathalie-medium',
     neighbourPitch: 1.05,
     voiceURI: null,
@@ -47,6 +50,8 @@ function cleanVoice(raw: unknown): VoiceSettings {
     useRecordings: typeof raw.useRecordings === 'boolean' ? raw.useRecordings : d.useRecordings,
     machine: typeof raw.machine === 'boolean' ? raw.machine : d.machine,
     machineSound: raw.machineSound === 'robot' || raw.machineSound === 'blik' ? raw.machineSound : d.machineSound,
+    disguise: typeof raw.disguise === 'boolean' ? raw.disguise : d.disguise,
+    disguisePitch: Math.round(clampNumber(raw.disguisePitch, PITCH_SEMITONES.min, PITCH_SEMITONES.max, d.disguisePitch)),
     neighbourVoice: PIPER_VOICE_IDS.find((id) => id === raw.neighbourVoice) ?? d.neighbourVoice,
     neighbourPitch: clampNumber(raw.neighbourPitch, PIPER_PITCH_RANGE.min, PIPER_PITCH_RANGE.max, d.neighbourPitch),
     voiceURI: typeof raw.voiceURI === 'string' && raw.voiceURI !== '' ? raw.voiceURI : null,

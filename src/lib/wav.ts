@@ -1,3 +1,5 @@
+import { shiftPitch } from './pitch';
+
 /**
  * Kleine geluidshulpjes: wav maken, stilte aan de randen wegknippen en opnames aan elkaar plakken.
  * Alles met Web Audio in de browser, dus offline.
@@ -59,10 +61,14 @@ export function trimBounds(samples: Float32Array, sampleRate: number): { start: 
 
 /** Pauze tussen twee stukjes, zoals bij een komma. */
 const GAP_SECONDS = 0.12;
-const RATE = 48000;
+/** Ruim genoeg voor een stem, en de helft minder rekenwerk voor het vermommen dan 48 kHz. */
+const RATE = 24000;
 
-/** Plakt opnames (bv. "kom ne keer hier" + naam + "schatteke") vlot aan elkaar tot één wav. */
-export async function stitch(pieces: Blob[]): Promise<Blob> {
+/**
+ * Plakt opnames (bv. "kom ne keer hier" + naam + "schatteke") vlot aan elkaar tot één wav,
+ * eventueel hoger of lager gemaakt (in halve tonen) om de stem te vermommen.
+ */
+export async function stitch(pieces: Blob[], semitones = 0): Promise<Blob> {
   const decoder = new OfflineAudioContext(1, 1, RATE);
   const parts: Float32Array[] = [];
   for (const piece of pieces) {
@@ -83,7 +89,7 @@ export async function stitch(pieces: Blob[]): Promise<Blob> {
     out.set(p, at);
     at += p.length + (i < parts.length - 1 ? gap : 0);
   });
-  return encodeWav(out, RATE);
+  return encodeWav(shiftPitch(out, RATE, semitones), RATE);
 }
 
 /** Heel korte in- en uitfade, zodat er geen tikje klinkt waar geknipt is. */

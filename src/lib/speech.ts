@@ -88,6 +88,29 @@ async function recordedPieces(options: SpeakOptions): Promise<Blob[] | null> {
   return [b?.audio, name.audio, a?.audio].filter((x): x is Blob => !!x);
 }
 
+/** Klaargemaakte opnames (aan elkaar en eventueel vermomd), zodat een zin die terugkomt meteen klinkt. */
+const preparedCache = new Map<string, Blob>();
+const PREPARED_MAX = 30;
+
+function disguiseSemitones(v: VoiceSettings): number {
+  return v.disguise ? v.disguisePitch : 0;
+}
+
+async function prepareRecording(pieces: Blob[], options: SpeakOptions, v: VoiceSettings): Promise<Blob> {
+  const semitones = disguiseSemitones(v);
+  // De grootte van de stukjes hoort bij de sleutel: na opnieuw inspreken is het een andere opname.
+  const key = [options.lineId, options.playerId ?? '', semitones, ...pieces.map((p) => p.size)].join('|');
+  const hit = preparedCache.get(key);
+  if (hit) return hit;
+  const wav = await stitch(pieces, semitones);
+  preparedCache.set(key, wav);
+  if (preparedCache.size > PREPARED_MAX) {
+    const oldest = preparedCache.keys().next().value;
+    if (oldest !== undefined) preparedCache.delete(oldest);
+  }
+  return wav;
+}
+
 export async function speak(text: string, v: VoiceSettings, options: SpeakOptions = {}): Promise<void> {
   if (!v.enabled || text.trim() === '') return;
   const mine = ++token;
@@ -101,7 +124,7 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
       if (pieces) {
         // Stilte aan de randen weg en alles aan elkaar: zo loopt de naam vlot in de zin.
         // Lukt dat niet (oud toestel, raar formaat), dan gewoon de stukjes na elkaar.
-        const joined = await stitch(pieces).catch(() => null);
+        const joined = await prepareRecording(pieces, options, v).catch(() => null);
         if (mine !== token) return;
         options.onStart?.(options.voice ? 'buurvrouw' : 'windy');
         for (const piece of joined ? [joined] : pieces) {

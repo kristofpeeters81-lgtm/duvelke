@@ -44,6 +44,10 @@ export interface VoiceSettings {
    */
   machine: boolean;
   machineSound: MachineSound;
+  /** Eigen opnames vermommen: hoger of lager, met hetzelfde tempo. */
+  disguise: boolean;
+  /** Halve tonen: negatief = lager, positief = hoger. */
+  disguisePitch: number;
   /** Aparte stem voor de buurvrouw. */
   neighbourVoice: PiperVoiceId;
   neighbourPitch: number;
