@@ -1514,6 +1514,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
       pick: 8,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'liedjes' },
     sabotage: [
@@ -1667,6 +1668,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
       pick: 3,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 2, unit: 'tekeningen' },
     sabotage: [
@@ -1747,6 +1749,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
       pick: 10,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'woorden' },
     sabotage: [

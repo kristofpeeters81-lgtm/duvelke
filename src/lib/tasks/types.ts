@@ -41,6 +41,11 @@ export interface TaskList {
   pick: number;
   /** Geheim: enkel voor één persoon, met ingedrukt houden (bv. uitbeeldwoorden). */
   secret: boolean;
+  /**
+   * Kaartjes: wie aan de beurt is, ziet tijdens het spelen telkens maar één item (bv. het woord om uit
+   * te leggen), nooit de hele lijst. Windy leest deze lijst nooit voor.
+   */
+  turns?: boolean;
 }
 
 export interface TaskRole {

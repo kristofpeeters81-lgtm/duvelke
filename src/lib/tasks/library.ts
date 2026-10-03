@@ -695,6 +695,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
       },
       pick: 10,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 6, unit: 'woorden' },
     sabotage: [
@@ -966,6 +967,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
       },
       pick: 3,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 3, unit: 'zinnen' },
     sabotage: [

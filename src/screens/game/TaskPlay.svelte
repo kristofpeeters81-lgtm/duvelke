@@ -21,6 +21,7 @@
   import Dilemma from './Dilemma.svelte';
   import GossipScene from './GossipScene.svelte';
   import QuizRunner from './QuizRunner.svelte';
+  import CardDeck from './CardDeck.svelte';
   import ReadAloud, { hasAnswers } from './ReadAloud.svelte';
   import ResultPicker from './ResultPicker.svelte';
   import StopwatchRunner from './StopwatchRunner.svelte';
@@ -124,7 +125,10 @@
     return s ? `${s.emoji} ${s.label}` : id;
   }
 
-  const answersList = $derived(item ? hasAnswers(item.list) : false);
+  // Kaartjes-lijsten zijn nooit vraag-en-antwoord, ook al staat er iets tussen haakjes ("niet: ...").
+  const answersList = $derived(item && !task?.list?.turns ? hasAnswers(item.list) : false);
+  /** Wie bij een kaartjes-opdracht het kaartje leest: de naam van de rol, zonder "Eerste". */
+  const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerstes+/i, '') ?? 'speler');
   let selfRead = $state(false);
   let readDone = $state(false);
   let readScore = $state<number | null>(null);
@@ -186,7 +190,14 @@
       {/if}
 
       {#if task.list && item.list.length > 0}
-        {#if task.list.secret && answersList && !selfRead}
+        {#if task.list.turns && current.timer}
+          <div class="card">
+            <h3>🃏 Kaartjes</h3>
+            <p class="hint small">Tijdens de timer ziet de {cardWho} telkens één kaartje, door het ingedrukt te houden. Niemand ziet de hele lijst.</p>
+          </div>
+        {:else if task.list.turns}
+          <CardDeck items={item.list} who={cardWho} />
+        {:else if task.list.secret && answersList && !selfRead}
           <!-- Vragen met antwoorden: Windy leest voor, dan ziet ook een meespelend hulpje de antwoorden niet. -->
           <div class="card">
             <h3>🔊 {app.settings.hostName} leest voor</h3>
@@ -248,6 +259,9 @@
         />
       {:else if current.timer}
         <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
+        {#if task.list?.turns && item.list.length > 0}
+          <CardDeck items={item.list} who={cardWho} />
+        {/if}
         <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
           <summary>📜 Uitleg en rollen</summary>
@@ -266,7 +280,7 @@
       {/if}
     </div>
   {:else if current.step === 'resultaat'}
-    <ResultPicker {task} {target} initial={readScore} onpick={setResult} />
+    <ResultPicker {task} {target} initial={task.list?.turns ? current.cards.guessed : readScore} onpick={setResult} />
   {:else if current.step === 'schat' && current.pending}
     <div class="stack center">
       <div class="gain" class:none={current.pending.gems === 0}>

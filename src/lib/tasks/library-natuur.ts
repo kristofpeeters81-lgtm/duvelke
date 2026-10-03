@@ -1528,6 +1528,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
       pick: 3,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 3, unit: 'tekeningen' },
     sabotage: [
@@ -1565,6 +1566,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
       pick: 3,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 3, unit: 'rondes' },
     sabotage: [

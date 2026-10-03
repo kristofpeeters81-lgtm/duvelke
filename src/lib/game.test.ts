@@ -13,6 +13,7 @@ import {
   finishCurrent,
   JOKER_COST,
   newCurrent,
+  nextCard,
   nextTestPlayer,
   normalizeGame,
   resolveDilemma,
@@ -397,5 +398,31 @@ describe('normalizeGame', () => {
     expect(normalizeGame({ ...game, phase: 'raar' })).toBeNull();
     expect(normalizeGame({ ...game, players: game.players.map((p) => ({ ...p, role: 'speurder' })) })).toBeNull();
     expect(normalizeGame({ ...game, revealOrder: game.revealOrder.slice(1) })).toBeNull();
+  });
+});
+
+describe('kaartjes', () => {
+  it('telt geraden kaartjes, slaat over zonder te tellen en onthoudt alles na herladen', () => {
+    const program: ProgramItem[] = [{ uid: 'u1', taskId: 'b-verboden-woorden', location: 'binnen', vars: { doel: 5 }, list: ['HOND (niet: blaffen, dier, poes)', 'ZON (niet: warm, geel, lucht)', 'BED (niet: slapen, kussen, nacht)'] }];
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(3));
+    startTasks(game);
+    expect(game.current?.cards).toEqual({ index: 0, guessed: 0 });
+    nextCard(game, true);
+    nextCard(game, false);
+    nextCard(game, true);
+    expect(game.current?.cards).toEqual({ index: 3, guessed: 2 });
+    const back = normalizeGame(JSON.parse(JSON.stringify(game)))!;
+    expect(back.current?.cards).toEqual({ index: 3, guessed: 2 });
+  });
+
+  it('vult een ontbrekende of kapotte kaartjesstand aan met nul', () => {
+    const program: ProgramItem[] = [{ uid: 'u1', taskId: 'uitbeelden', location: 'binnen', vars: {}, list: ['astronaut'] }];
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(3));
+    startTasks(game);
+    const raw = JSON.parse(JSON.stringify(game));
+    delete raw.current.cards;
+    expect(normalizeGame(raw)!.current?.cards).toEqual({ index: 0, guessed: 0 });
+    raw.current.cards = { index: 'x', guessed: -4 };
+    expect(normalizeGame(raw)!.current?.cards).toEqual({ index: 0, guessed: 0 });
   });
 });

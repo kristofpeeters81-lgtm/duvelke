@@ -40,6 +40,8 @@ export interface CurrentTask {
   gossip: Gossip | null;
   /** Komt er na deze opdracht een dilemma (schat of Kijk-joker)? */
   dilemma: boolean;
+  /** Kaartjes-opdracht: welk kaartje aan de beurt is en hoeveel er geraden zijn. */
+  cards: { index: number; guessed: number };
 }
 
 export interface GamePlayer {
@@ -352,6 +354,7 @@ export function newCurrent(game: Game, rng: Rng = Math.random): CurrentTask | nu
     briefing: null,
     gossip,
     dilemma: task.dilemma ? rng() < 0.7 : rng() < 0.15,
+    cards: { index: 0, guessed: 0 },
   };
 }
 
@@ -477,7 +480,19 @@ function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
     briefing: normalizeBriefing(raw.briefing, game),
     gossip: normalizeGossip(raw.gossip),
     dilemma: raw.dilemma === true,
+    cards: {
+      index: Math.max(0, Math.round(num(isRecord(raw.cards) ? raw.cards.index : null) ?? 0)),
+      guessed: Math.max(0, Math.round(num(isRecord(raw.cards) ? raw.cards.guessed : null) ?? 0)),
+    },
   };
+}
+
+/** Kaartjes: het woord is geraden (telt mee), of overgeslagen. Daarna komt het volgende kaartje. */
+export function nextCard(game: Game, guessed: boolean): void {
+  const c = game.current?.cards;
+  if (!c) return;
+  if (guessed) c.guessed += 1;
+  c.index += 1;
 }
 // --- Briefing, jokers, roddels en dilemma's -------------------------------------
 

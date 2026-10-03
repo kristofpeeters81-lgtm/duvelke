@@ -1419,6 +1419,7 @@ export const TASKS_TUIN: TaskDef[] = [
       },
       pick: 3,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 3, unit: 'woorden' },
     sabotage: [

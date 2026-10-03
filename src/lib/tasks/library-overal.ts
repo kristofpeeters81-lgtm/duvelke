@@ -1459,6 +1459,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
       pick: 8,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'woorden' },
     sabotage: [
@@ -1497,6 +1498,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
       pick: 8,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'woorden' },
     sabotage: [
@@ -1532,6 +1534,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
       pick: 4,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: 2, unit: 'tekeningen' },
     sabotage: [
@@ -1604,6 +1607,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
       pick: 4,
       secret: true,
+      turns: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'figuren' },
     sabotage: [
