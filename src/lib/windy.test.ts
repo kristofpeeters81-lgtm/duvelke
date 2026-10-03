@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { BUILTIN_LINES, LINE_CATEGORIES } from './data/windyLines';
+import { BUILTIN_LINES, LINE_CATEGORIES, NAMED_CATEGORIES } from './data/windyLines';
 import { toSpeech } from './voice';
-import { emptyLineState, fillPlaceholders, isFullyRecorded, linesFor, normalizeLineState, pickLine, recordingParts, rememberLine } from './windy';
+import { emptyLineState, fillPlaceholders, isFullyRecorded, linesFor, normalizeLineState, pickLine, pickNamed, recordingParts, rememberLine } from './windy';
 
 const ctx = { saboteur: "'t Duvelke", zoon: 'Kenzo', windy: 'Windy' };
 
@@ -143,5 +143,42 @@ describe('recordingParts', () => {
     const line = { id: 'z', text: 'A {speler} B' };
     expect(isFullyRecorded(line, ['z:voor'])).toBe(false);
     expect(isFullyRecorded(line, ['z:voor', 'z:na'])).toBe(true);
+  });
+});
+describe('spelers bij naam noemen', () => {
+  const spelers = [{ playerId: 'a' }, { playerId: 'b' }, { playerId: 'c' }];
+
+  it('kiest iedereen eens, en nooit twee keer na elkaar dezelfde', () => {
+    const seen = new Set<string>();
+    let last: string | null = null;
+    for (let i = 0; i < 200; i++) {
+      const p: { playerId: string } = pickNamed(spelers, last)!;
+      expect(p.playerId).not.toBe(last);
+      seen.add(p.playerId);
+      last = p.playerId;
+    }
+    expect([...seen].sort()).toEqual(['a', 'b', 'c']);
+  });
+
+  it('noemt de enige speler ook als die net genoemd werd', () => {
+    expect(pickNamed([{ playerId: 'a' }], 'a')?.playerId).toBe('a');
+    expect(pickNamed([], null)).toBeNull();
+  });
+
+  it('gebruikt {speler} enkel in categorieën waar het spel een naam invult', () => {
+    for (const line of BUILTIN_LINES.filter((l) => l.text.includes('{speler}'))) {
+      expect(NAMED_CATEGORIES, line.id).toContain(line.category);
+      expect(line.text.split('{speler}').length, `${line.id}: één naam per zin`).toBe(2);
+    }
+  });
+
+  it('neemt zinnen met een naam mee in de lotting als er een speler is, en anders niet', () => {
+    const state = emptyLineState();
+    const named = BUILTIN_LINES.filter((l) => l.category === 'bemoeien' && l.text.includes('{speler}')).map((l) => l.id);
+    const ctx = { saboteur: "'t Duvelke", zoon: 'Kenzo', windy: 'Windy' };
+    const withName = new Set<string>();
+    for (let i = 0; i < 300; i++) withName.add(pickLine('bemoeien', state, { ...ctx, speler: 'Lotte' })!.id);
+    expect(named.some((id) => withName.has(id))).toBe(true);
+    for (let i = 0; i < 100; i++) expect(named).not.toContain(pickLine('bemoeien', state, ctx)!.id);
   });
 });

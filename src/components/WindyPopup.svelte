@@ -7,7 +7,7 @@
 
   interface Props {
     /** Wat Windy zegt; bij een nieuwe waarde verschijnt het ballonnetje opnieuw. */
-    line: { id: string; text: string; key: number } | null;
+    line: { id: string; text: string; playerId?: string; key: number } | null;
   }
 
   let { line }: Props = $props();
@@ -28,6 +28,7 @@
     void (async () => {
       await speak(current.text, $state.snapshot(app.settings.voice), {
         lineId: current.id,
+        playerId: current.playerId,
         template: lineTemplate(current.id),
         onStart: (w) => ((who = w), (talking = true)),
       });

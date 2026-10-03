@@ -11,7 +11,7 @@
   import TopBar from '../components/TopBar.svelte';
   import Machine from '../components/Machine.svelte';
   import Windy, { type WindyMood } from '../components/Windy.svelte';
-  import { LINE_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
+  import { LINE_CATEGORIES, NAMED_CATEGORIES, type LineCategory } from '../lib/data/windyLines';
   import { newId } from '../lib/ids';
   import { PIPER_VOICES, storedVoices } from '../lib/piper';
   import { MACHINE_SOUNDS } from '../lib/robot';
@@ -422,7 +422,7 @@
           ></textarea>
           <div class="insert">
             {#each PLACEHOLDERS as ph (ph.key)}
-              {#if ph.key !== '{speler}' || cat.id === 'doorgeven'}
+              {#if ph.key !== '{speler}' || NAMED_CATEGORIES.includes(cat.id)}
                 <button type="button" class="ins" onclick={() => insert(ph.key)}>+ {ph.key}</button>
               {/if}
             {/each}

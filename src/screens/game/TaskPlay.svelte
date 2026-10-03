@@ -45,7 +45,7 @@
 
   // Windy: één uitspraak per stap, niet bij elke hertekening een nieuwe.
   let announce = $state<{ id: string; text: string } | null>(null);
-  let reaction = $state<{ id: string; text: string; happy: boolean } | null>(null);
+  let reaction = $state<{ id: string; text: string; playerId?: string; happy: boolean } | null>(null);
   let lastAnnounced = '';
   $effect(() => {
     const uid = current?.uid;
@@ -69,7 +69,7 @@
   });
 
   // Windy moeit zich tussendoor met de opdracht.
-  let popup = $state<{ id: string; text: string; key: number } | null>(null);
+  let popup = $state<{ id: string; text: string; playerId?: string; key: number } | null>(null);
   let popupKey = 0;
   function moei(category: 'bemoeien' | 'tijd'): void {
     const line = untrack(() => windySays(category));
@@ -274,7 +274,7 @@
       </div>
       <TreasureChest gems={total.gems + current.pending.gems} max={total.max} size="groot" bounce={current.pending.gems > 0} />
       {#if reaction}
-        {#key reaction.id}<WindyBubble text={reaction.text} lineId={reaction.id} mood={reaction.happy ? 'blij' : 'geschokt'} size={150} />{/key}
+        {#key reaction.id}<WindyBubble text={reaction.text} lineId={reaction.id} playerId={reaction.playerId} mood={reaction.happy ? 'blij' : 'geschokt'} size={150} />{/key}
       {/if}
       <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
       <BigButton variant="primary" size="large" full onclick={() => app.game && afterTreasure(app.game)}>Verder ▶</BigButton>

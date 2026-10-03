@@ -8,8 +8,8 @@ import { setExtraTasks } from './tasks/registry';
 import type { TaskDef } from './tasks/types';
 import { validateTask } from './tasks/validate';
 import type { Player, Settings } from './types';
-import { BUILTIN_LINES, type LineCategory } from './data/windyLines';
-import { emptyLineState, normalizeLineState, pickLine, rememberLine, type LineContext, type WindyLineState } from './windy';
+import { BUILTIN_LINES, RANDOM_NAMED_CATEGORIES, type LineCategory } from './data/windyLines';
+import { emptyLineState, normalizeLineState, pickLine, pickNamed, rememberLine, type LineContext, type WindyLineState } from './windy';
 
 export type Screen =
   | 'home'
@@ -301,10 +301,24 @@ export function recordTaskPlayed(taskId: string, rating: 1 | -1 | 0): void {
   if (rating !== 0) app.taskStats.ratings[taskId] = (app.taskStats.ratings[taskId] ?? 0) + rating;
   app.taskStats.recent = [taskId, ...app.taskStats.recent.filter((id) => id !== taskId)].slice(0, 30);
 }
-/** Kiest een uitspraak van Windy tijdens het spel en onthoudt ze, zodat ze niet meteen terugkomt. */
-export function windySays(category: LineCategory, speler?: string): { id: string; text: string } | null {
-  const line = pickLine(category, app.windyLines, lineContext(speler), app.game?.recentLines ?? []);
+let lastNamedId: string | null = null;
+
+/**
+ * Kiest een uitspraak van Windy tijdens het spel en onthoudt ze, zodat ze niet meteen terugkomt.
+ * Bij moeien, de tijd en gelukt/mislukt kiest het spel zelf een speler voor de zinnen met {speler}:
+ * die zinnen doen gewoon mee in de lotting, dus af en toe valt er een naam.
+ */
+export function windySays(category: LineCategory, speler?: string): { id: string; text: string; playerId?: string } | null {
+  let named: { playerId: string; name: string } | null = null;
+  if (speler === undefined && app.game && RANDOM_NAMED_CATEGORIES.includes(category)) {
+    named = pickNamed(app.game.players, lastNamedId);
+  }
+  const line = pickLine(category, app.windyLines, lineContext(speler ?? named?.name), app.game?.recentLines ?? []);
   if (line && app.game) app.game.recentLines = rememberLine(app.game.recentLines, line.id);
+  if (line && named && lineTemplate(line.id)?.includes('{speler}')) {
+    lastNamedId = named.playerId;
+    return { ...line, playerId: named.playerId };
+  }
   return line;
 }
 /** Opgeslagen eigen opdrachten opnieuw controleren: een kapotte opdracht mag het spel niet breken. */

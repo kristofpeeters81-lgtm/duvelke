@@ -29,14 +29,14 @@ export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; 
   { id: 'rollen', label: 'Geheime dossiers', emoji: '🗂️', hint: 'Vlak voor iedereen zijn rol krijgt.' },
   { id: 'doorgeven', label: 'Tablet doorgeven', emoji: '🤲', hint: 'Als de tablet naar de volgende gaat. {speler} = wie de tablet krijgt.' },
   { id: 'aankondiging', label: 'Nieuwe opdracht', emoji: '📣', hint: 'Voor elke opdracht.' },
-  { id: 'gelukt', label: 'Opdracht gelukt', emoji: '🎉', hint: 'Als het goed ging.' },
-  { id: 'mislukt', label: 'Opdracht mislukt', emoji: '😬', hint: 'Als het slecht ging.' },
+  { id: 'gelukt', label: 'Opdracht gelukt', emoji: '🎉', hint: 'Als het goed ging. {speler} = een willekeurige speler.' },
+  { id: 'mislukt', label: 'Opdracht mislukt', emoji: '😬', hint: 'Als het slecht ging. {speler} = een willekeurige speler.' },
   { id: 'roddel', label: 'Begin van een roddel', emoji: '🤫', hint: 'Daarna volgt de roddel zelf.' },
   { id: 'zoon', label: 'Over haar zoon', emoji: '🧢', hint: 'Klagen over {zoon}.' },
   { id: 'wijsheid', label: 'Levenswijsheden', emoji: '🧠', hint: 'Tussendoor, zomaar.' },
   { id: 'einde', label: 'Einde van het spel', emoji: '🏁', hint: 'Voor de test en de onthulling.' },
-  { id: 'bemoeien', label: 'Tussendoor moeien', emoji: '🙋', hint: 'Terwijl de groep met een opdracht bezig is.' },
-  { id: 'tijd', label: 'De tijd is bijna om', emoji: '⏰', hint: 'Als de timer bijna afloopt.' },
+  { id: 'bemoeien', label: 'Tussendoor moeien', emoji: '🙋', hint: 'Terwijl de groep met een opdracht bezig is. {speler} = een willekeurige speler.' },
+  { id: 'tijd', label: 'De tijd is bijna om', emoji: '⏰', hint: 'Als de timer bijna afloopt. {speler} = een willekeurige speler.' },
   { id: 'schat-gewonnen', label: 'Schat gewonnen', emoji: '💎', hint: 'De groep haalde minstens de helft.' },
   { id: 'schat-verloren', label: 'Schat verloren', emoji: '😈', hint: "Minder dan de helft: 't Duvelke wint de schat." },
   { id: 'ontmaskerd', label: 'De ontmaskering', emoji: '🎭', hint: '{speler} = wie het Duvelke was.' },
@@ -48,6 +48,12 @@ export const LINE_CATEGORIES: { id: LineCategory; label: string; emoji: string; 
     hint: 'Eén keer bij het begin: Windy stelt het machien voor dat alles voorleest wat niet ingesproken is. Enkel als het machien aan staat.',
   },
 ];
+
+/** Categorieën waarin een uitspraak een speler bij naam mag noemen ({speler}). */
+export const NAMED_CATEGORIES: readonly LineCategory[] = ['doorgeven', 'ontmaskerd', 'winnaar', 'bemoeien', 'tijd', 'gelukt', 'mislukt'];
+
+/** Hier kiest het spel zelf wie genoemd wordt (bij de andere bepaalt het moment wie het is). */
+export const RANDOM_NAMED_CATEGORIES: readonly LineCategory[] = ['bemoeien', 'tijd', 'gelukt', 'mislukt'];
 
 export interface BuiltInLine {
   id: string;
@@ -183,6 +189,18 @@ const lines: [LineCategory, string][] = [
   ['tijd', 'Allee mannekes, de klok wacht op niemand! Zelfs niet op mij.'],
   ['tijd', 'Nog efkes! Rap rap, voor ik moet beginnen aftellen!'],
   ['tijd', 'Bijna gedaan! Geef alles wat ge hebt, schatjes!'],
+
+  // Een speler bij naam noemen (3/10/2026). {speler} = willekeurig, ook {saboteur} zelf: dat verraadt niets.
+  ['bemoeien', 'Zeg {speler}, ge moet het niet zo laten opvallen dat ge {saboteur} zijt hé!'],
+  ['bemoeien', 'Allee {speler}, ge moet wel uw best doen. Anders denkt iedereen dat ge {saboteur} zijt.'],
+  ['bemoeien', '{speler}, ik heb u wel gezien hé! Ik zeg niks. Maar ik heb het gezien.'],
+  ['bemoeien', 'Amai {speler}, gij zijt precies wel heel stil vandaag. Verdacht, verdacht...'],
+  ['bemoeien', 'Komaan {speler}, laat ne keer zien wat ge kunt! Onzen {zoon} zou het al lang opgegeven hebben.'],
+  ['tijd', 'Rap rap, {speler}! De klok wacht op niemand, ook niet op u!'],
+  ['gelukt', 'Amai {speler}, dat hebt ge knap gedaan! Of was het toevallig?'],
+  ['gelukt', 'Goed gedaan, iedereen! En {speler}, gij hebt mij echt verrast.'],
+  ['mislukt', 'Oei. {speler}, kijk mij nu niet zo onschuldig aan hé.'],
+  ['mislukt', 'Mislukt! Ik wijs naar niemand. Behalve misschien naar {speler}. Grapje! Of toch niet?'],
 ];
 
 

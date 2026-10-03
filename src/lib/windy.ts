@@ -126,3 +126,11 @@ export function isFullyRecorded(line: { id: string; text: string }, recorded: re
 export function nameRecordingId(playerId: string): string {
   return `naam:${playerId}`;
 }
+/**
+ * Wie Windy tussendoor bij naam noemt: willekeurig onder alle spelers, ook 't Duvelke.
+ * Enkel onschuldigen noemen zou verraden dat die het niet zijn. Nooit twee keer na elkaar dezelfde.
+ */
+export function pickNamed<T extends { playerId: string }>(players: readonly T[], lastId: string | null, rng: Rng = Math.random): T | null {
+  const others = players.filter((p) => p.playerId !== lastId);
+  return pickRandom(others.length > 0 ? others : players, rng) ?? null;
+}
