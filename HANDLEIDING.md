@@ -22,6 +22,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 - **🎤 Zelf inspreken**: bij *Windy → Uitspraken* tik je 🎤 bij een zin. Namen spreek je in bij *Spelers*.
   - Zodra je één uitspraak ingesproken hebt, leest **🤖 Kenzo zijn machien** alles voor wat niet ingesproken is: de uitleg van de opdrachten, de roddels die altijd kloppen en de uitspraken die je (nog) niet opnam. Zo hoor je nooit een AI-stem die doet alsof ze Windy is naast jouw stem.
   - Spreek ook de categorie **"Het machien"** in: daarmee stelt Windy het machien voor bij het begin.
+- **🙋 Een naam noemen**: in eigen uitspraken bij *Tablet doorgeven*, *Tussendoor moeien*, *De tijd is bijna om*, *Opdracht gelukt* en *Opdracht mislukt* kan je **+ {speler}** invoegen. Tijdens het spel kiest Windy dan willekeurig iemand, ook ’t Duvelke zelf: dat verraadt dus niets. Met ingesproken namen hoor je de naam in jouw stem.
   - Bij *Windy → Stem* kies je hoe het machien klinkt (Licht, Robot of Blikken doos) of zet je het uit. Uit = de AI-stem van Windy leest die stukken.
 - **📚 Opdrachten**: bekijk de 305 ingebouwde opdrachten, maak er zelf, of laat er bedenken door een gratis AI:
   - **Via een chatbot**: kopieer de vraag, plak ze in ChatGPT, Gemini of Claude, en plak het antwoord terug.

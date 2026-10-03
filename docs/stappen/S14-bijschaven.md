@@ -29,6 +29,11 @@ De bevindingen uit [S13](S13-proefspel.md) oplossen. Elke fix krijgt een eigen c
 | 9 | Te veel pauze tussen de ingesproken naam en de rest van de zin | Gemeten op de echte opnames: tot 1,5 s stilte rond de naam (randstilte van elk stukje + opstarten van elk los geluid). Nu knipt `stitch()` in `wav.ts` bij het afspelen de stilte aan de randen weg en plakt de stukjes met ±0,12 s pauze aan elkaar tot één geluid. Geldt voor alle opnames, ook toekomstige; de bewaarde opnames blijven ongewijzigd. Zinnen met een naam zijn ±2 s korter. |
 | 10 | De map `backups/` stond niet in `.gitignore` | Toegevoegd: back-ups bevatten namen en stemopnames en mogen nooit in de publieke repo. |
 
+### Ronde 4 (3/10) ✅ 3/10
+| # | Vraag | Oplossing |
+|---|---|---|
+| 11 | Windy moet tijdens het spel ook iemand bij naam kunnen noemen ("Allee [X], ge moet wel uw best doen...") | `{speler}` mag nu ook bij Tussendoor moeien, De tijd is bijna om, Opdracht gelukt en Opdracht mislukt (`NAMED_CATEGORIES`). Het spel kiest dan willekeurig een speler (`pickNamed`): iedereen, ook ’t Duvelke (enkel onschuldigen noemen zou iets verraden), nooit twee keer na elkaar dezelfde. Zinnen met een naam doen gewoon mee in de lotting: ±1 op 4. 10 nieuwe ingebouwde zinnen met een naam (achteraan). Ingesproken namen worden gebruikt. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.
