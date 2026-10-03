@@ -22,7 +22,7 @@ Vite 8, Svelte 5 (runes), TypeScript strict, vite-plugin-pwa (Workbox). Opslag i
 ## Commando's
 
 - `npm run dev` start de ontwikkelserver.
-- `npm test` draait Vitest (460 tests).
+- `npm test` draait Vitest (462 tests).
 - `npm run check` draait svelte-check.
 - `npm run build` maakt de productiebuild.
 

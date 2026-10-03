@@ -50,6 +50,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 | **Aankondiging** | Windy kondigt de opdracht aan. |
 | **Geheime briefing** | De tablet gaat rond: iedereen krijgt een geheime tip. 't Duvelke krijgt een sabotagetip, de anderen een speurderstip. Beide passen bij die opdracht. Wie een Kijk-joker heeft, kan die hier inzetten. |
 | **Uitleg** | Windy leest voor. Rollen, geheime woorden en lijsten staan op het scherm. Bij vragen, raadsels en weetjes leest Windy ze één voor één voor en zegt ze pas daarna het antwoord, zodat ook een meespelend hulpje niets verklapt. |
+| **Kaartjes** | Bij opdrachten waar één speler om de beurt stiekem iets ziet (verboden woorden, uitbeelden, neuriën...): tijdens de timer houdt die speler één kaartje ingedrukt. Tik **✓ Geraden** of **⏭ Overslaan** voor het volgende kaartje. Het aantal geraden staat al klaar bij het resultaat. |
 | **Timer / quiz / klok** | De opdracht wordt gespeeld. Windy moeit zich ongeveer elke minuut ("Allee, allee, allee! Onzen Kenzo kan dat zelfs.") en roept als de tijd bijna om is. 📸 voor een bewijsfoto. |
 | **Resultaat** | Gelukt / bijna / mislukt of tellen: dat levert edelstenen op. |
 | **Dilemma** (soms) | Edelstenen houden, of een deel ruilen voor een Kijk-joker. |

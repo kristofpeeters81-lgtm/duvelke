@@ -39,6 +39,11 @@ De bevindingen uit [S13](S13-proefspel.md) oplossen. Elke fix krijgt een eigen c
 |---|---|---|
 | 12 | Een effect op de eigen opnames, zodat de stem minder herkenbaar is, met bediening | *Windy → Stem → 🎭 Mijn stem vermommen*: aan/uit en een schuifje van 6 stapjes (halve tonen) lager tot 6 hoger, standaard 3 hoger. Het tempo blijft gelijk (`pitch.ts`: WSOLA-uitrekken + herbemonsteren). Geldt voor alle opnames, ook de namen; enkel bij het afspelen, de opnames blijven ongewijzigd. Proefknop met een eigen opname. Rekentijd ±0,2-0,5 s per zin op een trage tablet, daarna uit de cache. Opnames worden nu op 24 kHz verwerkt. |
 
+### Ronde 6 (3/10) ✅ 3/10
+| # | Bevinding | Oplossing |
+|---|---|---|
+| 13 | De verboden woorden: "Windy leest voor" laat iedereen het woord horen; zelf lezen toont álle woorden; en beide al vóór de timer | Oorzaak: "(niet: ...)" werd aangezien voor een antwoord, dus de lijst leek een vragenlijst. Nieuw: **kaartjes** (`list.turns`, `CardDeck.svelte`) bij de 12 opdrachten waar één speler om de beurt stiekem iets ziet (verboden woorden ×2, uitbeelden, neuriequiz, luchttekenen, rugtekeningen ×3, fluisterketting, lettermannetje, ja-nee aan zee, stuur het standbeeld). Tijdens de timer houdt wie aan de beurt is één kaartje ingedrukt; ✓ Geraden of ⏭ Overslaan geeft het volgende. Het aantal geraden staat al ingevuld bij het resultaat en blijft bewaard na herladen. Windy leest kaartjes nooit voor. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.
