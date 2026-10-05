@@ -16,22 +16,35 @@
   import BigButton from '../../components/BigButton.svelte';
   import Machine from '../../components/Machine.svelte';
   import Windy from '../../components/Windy.svelte';
+  import { nextCard } from '../../lib/game';
   import { machineOn, speak, stopAll } from '../../lib/speech';
   import { app } from '../../lib/store.svelte';
 
   interface Props {
     items: string[];
-    /** Aan het einde: hoeveel er juist geraden waren. */
-    ondone?: (correct: number) => void;
+    /**
+     * Op het timerscherm: false zolang de timer nog niet loopt, true zodra hij loopt (dan begint het
+     * voorlezen vanzelf). Zonder timer (undefined) start het hulpje het voorlezen met een knop.
+     */
+    timerRunning?: boolean;
   }
 
-  let { items, ondone }: Props = $props();
+  let { items, timerRunning }: Props = $props();
 
-  let started = $state(false);
-  let index = $state(0);
+  // De voortgang staat in het spel, net als bij de kaartjes: na herladen gaat het verder waar het was.
+  const cards = $derived(app.game?.current?.cards ?? { index: 0, guessed: 0 });
+  const index = $derived(cards.index);
+  const correct = $derived(cards.guessed);
+  const done = $derived(index >= items.length);
+
+  let clicked = $state(false);
+  $effect(() => {
+    if (timerRunning) clicked = true;
+  });
+  const started = $derived(clicked || index > 0);
+
   let showAnswer = $state(false);
   let talking = $state(false);
-  let correct = $state(0);
 
   const current = $derived(splitAnswer(items[index] ?? ''));
 
@@ -42,7 +55,7 @@
   }
 
   $effect(() => {
-    if (!started) return;
+    if (!started || done) return;
     const q = current.question;
     const n = index;
     void say(`${n === 0 ? 'Luister goed. ' : ''}Nummer ${n + 1}. ${q}`);
@@ -56,15 +69,17 @@
   }
 
   function next(right: boolean): void {
-    if (right) correct += 1;
     showAnswer = false;
-    if (index + 1 < items.length) index += 1;
-    else ondone?.(correct);
+    if (app.game) nextCard(app.game, right);
   }
 </script>
 
-{#if !started}
-  <BigButton variant="secondary" full onclick={() => (started = true)}>▶ Start het voorlezen ({items.length})</BigButton>
+{#if done}
+  <p class="done">Alles voorgelezen: {correct} van de {items.length} juist!</p>
+{:else if !started && timerRunning === false}
+  <p class="hint center">Start de timer: dan leest {app.settings.hostName} de {items.length} vragen één voor één voor.</p>
+{:else if !started}
+  <BigButton variant="secondary" full onclick={() => (clicked = true)}>▶ Start het voorlezen ({items.length})</BigButton>
 {:else}
 <div class="read">
   <div class="head">
@@ -89,6 +104,12 @@
 {/if}
 
 <style>
+  .done {
+    margin: 0;
+    font-weight: 800;
+    text-align: center;
+  }
+
   .read {
     display: flex;
     flex-direction: column;

@@ -85,7 +85,7 @@
   // Zonder timer: na een tijdje toch eens komen moeien (niet als Windy vragen voorleest).
   $effect(() => {
     const step = current?.step;
-    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || (answersList && !selfRead);
+    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || windyReads;
     if (step !== 'uitleg' || quiet) return;
     const first = setTimeout(() => moei('bemoeien'), 75000);
     const second = setTimeout(() => moei('bemoeien'), 180000);
@@ -134,21 +134,38 @@
   const answersList = $derived(item && !task?.list?.turns ? hasAnswers(item.list) : false);
   /** Wie bij een kaartjes-opdracht het kaartje leest: de naam van de rol, zonder "Eerste". */
   const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerste\s+/i, '').toLowerCase() ?? 'speler');
+  /** Windy leest de vragen voor (tenzij het hulpje ze toch liever zelf stiekem leest). */
   let selfRead = $state(false);
-  let readDone = $state(false);
-  let readScore = $state<number | null>(null);
   $effect(() => {
     void item?.uid;
     selfRead = false;
-    readDone = false;
-    readScore = null;
   });
+  const windyReads = $derived(!!task?.list?.secret && answersList && !selfRead);
 
   const listOwner = $derived.by(() => {
     const first = current ? Object.values(current.roles)[0]?.[0] : undefined;
     return first ? name(first) : null;
   });
 </script>
+
+<!-- Geheime lijst (hou ingedrukt): op het uitlegscherm én tijdens de timer, want wie ze nodig heeft, moet ze kunnen herlezen. -->
+{#snippet secretList()}
+  {#if task?.list}
+    <div class="card">
+      <h3>🤫 {w(task.list.title)}</h3>
+      <p class="hint small">Enkel voor {listOwner ?? 'het hulpje'}! Hou ingedrukt om te lezen.</p>
+      <div class="secret">
+        <HoldToReveal label="Hou ingedrukt">
+          <div class="secret-list">
+            <ol>
+              {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
+            </ol>
+          </div>
+        </HoldToReveal>
+      </div>
+    </div>
+  {/if}
+{/snippet}
 
 {#if game && current && item && task}
   {#if current.step === 'roddel'}
@@ -202,31 +219,19 @@
           </div>
         {:else if task.list.turns}
           <CardDeck items={shownList} who={cardWho} />
-        {:else if task.list.secret && answersList && !selfRead}
+        {:else if windyReads}
           <!-- Vragen met antwoorden: Windy leest voor, dan ziet ook een meespelend hulpje de antwoorden niet. -->
           <div class="card">
             <h3>🔊 {app.settings.hostName} leest voor</h3>
-            {#if readDone}
-              <p class="hint small">Alles voorgelezen: {readScore} van de {item.list.length} juist! Tik op de knop hieronder.</p>
+            {#if current.timer}
+              <p class="hint small">Zodra de timer loopt, leest {app.settings.hostName} de vragen één voor één voor.</p>
             {:else}
-              <ReadAloud items={shownList} ondone={(n) => ((readDone = true), (readScore = n))} />
+              <ReadAloud items={shownList} />
             {/if}
             <button type="button" class="link" onclick={() => (selfRead = true)}>🤫 Toch liever zelf stiekem lezen (hulpje speelt niet mee)</button>
           </div>
         {:else if task.list.secret}
-          <div class="card">
-            <h3>🤫 {w(task.list.title)}</h3>
-            <p class="hint small">Enkel voor {listOwner ?? 'het hulpje'}! Hou ingedrukt om te lezen.</p>
-            <div class="secret">
-              <HoldToReveal label="Hou ingedrukt">
-                <div class="secret-list">
-                  <ol>
-                    {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
-                  </ol>
-                </div>
-              </HoldToReveal>
-            </div>
-          </div>
+          {@render secretList()}
         {:else}
           <div class="card">
             <h3>📋 {w(task.list.title)}</h3>
@@ -263,9 +268,16 @@
           ondone={(s) => setResult('score', gemsForStopwatch(task, s, target, marginFor(task, item)), Math.round(s * 10) / 10)}
         />
       {:else if current.timer}
-        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
-        {#if task.list?.turns && item.list.length > 0}
-          <CardDeck items={shownList} who={cardWho} />
+        <!-- Leest Windy vragen voor, dan komt ze niet tussendoor moeien: dat zou de vraag onderbreken. -->
+        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => !windyReads && moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
+        {#if task.list && item.list.length > 0}
+          {#if task.list.turns}
+            <CardDeck items={shownList} who={cardWho} />
+          {:else if windyReads}
+            <div class="card"><ReadAloud items={shownList} timerRunning={current.timer.endsAt !== null} /></div>
+          {:else if task.list.secret}
+            {@render secretList()}
+          {/if}
         {/if}
         <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
@@ -285,7 +297,7 @@
       {/if}
     </div>
   {:else if current.step === 'resultaat'}
-    <ResultPicker {task} {target} initial={task.list?.turns ? current.cards.guessed : readScore} onpick={setResult} />
+    <ResultPicker {task} {target} initial={task.list?.turns || answersList ? current.cards.guessed : null} onpick={setResult} />
   {:else if current.step === 'schat' && current.pending}
     <div class="stack center">
       <div class="gain" class:none={current.pending.gems === 0}>
