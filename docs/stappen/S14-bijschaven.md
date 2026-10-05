@@ -57,6 +57,12 @@ Volledige review van alle 303 opdrachten en de quiz: zie [review-opdrachten.md](
 
 Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en De mysterieverhalen blijven (de geheime lijst staat nu op het timerscherm); De schat van kapitein Kenzo blijft gelukt/mislukt (het doel is de schat vinden), met per niveau precies 3 raadsels zodat de stappen vastliggen; Samen springtouwen krijgt een terugvalregel in plaats van minstens 6 spelers; hoofdletters in geheime lijstjes en kaartjes blijven (Windy leest die nooit voor).
 
+### Ronde 8 (5/10) ✅ 5/10
+| # | Vraag | Oplossing |
+|---|---|---|
+| 20 | Is er rekening gehouden met een meespelend hulpje? | Nee, `gameMasterId` werd tijdens het spel niet gebruikt. Nieuw: `host` op opdrachten die het hulpje leidt (het kent het antwoord, verstopt iets, geeft bevelen). Speelt het hulpje mee, dan krijgt het daar geen rol, kiest het als 't Duvelke zelf tussen eerlijk spelen of iets kleins saboteren (eigen leider-tips per opdracht), en kunnen speurders een tip krijgen om op het hulpje te letten. Het programma kiest dan hoogstens 3 zulke opdrachten (`MAX_HOST_TASKS`), met een badge 🎬. |
+| 21 | Laat Windy of het machien overnemen wat het hulpje voorlas | `list.read`: **roepen** (één bevel per tik), **onthouden** (één keer voorlezen, verbergen, nakijken), **hints** (hint per hint, dan het antwoord), **willekeurig** (tijdens de timer op een onverwacht moment iets roepen). Altijd, ook als het hulpje niet meespeelt; "Toch liever zelf voorlezen" blijft. ±30 opdrachten omgezet (`ListReader.svelte`, `RandomCaller.svelte`). Waar het hulpje daarna niets meer leidt, is `host` weg; ±70 opdrachten houden het (verstoppen, ja/nee over een geheim, kijken wie beweegt, voordoen). |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.
