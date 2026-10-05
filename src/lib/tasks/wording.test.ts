@@ -34,3 +34,13 @@ describe('hostWording', () => {
     }
   });
 });
+
+describe('splitHints', () => {
+  it('haalt het antwoord en de hints uit elkaar', async () => {
+    const { splitHints } = await import('../../screens/game/ListReader.svelte');
+    expect(splitHints('giraf: 1) Ik woon in Afrika. 2) Ik ben groot. 3) Lange nek.')).toEqual({
+      answer: 'giraf',
+      hints: ['Ik woon in Afrika.', 'Ik ben groot.', 'Lange nek.'],
+    });
+  });
+});

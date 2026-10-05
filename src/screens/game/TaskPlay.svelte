@@ -22,6 +22,8 @@
   import GossipScene from './GossipScene.svelte';
   import QuizRunner from './QuizRunner.svelte';
   import CardDeck from './CardDeck.svelte';
+  import ListReader from './ListReader.svelte';
+  import RandomCaller from './RandomCaller.svelte';
   import ReadAloud, { hasAnswers } from './ReadAloud.svelte';
   import ResultPicker from './ResultPicker.svelte';
   import StopwatchRunner from './StopwatchRunner.svelte';
@@ -85,7 +87,7 @@
   // Zonder timer: na een tijdje toch eens komen moeien (niet als Windy vragen voorleest).
   $effect(() => {
     const step = current?.step;
-    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || windyReads;
+    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || appSpeaks;
     if (step !== 'uitleg' || quiet) return;
     const first = setTimeout(() => moei('bemoeien'), 75000);
     const second = setTimeout(() => moei('bemoeien'), 180000);
@@ -131,7 +133,7 @@
   }
 
   // Kaartjes-lijsten zijn nooit vraag-en-antwoord, ook al staat er iets tussen haakjes ("niet: ...").
-  const answersList = $derived(item && !task?.list?.turns ? hasAnswers(item.list) : false);
+  const answersList = $derived(item && !task?.list?.turns && !task?.list?.read ? hasAnswers(item.list) : false);
   /** Wie bij een kaartjes-opdracht het kaartje leest: de naam van de rol, zonder "Eerste". */
   const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerste\s+/i, '').toLowerCase() ?? 'speler');
   /** Windy leest de vragen voor (tenzij het hulpje ze toch liever zelf stiekem leest). */
@@ -141,6 +143,10 @@
     selfRead = false;
   });
   const windyReads = $derived(!!task?.list?.secret && answersList && !selfRead);
+  /** De app leest een lijst zelf voor (roepen, onthouden, hints), tenzij het hulpje het toch zelf doet. */
+  const listMode = $derived(selfRead ? undefined : task?.list?.read);
+  /** Windy of het machien is aan het voorlezen: dan niet tussendoor moeien. */
+  const appSpeaks = $derived(windyReads || !!listMode);
 
   const listOwner = $derived.by(() => {
     const first = current ? Object.values(current.roles)[0]?.[0] : undefined;
@@ -219,6 +225,26 @@
           </div>
         {:else if task.list.turns}
           <CardDeck items={shownList} who={cardWho} />
+        {:else if listMode === 'willekeurig'}
+          <div class="card">
+            <h3>🔊 {app.settings.hostName} roept</h3>
+            {#if current.timer}
+              <p class="hint small">Zodra de timer loopt, roept {app.settings.hostName} af en toe: {[...new Set(shownList)].join(' / ')}</p>
+            {:else}
+              <RandomCaller items={shownList} />
+            {/if}
+            <button type="button" class="link" onclick={() => (selfRead = true)}>🙋 Toch liever zelf roepen (hulpje)</button>
+          </div>
+        {:else if listMode}
+          <div class="card">
+            <h3>🔊 {app.settings.hostName} leest voor</h3>
+            {#if current.timer}
+              <p class="hint small">Zodra de timer loopt, leest {app.settings.hostName} voor.</p>
+            {:else}
+              <ListReader items={shownList} mode={listMode} />
+            {/if}
+            <button type="button" class="link" onclick={() => (selfRead = true)}>🙋 Toch liever zelf voorlezen (hulpje)</button>
+          </div>
         {:else if windyReads}
           <!-- Vragen met antwoorden: Windy leest voor, dan ziet ook een meespelend hulpje de antwoorden niet. -->
           <div class="card">
@@ -270,10 +296,14 @@
         />
       {:else if current.timer}
         <!-- Leest Windy vragen voor, dan komt ze niet tussendoor moeien: dat zou de vraag onderbreken. -->
-        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => !windyReads && moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
+        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => !appSpeaks && moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
         {#if task.list && item.list.length > 0}
           {#if task.list.turns}
             <CardDeck items={shownList} who={cardWho} />
+          {:else if listMode === 'willekeurig'}
+            <div class="card"><RandomCaller items={shownList} running={current.timer.endsAt !== null} /></div>
+          {:else if listMode}
+            <div class="card"><ListReader items={shownList} mode={listMode} timerRunning={current.timer.endsAt !== null} /></div>
           {:else if windyReads}
             <div class="card"><ReadAloud items={shownList} timerRunning={current.timer.endsAt !== null} /></div>
           {:else if task.list.secret}
@@ -288,7 +318,7 @@
             <p><strong>{role}:</strong> {ids.map(name).join(', ')}</p>
           {/each}
         </details>
-        {#if task.list && !task.list.secret && item.list.length > 0}
+        {#if task.list && !task.list.secret && !listMode && item.list.length > 0}
           <ul class="open-list compact">
             {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
           </ul>
@@ -298,7 +328,7 @@
       {/if}
     </div>
   {:else if current.step === 'resultaat'}
-    <ResultPicker {task} {target} initial={task.list?.turns || answersList ? current.cards.guessed : null} onpick={setResult} />
+    <ResultPicker {task} {target} initial={task.list?.turns || answersList || (listMode && listMode !== 'roepen' && listMode !== 'willekeurig') ? current.cards.guessed : null} onpick={setResult} />
   {:else if current.step === 'schat' && current.pending}
     <div class="stack center">
       <div class="gain" class:none={current.pending.gems === 0}>

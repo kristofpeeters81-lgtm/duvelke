@@ -3,6 +3,7 @@
  * die het spel niet laten crashen, maar het wel onspeelbaar of verwarrend maken.
  */
 import { describe, expect, it } from 'vitest';
+import { splitHints } from '../../screens/game/ListReader.svelte';
 import { hasAnswers } from '../../screens/game/ReadAloud.svelte';
 import { QUIZ } from './quiz';
 import { ALL_BUILTIN } from './registry';
@@ -13,7 +14,7 @@ const cases = ALL_BUILTIN.map((t) => [t.id, t] as const);
 
 describe('opdrachten: kwaliteit', () => {
   it.each(cases)('%s: voorlezen of geheim lijstje, op elk niveau hetzelfde', (_id, t) => {
-    if (!t.list || t.list.turns) return;
+    if (!t.list || t.list.turns || t.list.read) return;
     for (const level of LEVELS) {
       if (!t.difficulties.includes(level)) continue;
       const items = t.list.items[level]?.length ? t.list.items[level] : t.list.items.normaal;
@@ -23,6 +24,17 @@ describe('opdrachten: kwaliteit', () => {
     // Wat Windy voorleest, telt de app: dan moet er ook geteld worden. Behalve als het doel iets
     // anders is dan juist antwoorden (bij kapitein Kenzo: de schat vinden).
     if (windyReadsList(t) && t.id !== 'n-schat-kapitein-kenzo') expect(t.scoring.type).toBe('aantal');
+  });
+
+  it.each(cases)('%s: wat de app zelf voorleest, is goed opgebouwd', (_id, t) => {
+    const read = t.list?.read;
+    if (!t.list || !read) return;
+    const all = Object.values(t.list.items).flat();
+    if (read === 'hints') for (const i of all) expect(splitHints(i).hints.length, i).toBeGreaterThanOrEqual(3);
+    if (read === 'hints') for (const i of all) expect(splitHints(i).answer, i).not.toBe('');
+    // Wat je moet onthouden of raden, mag niet open op het scherm staan.
+    if (read === 'onthouden' || read === 'hints') expect(t.list.secret).toBe(true);
+    if (read === 'willekeurig') expect(t.timer, 'willekeurig roepen hoort bij een timer').toBeDefined();
   });
 
   it.each(cases)('%s: "spelleider" wordt overal goed vervangen', (_id, t) => {

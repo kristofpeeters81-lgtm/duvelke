@@ -46,6 +46,15 @@ export interface TaskList {
    * te leggen), nooit de hele lijst. Windy leest deze lijst nooit voor.
    */
   turns?: boolean;
+  /**
+   * De app (Windy of Kenzo zijn machien) leest deze lijst zelf voor, zodat het hulpje dat niet moet doen.
+   * - roepen: één bevel of opdracht per tik (Windy zegt, dierenparade...).
+   * - onthouden: één keer voorlezen, verbergen, daarna nakijken. Een "(antwoord)" achteraan is wat je
+   *   nakijkt (bv. het rijtje achterstevoren).
+   * - hints: "ANTWOORD: 1) hint 2) hint ...": hint per hint, daarna het antwoord.
+   * - willekeurig: tijdens de timer op een onverwacht moment één item roepen (bv. "Duvel!").
+   */
+  read?: 'roepen' | 'onthouden' | 'hints' | 'willekeurig';
 }
 
 export interface TaskRole {
