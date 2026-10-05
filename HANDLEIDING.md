@@ -35,6 +35,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 1. **▶ Nieuw spel**:
    - vink aan wie meespeelt (3 tot 16);
    - kies **het hulpje van Windy**. Windy leidt het spel (uitleggen, voorlezen, uitslagen); het hulpje doet wat Windy niet kan: klaarleggen, verstoppen, resultaten aanduiden en foto's nemen. Speelt het hulpje niet mee, dan kan je een pincode instellen.
+   - **Speelt het hulpje mee?** Dan kan het ook 't Duvelke zijn. Sommige opdrachten leidt het hulpje zelf, omdat het het antwoord kent, iets verstopt heeft of de bevelen geeft. Daar krijgt het geen rol. Is het hulpje 't Duvelke, dan kiest het zelf: eerlijk spelen om niet op te vallen, of iets kleins saboteren. De speurders krijgen dan soms een tip om ook op het hulpje te letten. Het programma kiest hoogstens 3 van zulke opdrachten (🎬 het hulpje leidt).
 2. **Het programma**: de app stelt opdrachten voor die passen bij de plek, de spullen, de moeilijkheid en de tijd.
    - 🔄 wisselt een opdracht, ✕ schrapt ze, ▲▼ verandert de volgorde, en je kan er toevoegen.
 3. **Paklijst**: leg alles klaar en doe de voorbereiding (bv. wasknijpers verstoppen). Ontbreken er ingesproken namen, dan zie je dat hier.

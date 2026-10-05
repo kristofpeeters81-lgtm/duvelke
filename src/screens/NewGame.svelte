@@ -72,8 +72,12 @@
     const same =
       previous !== null &&
       JSON.stringify(previous.playerIds) === JSON.stringify(playerIds) &&
-      JSON.stringify(previous.settings) === JSON.stringify(settings);
-    const program = same && previous ? previous.program : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent });
+      JSON.stringify(previous.settings) === JSON.stringify(settings) &&
+      (previous.gameMasterId === null) === (gm === null);
+    const program =
+      same && previous
+        ? previous.program
+        : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: gm !== null });
     app.draft = { playerIds, gameMasterId: gm, pin: gm === null && pin !== '' ? pin : null, settings, program };
     go('programma');
   }

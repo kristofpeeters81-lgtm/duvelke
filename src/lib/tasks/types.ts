@@ -54,6 +54,17 @@ export interface TaskRole {
   hint: string;
 }
 
+/**
+ * Opdrachten die het hulpje leidt: het kent het antwoord, verstopt of kiest iets, of geeft de bevelen.
+ * Speelt het hulpje mee, dan krijgt het hier geen rol en komen er maar een paar in het programma.
+ */
+export interface HostPart {
+  /** Kleine sabotage voor het hulpje, als het zelf 't Duvelke is (het mag ook eerlijk spelen). */
+  sabotage: string[];
+  /** Speurderstip over het hulpje; enkel als het hulpje meespeelt. */
+  detective: string;
+}
+
 export interface TaskDef {
   id: string;
   title: string;
@@ -88,6 +99,8 @@ export interface TaskDef {
   sabotage: string[];
   /** Speurderstips bij deze opdracht: waar let je op? Ontbreken ze, dan krijg je een algemene tip. */
   detective?: string[];
+  /** Het hulpje leidt deze opdracht (zie HostPart). */
+  host?: HostPart;
   /** Kan er na deze opdracht een dilemma (schat of Kijk-joker) komen? */
   dilemma?: boolean;
   /** Idee voor een bewijsfoto. */

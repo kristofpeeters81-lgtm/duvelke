@@ -31,25 +31,42 @@ export function pickInnocent(players: readonly SecretPlayer[], forId: string, kn
   return pickRandom(candidates, rng)?.playerId ?? null;
 }
 
+/** De tip voor een hulpje dat 't Duvelke is en deze opdracht zelf leidt: het kiest zelf. */
+export function hostSabotageTip(example: string): string {
+  return `Jij leidt deze opdracht. Kies zelf: speel eerlijk, zodat je niet opvalt, of saboteer iets kleins. Bijvoorbeeld: ${example}`;
+}
+
 /**
  * Maakt voor iedereen een kaartje. Saboteurs krijgen een sabotagetip die bij de opdracht past,
  * de rest een speurderstip. Iedereen krijgt dus iets geheims: niemand valt op.
+ * Speelt het hulpje mee (hostId) en leidt het deze opdracht, dan krijgt het als saboteur een eigen
+ * tip, en kan een speurder een tip krijgen om op het hulpje te letten.
  */
 export function makeBriefing(
   players: readonly SecretPlayer[],
   task: TaskDef,
-  options: { speurneusTurn: boolean; known: Record<string, string[]> },
+  options: { speurneusTurn: boolean; known: Record<string, string[]>; hostId?: string | null },
   rng: Rng = Math.random,
 ): Record<string, BriefingCard> {
   const sabotage = shuffle(task.sabotage, rng);
+  const host = task.host && options.hostId ? task.host : null;
+  const hostTips = host ? shuffle(host.sabotage, rng) : [];
   // Tips die bij deze opdracht passen; algemene tips enkel als de opdracht er (bijna) geen heeft.
   const own = task.detective ?? [];
-  const tips = shuffle(own.length >= 2 ? own : DETECTIVE_TIPS, rng);
+  const base = own.length >= 2 ? own : DETECTIVE_TIPS;
+  const tips = shuffle(host ? [...base, host.detective] : base, rng);
+  // Het hulpje zelf krijgt nooit de tip om op het hulpje te letten.
+  const hostOwnTips = shuffle(base, rng);
   const cards: Record<string, BriefingCard> = {};
   let s = 0;
   let d = 0;
+  let h = 0;
   for (const p of players) {
-    const tip = p.role === 'saboteur' ? (sabotage[s++ % sabotage.length] ?? '') : (tips[d++ % tips.length] ?? '');
+    const isHost = !!host && p.playerId === options.hostId;
+    let tip: string;
+    if (p.role === 'saboteur') tip = isHost && hostTips.length > 0 ? hostSabotageTip(hostTips[0] ?? '') : (sabotage[s++ % sabotage.length] ?? '');
+    else if (isHost) tip = hostOwnTips[h++ % hostOwnTips.length] ?? '';
+    else tip = tips[d++ % tips.length] ?? '';
     const innocentId = p.speurneus && options.speurneusTurn ? pickInnocent(players, p.playerId, options.known[p.playerId] ?? [], rng) : null;
     cards[p.playerId] = {
       tip,

@@ -3,7 +3,8 @@ import { SUPPLY_IDS } from '../data/supplies';
 import { defaultSettings } from '../settings';
 import type { Settings } from '../types';
 import { BUILTIN_TASKS } from './library';
-import { buildProgram, fillVars, packingList, programMinutes, swapItem, whyNot, type PlanContext } from './program';
+import { buildProgram, fillVars, MAX_HOST_TASKS, packingList, programMinutes, swapItem, whyNot, type PlanContext } from './program';
+import { ALL_BUILTIN } from './registry';
 import { QUIZ } from './quiz';
 
 function seeded(seed: number): () => number {
@@ -132,6 +133,19 @@ describe('buildProgram', () => {
       if (buildProgram(ctx(), seeded(seed)).some((p) => p.taskId === 'tel-tot-twintig')) without++;
     }
     expect(withBad).toBeLessThan(without);
+  });
+});
+
+describe('opdrachten die het hulpje leidt', () => {
+  it('komen hoogstens een paar keer in het programma als het hulpje meespeelt', () => {
+    const tasks = ALL_BUILTIN.filter((t) => t.locations.includes('binnen'));
+    for (let seed = 1; seed < 30; seed++) {
+      const c: PlanContext = { ...ctx({ durationMinutes: 240, locations: ['binnen'] }), tasks, hostPlays: true };
+      let program = buildProgram(c, seeded(seed));
+      for (let i = 0; i < program.length; i++) program = swapItem(program, i, c, seeded(seed + i));
+      const led = program.filter((p) => tasks.find((t) => t.id === p.taskId)?.host).length;
+      expect(led).toBeLessThanOrEqual(MAX_HOST_TASKS);
+    }
   });
 });
 

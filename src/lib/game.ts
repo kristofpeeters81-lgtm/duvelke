@@ -345,7 +345,8 @@ export function newCurrent(game: Game, rng: Rng = Math.random): CurrentTask | nu
   return {
     uid: item.uid,
     step: gossip ? 'roddel' : 'aankondiging',
-    roles: assignTaskRoles(task, game.players.map((p) => p.playerId), game.results, rng),
+    // Leidt het (meespelende) hulpje deze opdracht, dan krijgt het er geen rol bij.
+    roles: assignTaskRoles(task, game.players.map((p) => p.playerId).filter((id) => !(task.host && id === game.gameMasterId)), game.results, rng),
     quiz,
     quizAnswers: quiz.map(() => null),
     timer: seconds === null ? null : { total: seconds, remainingMs: seconds * 1000, endsAt: null },
@@ -513,7 +514,7 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
     current.step = 'uitleg';
     return;
   }
-  const cards = makeBriefing(game.players, task, { speurneusTurn: game.briefingCount % 2 === 0, known: game.known }, rng);
+  const cards = makeBriefing(game.players, task, { speurneusTurn: game.briefingCount % 2 === 0, known: game.known, hostId: game.gameMasterId }, rng);
   const withJokers: BriefingState['cards'] = {};
   for (const [id, card] of Object.entries(cards)) {
     withJokers[id] = { ...card, jokerInnocent: null };

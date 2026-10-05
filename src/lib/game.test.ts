@@ -25,6 +25,7 @@ import {
 } from './game';
 import { defaultSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
+import { getTask, setExtraTasks } from './tasks/registry';
 import type { Player } from './types';
 
 /** Voorspelbare "random" voor tests (mulberry32). */
@@ -424,5 +425,29 @@ describe('kaartjes', () => {
     expect(normalizeGame(raw)!.current?.cards).toEqual({ index: 0, guessed: 0 });
     raw.current.cards = { index: 'x', guessed: -4 };
     expect(normalizeGame(raw)!.current?.cards).toEqual({ index: 0, guessed: 0 });
+  });
+});
+
+describe('een meespelend hulpje dat de opdracht leidt', () => {
+  const base = getTask('blinde-piloot')!;
+  const led = { ...base, id: 'eigen-hulpje-leidt', source: 'eigen' as const, host: { sabotage: ['Zeg één keer "stop" net te laat.'], detective: 'Let ook op het hulpje.' } };
+  const program: ProgramItem[] = [{ uid: 'h1', taskId: led.id, location: 'binnen', vars: {}, list: [] }];
+
+  it('krijgt daar nooit een rol, wel als het niet meespeelt', () => {
+    setExtraTasks([led]);
+    try {
+      let hostHadRole = false;
+      for (let seed = 1; seed < 40; seed++) {
+        const withHost = createGame(players(4), defaultSettings(), 'p1', null, program, seeded(seed));
+        startTasks(withHost);
+        expect(Object.values(withHost.current!.roles).flat()).not.toContain('p1');
+        const without = createGame(players(4), defaultSettings(), null, null, program, seeded(seed));
+        startTasks(without);
+        if (Object.values(without.current!.roles).flat().includes('p1')) hostHadRole = true;
+      }
+      expect(hostHadRole).toBe(true);
+    } finally {
+      setExtraTasks([]);
+    }
   });
 });

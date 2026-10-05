@@ -68,6 +68,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie loopt met een ei niet de kortste weg naar het nest?',
       'Kijk zelf nog eens op een plek waarvan iemand zegt dat die leeg is.',
     ],
+    host: {
+      sabotage: [
+        'Verstop één ei net iets moeilijker dan de rest, diep onder een struik.',
+        'Antwoord één keer "lauw" op een warm-of-koudvraag, terwijl het eigenlijk al warm is.',
+        'Wacht net iets langer met antwoorden als ze "Warm of koud?" vragen.',
+      ],
+      detective: 'Let ook op het hulpje: zijn de warm-of-koudantwoorden altijd duidelijk, of soms wat vaag?',
+    },
     dilemma: true,
     photo: 'Iedereen rond het nest met de geredde eieren.',
   },
@@ -136,6 +144,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Kijk de rij zelf na: ligt elke kaart op de juiste plaats?',
       'Tel zelf na als iemand zegt dat een kaart er al ligt.',
     ],
+    host: {
+      sabotage: [
+        'Verstop één kaart net iets beter dan de andere, helemaal achter een bloempot.',
+        'Leg twee kaarten in de verste hoeken van de tuin, ver van de rest.',
+        'Verstop een kaart op een plek met dezelfde kleur, zodat ze minder opvalt.',
+      ],
+      detective: 'Let ook op het hulpje: liggen sommige kaarten veel moeilijker verstopt dan de rest?',
+    },
     photo: 'De volledige kaartenrij met de speurders.',
   },
   {
@@ -275,6 +291,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie roept heel zeker een woord dat niet helemaal klopt?',
       'Let op wie meer dan één "telfoutje" maakt.',
     ],
+    host: {
+      sabotage: [
+        'Schrijf de cijfers dicht tegen elkaar, zodat de streepjes ertussen moeilijk te zien zijn.',
+        'Schrijf één cijfer een beetje slordig, zodat een 1 op een 7 lijkt.',
+        'Wacht even met knikken als ze het juiste woord fluisteren, alsof je twijfelt.',
+      ],
+      detective: 'Let ook op het hulpje: is de krijtcode overal goed leesbaar, of lijkt een cijfer op een ander?',
+    },
     dilemma: true,
     photo: 'De ontcijferaars naast de krijtcode.',
   },
@@ -408,6 +432,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie vraagt iets wat al gevraagd was?',
       'Wie gokt snel, nog voor jullie samen overlegd hebben?',
     ],
+    host: {
+      sabotage: [
+        'Antwoord één keer net iets te vaag, met "een beetje" in plaats van ja of nee.',
+        'Sla een makkelijk ding over alsof het hier niet is, en neem het volgende.',
+        'Denk even lang na voor je antwoordt, zodat de groep gaat twijfelen.',
+      ],
+      detective: 'Let ook op het hulpje: antwoordt het altijd duidelijk "ja" of "nee", of zegt het soms "een beetje"?',
+    },
   },
 
   // ─────────────── Samenwerken ───────────────
@@ -531,6 +563,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie stelt een langere weg voor dan nodig?',
       'Kijk wie op de stapsteen gaat staan die een ander nodig had.',
     ],
+    host: {
+      sabotage: [
+        'Neem één keer een stuk karton weg dat maar heel even niet aangeraakt werd.',
+        'Snij één stuk karton net iets kleiner dan de andere.',
+        'Duid de overkant net een halve stap verder aan dan afgesproken.',
+      ],
+      detective: 'Let ook op het hulpje: neemt het een stuk karton heel snel weg, of geeft het iedereen even de tijd?',
+    },
     dilemma: true,
     photo: 'Iedereen samen op de laatste stapstenen.',
   },
@@ -682,6 +722,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie herinnert zich iets onder de handdoek dat niemand anders zag?',
       'Wie zoekt naar iets dat al gevonden is?',
     ],
+    host: {
+      sabotage: [
+        'Leg één ding onder de handdoek waarvan bijna geen tweeling te vinden is.',
+        'Tel net iets sneller tot dertig.',
+        'Leg de dingen dicht op elkaar, zodat ze moeilijker te onthouden zijn.',
+      ],
+      detective: 'Let ook op het hulpje: telt het rustig tot dertig, of opvallend snel?',
+    },
     photo: 'De originelen naast hun tweelingen.',
   },
   {
@@ -708,6 +756,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie voegt er iets toe dat jij je niet herinnert?',
       'Wie verbetert anderen heel zeker, maar fout?',
     ],
+    host: {
+      sabotage: [
+        'Loop één stap van het parcours net iets sneller voor, zodat hij makkelijk gemist wordt.',
+        'Kies twee stappen die heel erg op elkaar lijken.',
+        'Doe één beweging een beetje klein, zodat niet iedereen ze goed ziet.',
+      ],
+      detective: 'Let ook op het hulpje: loopt het elke stap duidelijk voor, of gaat het ergens opvallend snel?',
+    },
   },
   {
     id: 't-boemvakjes',
@@ -746,6 +802,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie gaf er advies net voor een boem?',
       'Wie stapt op een vakje dat al eens boem was?',
     ],
+    host: {
+      sabotage: [
+        'Roep "Boem!" een beetje zacht, zodat niet iedereen goed ziet welk vakje het was.',
+        'Schrijf de letters boven de kolommen een beetje klein, zodat ze moeilijk te lezen zijn.',
+        'Wacht een tel met "Boem!" roepen, zodat niet meteen duidelijk is welk vakje fout was.',
+      ],
+      detective: 'Let ook op het hulpje: roept het "Boem!" altijd meteen en duidelijk, zodat iedereen ziet welk vakje fout was?',
+    },
     dilemma: true,
     photo: 'Het rooster met een speler op het laatste vakje.',
   },
@@ -773,6 +837,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie begint net later dan de rest?',
       'Wie vergist zich, maar doet het wel heel zeker?',
     ],
+    host: {
+      sabotage: [
+        'Roep één woord net iets sneller na het vorige dan de rest.',
+        'Roep twee woorden na elkaar waarvan de bewegingen op elkaar lijken.',
+        'Mompel één woord een beetje, zodat niet iedereen het goed hoort.',
+      ],
+      detective: 'Let ook op het hulpje: roept het de woorden duidelijk en in een gelijk tempo, of gaat het opeens veel sneller?',
+    },
     photo: 'Iedereen tegelijk in de "boom"-pose.',
   },
 
@@ -1501,6 +1573,13 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie blijft tevreden op een verkeerde plek staan?',
       'Kijk naar de voeten: wie stapt er naast het touw?',
     ],
+    host: {
+      sabotage: [
+        'Roep één keer "Hap!" als iemand maar met de rand van zijn schoen naast het touw staat.',
+        'Tel de tien tellen stilstaan net iets trager.',
+      ],
+      detective: 'Let ook op het hulpje: roept het "Hap!" ook bij een heel klein stapje naast het touw, en telt het de tien tellen niet te traag?',
+    },
     dilemma: true,
     photo: 'De hele rij op de brug, in de juiste volgorde.',
   },
@@ -1623,6 +1702,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie is telkens als laatste klaar?',
       'Klopt wat iedereen aanraakt echt met de opdracht?',
     ],
+    host: {
+      sabotage: [
+        'Tel de seconden net iets sneller af.',
+        'Roep na elkaar twee opdrachten waarbij maar weinig dingen passen.',
+        'Roep één opdracht een beetje stil, zodat niet iedereen ze meteen hoort.',
+      ],
+      detective: 'Let ook op het hulpje: telt het de seconden altijd even snel, en roept het elke opdracht duidelijk?',
+    },
   },
   {
     id: 't-red-de-picknick',
@@ -1680,6 +1767,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie staat op een verkeerde plek in de rij?',
       'Wie is net te laat in de kring?',
     ],
+    host: {
+      sabotage: [
+        'Fluit twee signalen zo snel na elkaar dat ze bijna als één klinken.',
+        'Tel net iets sneller tot het einde.',
+        'Kies twee keer na elkaar de moeilijkste formatie.',
+      ],
+      detective: 'Let ook op het hulpje: klinken de fluitsignalen altijd duidelijk apart, en telt het rustig?',
+    },
     photo: 'De groep in de moeilijkste fluitformatie.',
   },
 
@@ -1713,6 +1808,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Onthoud zelf de letters en vergelijk.',
       'Wie loopt voorop en loopt een pijl voorbij?',
     ],
+    host: {
+      sabotage: [
+        'Teken één echte pijl wat kleiner of vager, zodat hij makkelijk gemist wordt.',
+        'Teken het kruisje in één valse pijl net iets kleiner.',
+        'Schrijf één letter een beetje slordig, zodat ze op een andere letter lijkt.',
+      ],
+      detective: 'Let ook op het hulpje: zijn alle pijlen en letters even duidelijk getekend, of is er eentje vaag?',
+    },
     dilemma: true,
     photo: 'De speurders bij de laatste pijl.',
   },
@@ -1778,6 +1881,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wijst de naald echt naar de letter N als iemand anders het kompas vasthoudt?',
       'Wie haalt de windrichtingen door elkaar?',
     ],
+    host: {
+      sabotage: [
+        'Verstop de schat net iets beter dan nodig, onder een laagje bladeren.',
+        'Tel bij het uitzetten van de route met net iets grotere stappen.',
+        'Schrijf één windrichting op het routepapier wat slordig, zodat de O op een N lijkt.',
+      ],
+      detective: 'Let ook op het hulpje: is het routepapier overal duidelijk, en klopt het aantal stappen?',
+    },
     dilemma: true,
     photo: 'De vinders met de schat en het kompas.',
   },
@@ -1989,6 +2100,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie is telkens net te laat?',
       'Wie fluistert er tips die niet kloppen?',
     ],
+    host: {
+      sabotage: [
+        'Roep een opdracht zonder "Windy zegt" heel snel na een echte.',
+        'Mompel één keer het begin van de zin, zodat niet iedereen hoort wie het zegt.',
+        'Doe zelf één keer de beweging voor bij een opdracht waarbij niemand mag bewegen.',
+      ],
+      detective: 'Let ook op het hulpje: zegt het het begin van elke zin duidelijk, en doet het geen bewegingen voor die jullie in de war brengen?',
+    },
   },
   {
     id: 't-dierenestafette',
@@ -2023,6 +2142,13 @@ export const TASKS_TUIN: TaskDef[] = [
       'Kijk of de volgende echt goed aangetikt wordt.',
       'Gaat iedereen echt helemaal tot aan het keerpunt?',
     ],
+    host: {
+      sabotage: [
+        'Geef de snelste lopers de traagste dieren, zoals de rups of de olifant.',
+        'Roep het dier voor de volgende loper net iets te laat.',
+      ],
+      detective: 'Let ook op het hulpje: krijgen sommige lopers altijd de traagste dieren, en roept het die op tijd?',
+    },
     photo: 'Het gekste dierenloopje in actie.',
   },
   {
@@ -2139,6 +2265,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie is telkens net te laat?',
       'Wie stuurt iedereen naar hetzelfde eiland, terwijl er nog andere vrij zijn?',
     ],
+    host: {
+      sabotage: [
+        'Roep "Haaien!" op een moment dat de meeste spelers net ver van de hoepels zijn.',
+        'Neem een eiland weg dat in het midden lag, zodat de rest verder uit elkaar ligt.',
+        'Tel de vijf tellen net iets sneller.',
+      ],
+      detective: 'Let ook op het hulpje: roept het "Haaien!" net als iedereen ver weg is, en telt het altijd even snel?',
+    },
     photo: 'Iedereen samengepropt op het laatste eiland.',
   },
   {
@@ -2166,6 +2300,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie fluistert er net te luid?',
       'Wie maakt geluid op het spannendste moment?',
     ],
+    host: {
+      sabotage: [
+        'Wijs één keer iemand aan die je maar heel zacht hoorde.',
+        'Zet de schat net iets dichter tegen je voeten.',
+        'Kies een plek met veel droge bladeren rondom je.',
+      ],
+      detective: 'Let ook op het hulpje: wijst het enkel mensen aan die echt geluid maakten, of ook bij een heel klein geritsel?',
+    },
     dilemma: true,
   },
   {
@@ -2194,6 +2336,14 @@ export const TASKS_TUIN: TaskDef[] = [
       'Wie wijst een vakje aan net naast het juiste?',
       'Wie is de code opeens vergeten?',
     ],
+    host: {
+      sabotage: [
+        'Roep één code net iets te snel, zodat ze moeilijker te onthouden is.',
+        'Kies een code waarbij je telkens ver van het ene vakje naar het andere moet springen.',
+        'Zet bij het tekenen de 6 en de 9 naast elkaar, zodat ze makkelijk verward worden.',
+      ],
+      detective: 'Let ook op het hulpje: roept het elke code rustig en duidelijk, of soms opvallend snel?',
+    },
     photo: 'Een springer midden in de code.',
   },
 ];

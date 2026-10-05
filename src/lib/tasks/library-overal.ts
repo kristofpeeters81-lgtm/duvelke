@@ -452,6 +452,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie blijft terugkomen op een idee dat al "nee" kreeg?',
       'Wie houdt goede vragen tegen?',
     ],
+    host: {
+      sabotage: [
+        'Antwoord één keer "doet er niet toe" op een vraag die eigenlijk een beetje helpt.',
+        'Antwoord één keer net iets te vaag, zoals "mmm, niet echt".',
+        'Vertel het mysterie één keer net iets sneller, zodat een belangrijk detail minder opvalt.',
+      ],
+      detective: 'Let ook op het hulpje: antwoordt het altijd duidelijk "ja" of "nee", of zegt het soms iets vaags?',
+    },
   },
   {
     id: 'o-achterstevoren',
@@ -611,6 +619,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie steekt opvallend weinig vingers op als het getal groot is?',
       'Wie is net te laat met zijn vingers op "drie!"?',
     ],
+    host: {
+      sabotage: [
+        'Kies vaak een getal in het midden: dat is moeilijker te raken dan heel weinig of heel veel vingers.',
+        'Tel één keer net iets sneller tot "drie!", zodat niet iedereen klaar is.',
+        'Roep één getal net iets stiller, zodat iemand het verkeerd verstaat.',
+      ],
+      detective: 'Let ook op het hulpje: kiest het getallen die makkelijk te raken zijn, of vooral lastige getallen in het midden?',
+    },
   },
   {
     id: 'o-duvel-tellen',
@@ -690,6 +706,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie herinnert zich dingen die er niet waren?',
       'Wie kijkt tijdens het kijken maar naar één plek?',
     ],
+    host: {
+      sabotage: [
+        'Tel net iets sneller, zodat er minder kijktijd is.',
+        'Stel één vraag net iets onduidelijker, zoals "welk huis?" zonder te zeggen welk huis je bedoelt.',
+        'Keur één antwoord dat er net naast zit niet goed, ook al zou je anders mild zijn.',
+      ],
+      detective: 'Let ook op het hulpje: telt het rustig, en stelt het de vragen duidelijk genoeg?',
+    },
   },
   {
     id: 'o-broodkruimelspoor',
@@ -715,6 +739,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie noemt herkenningspunten die niemand anders zich herinnert?',
       'Wie haalt de volgorde van de bochten door elkaar?',
     ],
+    host: {
+      sabotage: [
+        'Kies een route met bochten waar weinig opvallends te zien is.',
+        'Neem twee bochten die erg op elkaar lijken.',
+        'Wandel bij één bocht net iets sneller door, zodat de groep minder tijd heeft om rond te kijken.',
+      ],
+      detective: 'Let ook op het hulpje: kiest het een route met duidelijke herkenningspunten, of lijken de bochten opvallend veel op elkaar?',
+    },
     photo: 'De groep terug aan de start, met de duim omhoog.',
   },
   {
@@ -750,6 +782,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie draait twee cijfers om?',
       'Wie begint te praten voor de anderen klaar zijn met onthouden?',
     ],
+    host: {
+      sabotage: [
+        'Lees de cijfers net iets sneller voor dan nodig.',
+        'Lees alle cijfers in één adem, zonder de kleine pauzes die helpen onthouden.',
+        'Zeg één cijfer in het midden net iets stiller.',
+      ],
+      detective: 'Let ook op het hulpje: leest het de cijfers rustig en duidelijk voor, of net iets te snel?',
+    },
   },
   {
     id: 'o-wie-zei-wat',
@@ -784,6 +824,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie geeft een antwoord dat bijna hetzelfde is als dat van een ander?',
       'Wie zaait twijfel over antwoorden die de groep goed wist?',
     ],
+    host: {
+      sabotage: [
+        'Vraag vooral naar antwoorden die bij twee mensen bijna hetzelfde waren.',
+        'Vraag naar een antwoord van helemaal in het begin, dat de meesten al vergeten zijn.',
+        'Stel één vraag net iets vager, zodat de groep moet raden wat je bedoelt.',
+      ],
+      detective: 'Let ook op het hulpje: vraagt het opvallend vaak naar antwoorden die op elkaar lijken?',
+    },
   },
   {
     id: 'o-boodschappenlijst',
@@ -819,6 +867,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie zegt dat iets al genoemd is, terwijl niemand het zich herinnert?',
       'Wie noemt een ding net verkeerd, met een ander getal of een andere kleur?',
     ],
+    host: {
+      sabotage: [
+        'Lees de lijst net iets sneller voor dan "rustig".',
+        'Lees de lastigste dingen vlak na elkaar, zodat ze moeilijker te onthouden zijn.',
+        'Zeg één ding net iets stiller of onduidelijker.',
+      ],
+      detective: 'Let ook op het hulpje: leest het de lijst echt rustig voor, en is elk ding goed te verstaan?',
+    },
     dilemma: true,
   },
   {
@@ -854,6 +910,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie laat een woord weg of vervangt het door iets dat erop lijkt?',
       'Wie zegt een rijtje heel zeker op, terwijl het niet klopt?',
     ],
+    host: {
+      sabotage: [
+        'Zeg één rijtje net iets sneller dan de andere.',
+        'Laat geen pauze tussen de woorden, zodat ze in elkaar overlopen.',
+        'Zeg één woord in het midden net iets stiller.',
+      ],
+      detective: 'Let ook op het hulpje: zegt het elk rijtje even rustig, of gaat het soms sneller?',
+    },
   },
 
   // ─────────────── Behendigheid ───────────────
@@ -910,6 +974,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie maakt de anderen aan het lachen op het spannendste moment?',
       'Wie klaagt dat het niet meer gaat, terwijl hij nog stevig staat?',
     ],
+    host: {
+      sabotage: [
+        'Tel net iets trager dan normaal, zodat iedereen langer op één been moet staan.',
+        'Twijfel je of iemand zijn voet even neerzette? Begin dan toch opnieuw bij één.',
+        'Rek de laatste getallen net iets langer uit.',
+      ],
+      detective: 'Let ook op het hulpje: telt het altijd even snel, of gaat het trager als jullie bijna klaar zijn?',
+    },
     dilemma: true,
     photo: 'De flamingokolonie in actie.',
   },
@@ -938,6 +1010,13 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie klapt net voor de rest?',
       'Wie roept aanwijzingen die de anderen in de war brengen?',
     ],
+    host: {
+      sabotage: [
+        'Maak het tempo een heel klein beetje sneller, net als het goed gaat.',
+        'Geef het tempo één keer net onregelmatig, zodat iemand te vroeg klapt.',
+      ],
+      detective: 'Let ook op het hulpje: blijft het tempo gelijk, of gaat het net sneller als het bijna gelukt is?',
+    },
     photo: 'Iedereen met de handen in de knoop.',
   },
   {
@@ -1131,6 +1210,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie maakt een geluid bij een woord dat niet van hem is?',
       'Wie vergeet zijn geluid bij een woord dat heel duidelijk was?',
     ],
+    host: {
+      sabotage: [
+        'Zeg twee geluidswoorden vlak na elkaar, zodat iemand zijn geluid mist.',
+        'Verstop één woord in een lange zin en zeg het net iets stiller.',
+        'Vertel het verhaal net iets sneller dan nodig.',
+      ],
+      detective: 'Let ook op het hulpje: zegt het de woorden duidelijk, of laat het ze snel na elkaar vallen?',
+    },
   },
 
   // ─────────────── Quiz ───────────────
@@ -1587,6 +1674,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie heeft als Rader het juiste woord bijna, maar kiest toch iets anders?',
       'Welke tip stuurt de Rader naar een woord dat erop lijkt?',
     ],
+    host: {
+      sabotage: [
+        'Laat een tip die maar een beetje op een andere lijkt toch wegvallen als dubbel.',
+        'Zeg de overgebleven tips zo dat de beste tip als laatste komt.',
+        'Fluister het geheime woord één keer net iets te stil.',
+      ],
+      detective: 'Let ook op het hulpje: valt er een tip weg die eigenlijk niet echt dubbel was?',
+    },
   },
   {
     id: 'o-stuur-het-standbeeld',
@@ -1719,6 +1814,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie stuurt de blikken van de groep de verkeerde kant op?',
       'Wie vraagt om herhaling, terwijl het duidelijk was?',
     ],
+    host: {
+      sabotage: [
+        'Tel de 10 tellen net iets sneller af.',
+        'Roep één ding van de lijst net iets onduidelijker.',
+        'Begin met de moeilijkste dingen van de lijst, zodat de groep slecht start.',
+      ],
+      detective: 'Let ook op het hulpje: telt het altijd even snel af, of soms net sneller?',
+    },
   },
   {
     id: 'o-klapgolf',
@@ -1745,6 +1848,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Bij wie loopt het mis net na "Duvel!"?',
       'Wie aarzelt net te lang als de golf bij hem komt?',
     ],
+    host: {
+      sabotage: [
+        'Roep "Duvel!" net op het moment dat de golf goed op gang is.',
+        'Roep één keer twee keer "Duvel!" vlak na elkaar.',
+        'Roep "Duvel!" één keer net iets stiller.',
+      ],
+      detective: 'Let ook op het hulpje: wanneer roept het "Duvel!"? Net als het goed loopt, of vlak na elkaar?',
+    },
   },
   {
     id: 'o-rijmrace',
@@ -2052,6 +2163,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie zegt dat jullie iets al voorbij zijn?',
       'Wie wijst dingen aan die maar een beetje op de foto lijken?',
     ],
+    host: {
+      sabotage: [
+        'Fotografeer één ding van zo dichtbij dat het bijna niet meer te herkennen is.',
+        'Kies één ding dat op veel plekken voorkomt, zoals een voeg tussen tegels.',
+        'Toon de foto’s niet in de volgorde van de wandeling.',
+      ],
+      detective: 'Let ook op het hulpje: zijn alle foto’s even goed te herkennen, of is er één veel te moeilijk?',
+    },
   },
   {
     id: 'o-reuzen-en-dwergen',
@@ -2185,6 +2304,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie blijft achter als jullie samen moeten aankomen?',
       'Wie vraagt opvallend vaak welk dier het was?',
     ],
+    host: {
+      sabotage: [
+        'Roep een nieuw dier net als iedereen goed in het vorige zit.',
+        'Wissel één keer heel snel na elkaar van dier.',
+        'Roep één dier net iets stiller, zodat wie achteraan loopt het mist.',
+      ],
+      detective: 'Let ook op het hulpje: roept het de dieren rustig, of wisselt het soms opvallend snel?',
+    },
     photo: 'De hele parade als pinguïns.',
   },
   {
@@ -2295,6 +2422,14 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie doet groot mee met een bevel dat niet mocht?',
       'Wie zaait twijfel over wat het hulpje zei?',
     ],
+    host: {
+      sabotage: [
+        'Geef één bevel zonder "Windy zegt" net iets sneller, zodat iemand meteen meedoet.',
+        'Doe bij een bevel zonder "Windy zegt" zelf heel even de beweging voor.',
+        'Zeg "Windy zegt" één keer net iets stiller.',
+      ],
+      detective: 'Let ook op het hulpje: geeft het alle bevelen even duidelijk, of doet het soms zelf een beweging voor?',
+    },
     dilemma: true,
   },
   {

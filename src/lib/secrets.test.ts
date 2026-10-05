@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PROFILE_QUESTIONS } from './data/profile';
-import { gossipSentence, makeBriefing, makeGossip, pickInnocent, type Gossip, type SecretPlayer } from './secrets';
+import { gossipSentence, hostSabotageTip, makeBriefing, makeGossip, pickInnocent, type Gossip, type SecretPlayer } from './secrets';
 import { BUILTIN_TASKS } from './tasks/library';
 import { DETECTIVE_TIPS } from './tasks/quiz';
 
@@ -67,6 +67,38 @@ describe('makeBriefing', () => {
     const cards = makeBriefing(players, task, { speurneusTurn: false, known: {} }, seeded(2));
     expect(cards['b']!.reminder).not.toBeNull();
     expect(cards['x']!.reminder).toBeNull();
+  });
+});
+
+describe('makeBriefing als het hulpje de opdracht leidt', () => {
+  const led = { ...task, host: { sabotage: ['Antwoord één keer net te vaag.', 'Tel net iets trager.'], detective: 'Antwoordt het hulpje altijd duidelijk?' } };
+
+  it('laat een hulpje dat Duvelke is kiezen: eerlijk spelen of iets kleins saboteren', () => {
+    const cards = makeBriefing(players, led, { speurneusTurn: false, known: {}, hostId: 's' }, seeded(1));
+    expect(led.host.sabotage.map(hostSabotageTip)).toContain(cards['s']!.tip);
+    expect(cards['s']!.tip).toMatch(/speel eerlijk/);
+  });
+
+  it('geeft een onschuldig hulpje nooit de tip om op zichzelf te letten', () => {
+    for (let seed = 1; seed < 40; seed++) {
+      const cards = makeBriefing(players, led, { speurneusTurn: false, known: {}, hostId: 'x' }, seeded(seed));
+      expect(cards['x']!.tip).not.toBe(led.host.detective);
+      expect(task.detective).toContain(cards['x']!.tip);
+    }
+  });
+
+  it('laat speurders soms op het hulpje letten, maar enkel als het hulpje meespeelt', () => {
+    const seen = (hostId: string | null) =>
+      Array.from({ length: 40 }, (_, i) => makeBriefing(players, led, { speurneusTurn: false, known: {}, hostId }, seeded(i + 1))).some((c) =>
+        ['n', 'b'].some((id) => c[id]!.tip === led.host.detective),
+      );
+    expect(seen('x')).toBe(true);
+    expect(seen(null)).toBe(false);
+  });
+
+  it('geeft een saboteur die niet het hulpje is gewoon een sabotagetip', () => {
+    const cards = makeBriefing(players, led, { speurneusTurn: false, known: {}, hostId: 'x' }, seeded(2));
+    expect(task.sabotage).toContain(cards['s']!.tip);
   });
 });
 

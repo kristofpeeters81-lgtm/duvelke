@@ -49,6 +49,13 @@ describe('opdrachten: kwaliteit', () => {
     }
   });
 
+  it.each(cases)('%s: leidt het hulpje, dan heeft het eigen tips', (_id, t) => {
+    if (!t.host) return;
+    expect(t.host.sabotage.length).toBeGreaterThanOrEqual(2);
+    expect(t.host.detective.length).toBeGreaterThan(10);
+    for (const tip of [...t.host.sabotage, t.host.detective]) expect(tip).not.toMatch(/spelleider|saboteur|Duvelke/i);
+  });
+
   it.each(cases)('%s: geen nacht, slapen of Halloween', (_id, t) => {
     expect([t.title, t.explain, t.prep ?? ''].join(' ')).not.toMatch(/\b(nacht|halloween|pyjama|slaapzak|bedtijd)\b/i);
   });

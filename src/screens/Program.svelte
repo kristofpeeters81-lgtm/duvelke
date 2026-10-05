@@ -24,7 +24,7 @@
   const draft = $derived(app.draft);
   const ctx = $derived<PlanContext | null>(
     draft
-      ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent }
+      ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: draft.gameMasterId !== null }
       : null,
   );
   const minutes = $derived(draft && ctx ? programMinutes(draft.program, ctx) : 0);
@@ -137,6 +137,7 @@
                   {#if loc}<span class="tag">{loc.emoji} {loc.label}{loc.needsAdult ? ' 🦺' : ''}</span>{/if}
                   <span class="tag">⏱️ {task.minutes} min</span>
                   {#if task.prep}<span class="tag prep">📝 voorbereiden</span>{/if}
+                  {#if task.host && draft.gameMasterId !== null}<span class="tag host">🎬 het hulpje leidt</span>{/if}
                 </span>
               </span>
             </button>
@@ -190,7 +191,7 @@
             <button type="button" class="alt" onclick={() => add(t)}>
               <span class="em">{t.emoji}</span>
               <span class="title">{t.title}</span>
-              <span class="hint small">{t.minutes} min</span>
+              <span class="hint small">{t.minutes} min{t.host && draft.gameMasterId !== null ? ' · 🎬 het hulpje leidt' : ''}</span>
             </button>
           {/each}
         </div>
@@ -316,6 +317,11 @@
   .tag.prep {
     background: rgba(255, 207, 63, 0.15);
     color: var(--gold);
+  }
+
+  .tag.host {
+    background: rgba(255, 79, 163, 0.15);
+    color: var(--pink);
   }
 
   .actions {

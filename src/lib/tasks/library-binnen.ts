@@ -41,6 +41,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie wil er snel stoppen met zoeken, terwijl het woord nog niet klopt?',
       'Wie stelt heel zeker een woord voor dat niet bij alle letters past?',
     ],
+    host: {
+      sabotage: [
+        'Plak één post-it net iets beter verstopt dan de rest, bijvoorbeeld onder de rand van een kast.',
+        'Plak twee letters vlak bij elkaar, zodat de groep denkt dat ze naast elkaar horen.',
+        'Zeg niet hoeveel letters het woord heeft, ook niet als de groep het vraagt.',
+      ],
+      detective: 'Let ook op het hulpje: liggen sommige post-its veel moeilijker verstopt dan de andere?',
+    },
     dilemma: true,
     photo: 'Het geheime woord in post-its, met de speurders erachter.',
   },
@@ -74,6 +82,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Let op wie de groep naar een plek stuurt die niet bij het kruisje past.',
       'Wie twijfelt over wat er op de kaart staat, net als jullie bijna zeker zijn?',
     ],
+    host: {
+      sabotage: [
+        'Teken het kruisje net een klein beetje naast de echte plek.',
+        'Verstop de snoepjes op een plek die op de kaart net tussen twee meubels valt.',
+        'Laat op de kaart één klein meubel weg dat dicht bij de schat staat.',
+      ],
+      detective: 'Let ook op het hulpje: klopt het kruisje op de kaart echt met de plek van de schat?',
+    },
     photo: 'De schatzoekers met de kaart en de schat.',
   },
   {
@@ -140,6 +156,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie stelt er verstopplekken voor die bijna niet te vinden zijn?',
       'Loopt de Zoeker de verkeerde kant op terwijl het neuriën duidelijk is?',
     ],
+    host: {
+      sabotage: [
+        'Kies een klein voorwerp dat makkelijk tussen andere spullen verdwijnt.',
+        'Kies een voorwerp met dezelfde kleur als de kamer, zoals een bruine lepel bij een houten kast.',
+        'Neurie zelf ook mee, maar één keer net iets te laat.',
+      ],
+      detective: 'Let ook op het hulpje: kiest het voorwerpen die bijna niet te vinden zijn?',
+    },
   },
   {
     id: 'b-kaarten-code',
@@ -167,6 +191,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Tel zelf hoeveel kaarten er al gevonden zijn.',
       'Vindt iemand een kaart op een plek die al doorzocht was? Wie zocht daar eerst?',
     ],
+    host: {
+      sabotage: [
+        'Verstop één kaart net iets beter dan de andere.',
+        'Kies vooral kaarten met hoge getallen, zodat het optellen moeilijker wordt.',
+        'Leg één kaart met de voorkant naar beneden, zodat ze minder opvalt.',
+      ],
+      detective: 'Let ook op het hulpje: ligt één kaart veel moeilijker verstopt dan de rest?',
+    },
     dilemma: true,
   },
   {
@@ -352,6 +384,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie leest getallen verkeerd voor of twijfelt over een getal dat duidelijk is?',
       'Past het voorgestelde woord bij álle getallen, of maar bij een paar?',
     ],
+    host: {
+      sabotage: [
+        'Schrijf de getallen een beetje slordig, zodat een 1 net op een 7 lijkt.',
+        'Zet de streepjes tussen de woorden net iets minder duidelijk.',
+        'Schrijf alle getallen dicht tegen elkaar.',
+      ],
+      detective: 'Let ook op het hulpje: zijn alle getallen op het blad goed leesbaar?',
+    },
     dilemma: true,
   },
   {
@@ -412,6 +452,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie houdt vast aan een ingewikkelde uitleg, ook als de antwoorden niet passen?',
       'Wie stelt een vraag opnieuw die al beantwoord was?',
     ],
+    host: {
+      sabotage: [
+        'Antwoord één keer net iets te vaag, bijvoorbeeld "dat doet er niet zoveel toe".',
+        'Vertel het mysterie wat sneller, zodat een belangrijk stukje minder opvalt.',
+        'Wacht bij een goede vraag een tel langer voor je "ja" zegt, alsof je twijfelt.',
+      ],
+      detective: 'Let ook op het hulpje: antwoordt het altijd duidelijk, of zegt het soms "misschien"?',
+    },
   },
   {
     id: 'b-kaartenpuzzel',
@@ -447,6 +495,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie zegt dat een goede rij fout is?',
       'Wie wil er snel opgeven terwijl er nog tijd is?',
     ],
+    host: {
+      sabotage: [
+        'Geef de kaarten netjes op volgorde aan de groep, zodat de verkeerde rij al klaarligt.',
+        'Wacht even voor je zegt dat een goede rij klopt, alsof je het moet nakijken.',
+        'Geef geen enkele hint als de groep vastzit, ook al zie je hoe het moet.',
+      ],
+      detective: 'Let ook op het hulpje: zegt het meteen dat een goede rij klopt, of laat het jullie twijfelen?',
+    },
     dilemma: true,
     photo: 'De opgeloste kaartenrij met de slimme koppen erachter.',
   },
@@ -845,6 +901,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie zegt dat iets al genoemd is, terwijl dat niet zo is?',
       'Wie maakt de groep in de war met "of was het..."?',
     ],
+    host: {
+      sabotage: [
+        'Lees het lijstje net iets sneller voor dan echt traag.',
+        'Lees twee boodschappen vlak na elkaar, zonder pauze ertussen.',
+        'Spreek één boodschap net iets stiller uit dan de rest.',
+      ],
+      detective: 'Let ook op het hulpje: leest het elke boodschap even traag en duidelijk voor?',
+    },
   },
   {
     id: 'b-kaartenrij',
@@ -870,6 +934,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie maakt de anderen aan het lachen net als jullie moeten kijken?',
       'Zegt iemand twee kaarten in de verkeerde volgorde? Let of dat vaker gebeurt.',
     ],
+    host: {
+      sabotage: [
+        'Tel de 20 seconden net iets te snel.',
+        'Leg twee kaarten met dezelfde kleur naast elkaar, zodat ze makkelijk door elkaar lopen.',
+        'Leg de eerste kaarten snel neer, zodat ze net iets korter te zien zijn.',
+      ],
+      detective: 'Let ook op het hulpje: liggen de kaarten echt 20 seconden open?',
+    },
   },
   {
     id: 'b-weet-jij-het-nog',
@@ -898,6 +970,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie twijfelt aan een antwoord dat jij ook juist vond?',
       'Wie vertelde over zichzelf dingen die bijna niemand onthoudt?',
     ],
+    host: {
+      sabotage: [
+        'Stel net iets meer vragen over wie heel gewone dingen vertelde.',
+        'Stel een vraag over iemand die al lang geleden aan de beurt was.',
+        'Stel de vragen vlak na elkaar, zodat de groep weinig tijd heeft om na te denken.',
+      ],
+      detective: 'Let ook op het hulpje: stelt het vooral vragen over dingen die bijna niemand onthouden heeft?',
+    },
   },
   {
     id: 'b-flitstekening',
@@ -953,6 +1033,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie is heel zeker van een aantal dat jij anders onthouden hebt?',
       'Wie keek niet goed tijdens de flits?',
     ],
+    host: {
+      sabotage: [
+        'Teken één klein detail extra klein, zodat het in de flits bijna niet opvalt.',
+        'Hou de tekening net iets schuin, zodat niet iedereen ze even goed ziet.',
+        'Tel de seconden van de flits net iets te snel.',
+      ],
+      detective: 'Let ook op het hulpje: kon iedereen de tekening even lang en even goed zien?',
+    },
     photo: 'Het origineel naast de namaak.',
   },
   {
@@ -981,6 +1069,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie is heel zeker over een plek die jij anders onthouden hebt?',
       'Wie zit nog aan de voorwerpen als het eigenlijk al klaar is?',
     ],
+    host: {
+      sabotage: [
+        'Leg twee voorwerpen die op elkaar lijken naast elkaar, zoals een pen en een potlood.',
+        'Tel net iets sneller tot zestig.',
+        'Leg het raster een beetje scheef, zodat de rijen minder duidelijk zijn.',
+      ],
+      detective: 'Let ook op het hulpje: telt het rustig tot zestig, of gaat het opvallend snel?',
+    },
     dilemma: true,
   },
 
@@ -1396,6 +1492,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie stuurt de groep naar een antwoord dat niet bij alle hints past?',
       'Wie wil er nog wachten, terwijl jullie het eigenlijk al weten?',
     ],
+    host: {
+      sabotage: [
+        'Lees één hint net iets te snel voor, zodat niet iedereen ze goed hoort.',
+        'Laat na een hint maar heel kort tijd om te overleggen voor je om het antwoord vraagt.',
+        'Lees de hints een beetje eentonig voor, zodat het belangrijkste woord niet opvalt.',
+      ],
+      detective: 'Let ook op het hulpje: leest het elke hint duidelijk voor, en krijgen jullie genoeg tijd om te overleggen?',
+    },
   },
   {
     id: 'b-fabeltjes',
@@ -1912,6 +2016,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Kijk wie knikt of schudt als iemand anders aan de beurt is.',
       'Wie neemt zoveel tijd dat de volgende zenuwachtig wordt?',
     ],
+    host: {
+      sabotage: [
+        'Stel een strikvraag net iets sneller aan iemand die al twijfelt.',
+        'Hou de lastigste strikvragen, zoals "Zei jij daarnet ja?", voor als de groep bijna het doel haalt.',
+        'Knik zelf heel licht als je een vraag stelt, zodat de ander meeknikt.',
+      ],
+      detective: 'Let ook op het hulpje: houdt het de lastigste vragen voor net als jullie bijna het doel halen?',
+    },
   },
   {
     id: 'b-stille-boodschapper',
@@ -2001,6 +2113,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie maakt zijn geluid zo zacht dat je hem bijna niet hoort?',
       'Staat er iemand bij jouw familie die niet hetzelfde geluid maakt?',
     ],
+    host: {
+      sabotage: [
+        'Fluister één dier net iets stiller, zodat die speler moet twijfelen.',
+        'Kies dieren met geluiden die een beetje op elkaar lijken.',
+        'Laat spelers met hetzelfde dier zo ver mogelijk van elkaar beginnen.',
+      ],
+      detective: 'Let ook op het hulpje: fluisterde het jouw dier duidelijk, en lijken sommige dieren verdacht veel op elkaar?',
+    },
     photo: 'De dierenfamilies, trots samen.',
   },
 
@@ -2196,6 +2316,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie houdt de wekker net te lang vast?',
       'Wie praat zo stil dat jullie moeten vragen wat hij zei?',
     ],
+    host: {
+      sabotage: [
+        'Zet de kookwekker op een tijd dichter bij 1 minuut dan bij 2.',
+        'Leg de wekker zo neer dat het tikken extra hard klinkt, zodat de groep zenuwachtig wordt.',
+        'Zeg net voor het begin: "Hij kan elk moment afgaan!"',
+      ],
+      detective: 'Let ook op het hulpje: ging de wekker opvallend snel af?',
+    },
   },
 
   // ─────────────── Speuren ───────────────
@@ -2225,6 +2353,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie is heel zeker, maar zit vaak fout?',
       'Wie houdt sokken lang vast, zodat anderen minder kunnen voelen?',
     ],
+    host: {
+      sabotage: [
+        'Stop twee voorwerpen met bijna dezelfde vorm in de sokken, zoals een gom en een dobbelsteen.',
+        'Kies voor één voorwerp een heel dikke sok, zodat je het erin slecht voelt.',
+        'Knoop één sok net iets strakker dicht, zodat het voorwerp er minder in kan bewegen.',
+      ],
+      detective: 'Let ook op het hulpje: zitten er voorwerpen in die bijna niet uit elkaar te houden zijn?',
+    },
     photo: 'De speurneuzen met hun voelsokken.',
   },
   {
@@ -2253,6 +2389,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie loopt naar een plek die niet bij het raadsel past?',
       'Wie vindt een briefje, maar zegt het pas later?',
     ],
+    host: {
+      sabotage: [
+        'Maak één raadsel net iets moeilijker dan de andere.',
+        'Verstop één briefje een beetje beter, bijvoorbeeld net onder de rand van een mat.',
+        'Schrijf één briefje wat slordiger, zodat het lezen langer duurt.',
+      ],
+      detective: 'Let ook op het hulpje: is er één raadsel of briefje veel moeilijker dan de rest?',
+    },
     dilemma: true,
     photo: 'De speurders bij de verrassing, met alle briefjes.',
   },
@@ -2281,6 +2425,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie wijst naar een hoek waar je zelf niets hoort?',
       'Wie stuurt de groep naar de verkeerde kant van de kamer?',
     ],
+    host: {
+      sabotage: [
+        'Verstop de wekker op een plek waar het tikken wat gedempt klinkt, zoals achter een kussen.',
+        'Verstop hem dicht bij iets dat zelf zacht geluid maakt, zoals de koelkast.',
+        'Kies een plek op ooghoogte van een volwassene, waar kinderen minder snel kijken.',
+      ],
+      detective: 'Let ook op het hulpje: verstopte het de wekker op een plek waar je het tikken bijna niet hoort?',
+    },
     dilemma: true,
   },
   {
@@ -2309,6 +2461,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zegt iemand dat een plek doorzocht is? Kijk er zelf nog eens.',
       'Wie zoekt lang op een plek waar niets ligt?',
     ],
+    host: {
+      sabotage: [
+        'Verstop één knuffel zo dat er net geen stukje meer van te zien is.',
+        'Kies een donkere knuffel voor de moeilijkste plek.',
+        'Zet de knuffelmand net iets verder van de zoekplekken.',
+      ],
+      detective: 'Let ook op het hulpje: zijn sommige knuffels veel moeilijker verstopt dan de andere?',
+    },
     photo: 'De speurders in het donker met hun zaklampen.',
   },
   {
@@ -2337,6 +2497,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie stuurt de groep naar een andere kamer?',
       'Wie staat vaak net in de weg?',
     ],
+    host: {
+      sabotage: [
+        'Zoom één foto net iets verder in dan de andere.',
+        'Kies één detail dat op meerdere plekken in huis voorkomt, zoals een stopcontact.',
+        'Toon één foto net iets korter dan de rest.',
+      ],
+      detective: 'Let ook op het hulpje: is één foto veel moeilijker dan de rest, of toont het een foto maar heel kort?',
+    },
   },
   {
     id: 'b-indringers',
@@ -2364,6 +2532,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zegt iemand "dat ligt daar altijd"? Kijk er toch nog eens naar.',
       'Welke hoek wordt door niemand goed bekeken? Ga daar zelf eens kijken.',
     ],
+    host: {
+      sabotage: [
+        'Leg één indringer op een plek waar je hem bijna niet ziet, zoals half achter een kussen.',
+        'Kies één voorwerp met dezelfde kleur als de plek waar je het legt.',
+        'Leg een indringer in een hoek waar de groep zelden komt.',
+      ],
+      detective: 'Let ook op het hulpje: valt één indringer veel minder op dan de andere?',
+    },
     photo: 'Alle indringers op een rij.',
   },
 
@@ -2619,6 +2795,14 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Is de Leider ’t Duvelke? Let op wanneer hij van beweging verandert.',
       'Wie wilde per se een Leider die snel begint te giechelen?',
     ],
+    host: {
+      sabotage: [
+        'Kom net iets vroeger terug, zodat de groep weinig tijd had om te oefenen.',
+        'Kijk vooral wie het eerst van beweging verandert en raad die meteen.',
+        'Draai snel rond in het midden, zodat de Leider minder kan veranderen zonder dat je het ziet.',
+      ],
+      detective: 'Let ook op het hulpje: raadt het de Leider opvallend snel, alsof het iets gezien heeft?',
+    },
   },
   {
     id: 'b-kruipparcours',
@@ -2731,5 +2915,13 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie beweegt een heel klein beetje, zodat anderen twijfelen?',
       'Doet iemand een bevel net anders dan gevraagd?',
     ],
+    host: {
+      sabotage: [
+        'Geef één bevel zonder "Windy zegt" net iets sneller, vlak na een reeks met "Windy zegt".',
+        'Zeg "Windy zegt" één keer net iets stiller dan anders.',
+        'Doe een bevel zonder "Windy zegt" zelf voor, zodat iemand je nadoet.',
+      ],
+      detective: 'Let ook op het hulpje: zegt het "Windy zegt" altijd even duidelijk en even snel?',
+    },
   },
 ];

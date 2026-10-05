@@ -23,6 +23,15 @@ export interface PlanContext {
   ratings?: Record<string, number>;
   /** Opdrachten die recent gespeeld zijn: minder kans om terug te komen. */
   recentTaskIds?: readonly string[];
+  /** Speelt het hulpje mee? Dan komen er maar een paar opdrachten in die het hulpje leidt. */
+  hostPlays?: boolean;
+}
+
+/** Zoveel opdrachten die het hulpje leidt, kiest het programma hoogstens als het hulpje meespeelt. */
+export const MAX_HOST_TASKS = 3;
+
+function hostFull(chosen: readonly TaskDef[], ctx: PlanContext): boolean {
+  return !!ctx.hostPlays && chosen.filter((t) => t.host).length >= MAX_HOST_TASKS;
 }
 
 /** Waarom een opdracht niet kan, of null als ze wel kan. */
@@ -137,7 +146,10 @@ export function buildProgram(ctx: PlanContext, rng: Rng = Math.random): ProgramI
   while (true) {
     const remaining = budget - used;
     const fits = pool.filter(
-      (t) => !chosen.includes(t) && (taskCost(t, ctx.playerCount, ctx.settings) <= remaining || chosen.length < 3),
+      (t) =>
+        !chosen.includes(t) &&
+        !(t.host && hostFull(chosen, ctx)) &&
+        (taskCost(t, ctx.playerCount, ctx.settings) <= remaining || chosen.length < 3),
     );
     if (fits.length === 0 || (chosen.length >= 3 && remaining <= 0)) break;
 
@@ -166,7 +178,7 @@ export function swapItem(program: readonly ProgramItem[], index: number, ctx: Pl
   if (!current) return [...program];
   const byId = new Map(ctx.tasks.map((t) => [t.id, t]));
   const others = program.filter((_, i) => i !== index).map((p) => byId.get(p.taskId)).filter((t): t is TaskDef => !!t);
-  const candidates = alternatives(program, ctx);
+  const candidates = alternatives(program, ctx).filter((t) => !(t.host && hostFull(others, ctx)));
   if (candidates.length === 0) return [...program];
   const task = weightedPick(shuffle(candidates, rng), others, ctx, rng);
   if (!task) return [...program];

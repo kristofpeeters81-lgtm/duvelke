@@ -103,6 +103,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Let op wie de groep wil laten haasten.',
       'Wie roept er "ik zie iets!" bij iets wat gewoon in het bos hoort?',
     ],
+    host: {
+      sabotage: [
+        'Verstop één voorwerp net iets dieper onder de blaadjes dan de rest.',
+        'Kies één voorwerp met een bruine of groene kleur, zodat het minder opvalt tussen de bladeren.',
+        'Leg één voorwerp aan de kant van het pad waar de groep het minst zal kijken.',
+      ],
+      detective: 'Let ook op het hulpje: liggen alle voorwerpen even goed zichtbaar, of is er eentje verdacht goed verstopt?',
+    },
     dilemma: true,
   },
   {
@@ -474,6 +482,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie wil er ergens anders graven dan waar jullie uitkwamen?',
       'Reken de antwoorden zelf na in je hoofd.',
     ],
+    host: {
+      sabotage: [
+        'Begraaf de schat net iets dieper dan nodig.',
+        'Strijk het zand boven de schat extra glad, zodat je er niets van ziet.',
+        'Zet bij het klaarleggen net iets grotere stappen, zodat de schat een tikje verder ligt.',
+      ],
+      detective: 'Let ook op het hulpje: het weet waar de schat ligt. Kijkt het stiekem een andere kant op, of wil het ergens anders laten graven?',
+    },
     dilemma: true,
     photo: 'De piraten met de gevonden schat.',
   },
@@ -658,6 +674,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Kijk of de volgorde nog klopt nadat iemand iets gelegd heeft.',
       'Lijkt wat iemand meebrengt echt op het origineel?',
     ],
+    host: {
+      sabotage: [
+        'Leg twee dingen naast elkaar die erg op elkaar lijken, zoals twee bruine blaadjes.',
+        'Kies één ding dat in de buurt net iets moeilijker te vinden is.',
+        'Leg de jas een tel te vroeg terug over de rij.',
+      ],
+      detective: 'Let ook op het hulpje: koos het dingen die je in de buurt kan terugvinden, en mochten jullie de volle tijd kijken?',
+    },
     dilemma: true,
     photo: 'Het origineel naast de kopie.',
   },
@@ -707,6 +731,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Let op wie heel zeker is over een getal dat de anderen anders onthouden.',
       'Wie spreekt de anderen tegen over waar iets lag?',
     ],
+    host: {
+      sabotage: [
+        'Kies één vraag over iets waar bijna niemand op lette.',
+        'Stel één vraag net iets vaag, zodat er twee antwoorden lijken te kloppen.',
+        'Wandel net iets sneller voorbij iets waar je straks een vraag over stelt.',
+      ],
+      detective: 'Let ook op het hulpje: stelt het duidelijke vragen, of vragen over dingen die bijna niemand kon zien?',
+    },
   },
   {
     id: 'n-natuurketting',
@@ -733,6 +765,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Begint iedereen aan dezelfde kant van de ketting?',
       'Kijk na elke beurt nog eens of de ketting klopt.',
     ],
+    host: {
+      sabotage: [
+        'Leg twee dingen die erg op elkaar lijken net naast elkaar in de ketting.',
+        'Tel de 20 tellen net iets sneller.',
+        'Leg de ketting een beetje kronkelend, zodat de volgorde moeilijker te zien is.',
+      ],
+      detective: 'Let ook op het hulpje: telt het de 20 tellen rustig, en legt het een ketting die je goed kan zien?',
+    },
   },
   {
     id: 'n-zandmemory',
@@ -762,6 +802,13 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Let op wie een "zeker weten"-tip geeft die niet klopt.',
       'Wie maakt een hoopje open dat al eens bekeken werd?',
     ],
+    host: {
+      sabotage: [
+        'Kies twee paren schelpen die erg op elkaar lijken.',
+        'Leg het rooster net iets minder netjes, zodat je moeilijker onthoudt welk hoopje waar ligt.',
+      ],
+      detective: 'Let ook op het hulpje: lijken schelpen van verschillende paren verdacht goed op elkaar?',
+    },
     dilemma: true,
     photo: 'Alle gevonden paren op een rij.',
   },
@@ -799,6 +846,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie tekent zijn stukje veel groter of kleiner dan de rest?',
       'Staat alles aan de juiste kant? Kijk na elke tekenaar.',
     ],
+    host: {
+      sabotage: [
+        'Teken de tekening net iets kleiner dan nodig.',
+        'Wis de tekening een tel te vroeg uit.',
+        'Teken een klein extra detail dat makkelijk vergeten wordt.',
+      ],
+      detective: 'Let ook op het hulpje: tekent het groot en duidelijk, en mochten jullie de volle tijd kijken?',
+    },
     photo: 'De namaaktekening met de trotse tekenaars.',
   },
 
@@ -1436,6 +1491,13 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie kiest er een boom die maar half klopt?',
       'Let op wie de Beschrijver in de war brengt met vragen.',
     ],
+    host: {
+      sabotage: [
+        'Kijk "per ongeluk" even naar een boom die net naast de juiste staat.',
+        'Moedig de groep aan om snel te kiezen, nog voor de Beschrijver alles verteld heeft.',
+      ],
+      detective: 'Let ook op het hulpje: het weet welke boom het is. Kijkt het stiekem een bepaalde kant op?',
+    },
   },
   {
     id: 'n-uilentaal',
@@ -1497,6 +1559,13 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie zoekt er op plekken waar het niet kan liggen?',
       'Wie stelt de Voeler vragen die hem of haar aan het twijfelen brengen?',
     ],
+    host: {
+      sabotage: [
+        'Kies één keer een schat die in de buurt net iets moeilijker te vinden is.',
+        'Kies een ding zonder veel opvallends, zoals een gewoon steentje, zodat de Voeler weinig kan vertellen.',
+      ],
+      detective: 'Let ook op het hulpje: kiest het schatten die je in de buurt makkelijk kan terugvinden?',
+    },
   },
   {
     id: 'n-rugtekening',
@@ -1684,6 +1753,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie is er net te laat bij het tikken?',
       'Let op wie anderen naar iets verkeerds stuurt.',
     ],
+    host: {
+      sabotage: [
+        'Tel de tellen één keer net iets sneller.',
+        'Roep een opdracht waarvoor er weinig in de buurt ligt net op het moment dat de groep verspreid staat.',
+        'Roep één opdracht net iets onduidelijk.',
+      ],
+      detective: 'Let ook op het hulpje: telt het altijd even snel, en roept het de opdracht duidelijk?',
+    },
     dilemma: true,
   },
   {
@@ -1776,6 +1853,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie loopt voorop en mist er tekens?',
       'Let op wie het spoor wil verlaten voor een "kortere weg".',
     ],
+    host: {
+      sabotage: [
+        'Leg één pijl net iets kleiner of meer verstopt dan de rest.',
+        'Leg één kruis net iets slordiger, zodat het op een gewoon hoopje takjes lijkt.',
+        'Verstop de snoepjes bij het einde net iets beter dan nodig.',
+      ],
+      detective: 'Let ook op het hulpje: zijn alle tekens even goed te zien, of is er eentje verdacht klein of slordig?',
+    },
     dilemma: true,
     photo: 'De speurders bij het laatste teken.',
   },
@@ -1805,6 +1890,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Tel zelf stilletjes de stappen mee.',
       'Kijk zelf op het kompas als iemand een richting aanwijst.',
     ],
+    host: {
+      sabotage: [
+        'Lees één opdracht net iets te snel voor.',
+        'Zet bij het afstappen van de route net iets grotere stappen.',
+        'Verstop de snoepjes net iets beter dan nodig.',
+      ],
+      detective: 'Let ook op het hulpje: leest het elke opdracht duidelijk voor, met het juiste aantal stappen?',
+    },
     photo: 'De kompasdrager met de gevonden verrassing.',
   },
   {
@@ -2132,6 +2225,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wie giechelt er als iemand bijna bij de uil is?',
       'Let op wie de anderen aanspoort om sneller te gaan.',
     ],
+    host: {
+      sabotage: [
+        'Wijs één keer al bij een heel klein geritsel.',
+        'Wijs één keer net naar de sluiper die het verst gekomen is.',
+        'Draai je hoofd een beetje mee, zodat je de sluipers beter hoort.',
+      ],
+      detective: 'Let ook op het hulpje: wijst het enkel als het echt iets hoorde, of ook bij heel stille sluipers?',
+    },
     dilemma: true,
     photo: 'De sluipers op hun tenen, vlak achter de uil.',
   },
@@ -2180,6 +2281,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Let op wie nog het vorige dier doet.',
       'Wie maakt de groep aan het lachen als jullie moeten opschieten?',
     ],
+    host: {
+      sabotage: [
+        'Roep een nieuw dier net als de groep goed op gang is.',
+        'Kies wat vaker een traag dier, zoals de slak.',
+        'Roep één keer net iets te snel na elkaar een nieuw dier, zodat de groep uit elkaar valt.',
+      ],
+      detective: 'Let ook op het hulpje: kiest het vaak trage dieren, of wisselt het net als jullie goed op gang zijn?',
+    },
     photo: 'De dierenparade in volle actie.',
   },
   {
@@ -2260,6 +2369,14 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Let op wie de anderen aan het lachen brengt.',
       'Luister zelf goed naar de opdracht van het hulpje.',
     ],
+    host: {
+      sabotage: [
+        'Roep een opdracht waarbij twee mensen net hetzelfde vakje nodig hebben.',
+        'Roep de volgende opdracht net iets te snel, voor iedereen stevig staat.',
+        'Zeg één opdracht net iets onduidelijk, zodat niet iedereen weet of ze voor iedereen is.',
+      ],
+      detective: 'Let ook op het hulpje: zijn de opdrachten duidelijk, of moeten jullie vaak vragen wat het bedoelt?',
+    },
     photo: 'De grootste knoop van armen en benen.',
   },
 ];

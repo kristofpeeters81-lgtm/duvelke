@@ -40,6 +40,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie stuurt de groep naar een hoek waar dan niets blijkt te liggen?',
       'Kijk wie bijna nooit een wasknijper naar de spelleider brengt.',
     ],
+    host: {
+      sabotage: [
+        'Verstop één of twee wasknijpers net iets moeilijker dan de rest, bijvoorbeeld half onder een kussen.',
+        'Kijk eens naar een plek waar geen wasknijper ligt, als de groep bijna klaar is.',
+        'Verstop twee wasknijpers vlak bij elkaar, zodat de groep na de eerste niet meer verder zoekt.',
+      ],
+      detective: 'Let ook op het hulpje: liggen sommige wasknijpers veel moeilijker dan de rest, of kijkt het hulpje naar plekken waar niets ligt?',
+    },
     dilemma: true,
     photo: 'Iedereen met een wasknijper aan zijn oor.',
   },
@@ -483,6 +491,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie maakt de groep onzeker als het antwoord goed is?',
       'Wie herinnert zich voorwerpen die er nooit lagen?',
     ],
+    host: {
+      sabotage: [
+        'Leg twee voorwerpen die sterk op elkaar lijken naast elkaar, zoals twee lepels.',
+        'Schuif bij het weghalen de andere voorwerpen een beetje op, zodat het gat minder opvalt.',
+        'Haal in een ronde het kleinste voorwerp weg dat er ligt.',
+      ],
+      detective: 'Let ook op het hulpje: schuift het de voorwerpen anders als het er één weghaalt?',
+    },
   },
   {
     id: 'ik-ga-op-reis',
@@ -533,6 +549,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie stampt of knipt op het verkeerde moment?',
       'Wie zaait twijfel over hoe het patroon ging?',
     ],
+    host: {
+      sabotage: [
+        'Doe het patroon één keer net iets sneller voor dan de vorige rondes.',
+        'Maak één beweging iets minder duidelijk, zoals een heel stil vingerknipje.',
+        'Voeg in een ronde twee nieuwe bewegingen toe in plaats van één.',
+      ],
+      detective: 'Let ook op het hulpje: doet het het patroon altijd even rustig en duidelijk voor?',
+    },
   },
 
   // ─────────────── Behendigheid ───────────────
@@ -1012,6 +1036,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie onderbreekt de Bouwmeester vaak?',
       'Vergat de Bouwmeester een blokje, of zei die "erop" waar het "ernaast" moest?',
     ],
+    host: {
+      sabotage: [
+        'Gebruik in je bouwwerk twee blokjes met bijna dezelfde kleur.',
+        'Zet één blokje zo dat het half verstopt zit achter een ander blokje.',
+        'Leg bij de blokjes voor de groep één extra blokje dat er sterk op lijkt.',
+      ],
+      detective: 'Let ook op het hulpje: is het geheime bouwwerk eerlijk te zien, en liggen er precies de juiste blokjes klaar?',
+    },
     photo: 'Het origineel naast de kopie.',
   },
 
@@ -1150,6 +1182,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Hoor je iemand kuchen of schuifelen net bij een geluid?',
       'Wie zegt dat een geluid al geweest is, terwijl het nieuw is?',
     ],
+    host: {
+      sabotage: [
+        'Maak één geluid net iets korter of zachter dan de andere.',
+        'Kies één geluid dat heel erg lijkt op een geluid dat al geweest is.',
+        'Maak per ongeluk een klein extra geluidje vlak voor het echte geluid.',
+      ],
+      detective: 'Let ook op het hulpje: zijn alle geluiden even lang en even luid, of is er eentje opvallend kort of stil?',
+    },
   },
   {
     id: 'spoorzoeker',
@@ -1176,6 +1216,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie zag een wolletje waar er dan geen blijkt te zijn?',
       'Wie maakt de groep in de war over het aantal?',
     ],
+    host: {
+      sabotage: [
+        'Knoop één wolletje net iets hoger of meer verstopt dan de andere.',
+        'Hang twee wolletjes vlak bij elkaar, zodat de groep er makkelijk één mist.',
+        'Kies een wolletje in een kleur die goed opgaat tussen de bladeren.',
+      ],
+      detective: 'Let ook op het hulpje: hangen alle wolletjes even goed zichtbaar, of zit er eentje opvallend verstopt?',
+    },
     photo: 'De ontdekkingsreizigers bij de verrassing.',
   },
 
@@ -1212,6 +1260,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie beweegt net als de foto gemaakt wordt?',
       'Wie probeert anderen aan het lachen te krijgen?',
     ],
+    host: {
+      sabotage: [
+        'Tel de 10 tellen één keer net iets sneller.',
+        'Kies de moeilijkste pose van de lijst als de groep net goed bezig is.',
+        'Neem één foto net een tikje te vroeg, als nog niet iedereen stilstaat.',
+      ],
+      detective: 'Let ook op het hulpje: telt het altijd even snel, en wacht het met de foto tot iedereen klaarstaat?',
+    },
     photo: 'De beste pose van allemaal.',
   },
   {
@@ -1266,6 +1322,14 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie probeert de anderen aan het lachen te brengen?',
       'Wie komt bijna nooit vooruit?',
     ],
+    host: {
+      sabotage: [
+        'Tel één ronde net iets sneller dan de andere.',
+        'Draai je één keer heel snel om, net na het laatste getal.',
+        'Stuur één keer iemand terug die maar heel even wiebelde.',
+      ],
+      detective: 'Let ook op het hulpje: telt het elke ronde even snel, en stuurt het eerlijk terug wie beweegt?',
+    },
   },
   {
     id: 'estafette-letters',
