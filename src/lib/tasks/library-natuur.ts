@@ -25,9 +25,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zoek samen {aantal} blaadjes die op de grond liggen, allemaal in een andere kleur of tint. Leg ze op een rij van het lichtste naar het donkerste blad, als een ladder. Blijf in de buurt van de volwassene en pluk niets van de bomen!',
+      'Zoek samen {aantal} blaadjes die op de grond liggen, allemaal in een andere kleur of tint. Leg ze op een rij van het lichtste naar het donkerste blad, als een ladder. Elk blaadje dat op de juiste plek in de ladder ligt, telt. Blijf in de buurt van de volwassene en pluk niets van de bomen!',
     vars: { aantal: { makkelijk: [6], normaal: [8], pittig: [12] } },
-    scoring: { type: 'aantal', target: '{aantal}', unit: 'blaadjes' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'blaadjes op de juiste plek' },
     sabotage: [
       'Leg twee blaadjes met bijna dezelfde kleur naast elkaar en zeg dat ze heel anders zijn.',
       'Wissel als niemand kijkt twee blaadjes die naast elkaar liggen van plaats.',
@@ -87,7 +87,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 8,
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Leg langs een stuk pad van ongeveer 50 meter {aantal} voorwerpen uit huis die niet in het bos horen (een lepel, een sok, een legoblokje, een wasknijper...), half verstopt maar vlak naast het pad.',
+    prep: 'Leg langs een stuk pad van ongeveer 50 meter {aantal} voorwerpen uit huis die niet in het bos horen (een lepel, een sok, een legoblokje, een wasknijper...), half verstopt maar vlak naast het pad. Onthoud waar je alles legt, zodat je straks niets vergeet mee te nemen.',
     explain:
       'Oei, ’t Duvelke heeft rommel in het bos gelegd! Wandel samen traag over het pad en zoek {aantal} dingen die niet in het bos thuishoren. Wie iets ziet, wijst het aan en raapt het op, maar niemand verlaat het pad. Zo blijft het bos proper!',
     vars: { aantal: { makkelijk: [6], normaal: [8], pittig: [10] } },
@@ -122,8 +122,8 @@ export const TASKS_NATUUR: TaskDef[] = [
       title: 'Bingokaart',
       items: {
         makkelijk: ['een witte schelp', 'een donkere schelp', 'een veer', 'een stukje hout', 'een steentje', 'een schelp met strepen', 'een piepkleine schelp', 'een grote schelp', 'iets roze', 'droog zeewier', 'iets ronds'],
-        normaal: ['een schelp met een gaatje', 'een scheermesschelp', 'een veer', 'een glad steentje', 'een stukje drijfhout', 'een lege krabbenschaal', 'een schelp groter dan je handpalm', 'twee schelpen die nog aan elkaar vastzitten', 'een oranje schelp', 'droog zeewier', 'een stukje afval (dat gooien we straks weg)'],
-        pittig: ['een schelp met drie kleuren', 'een scheermesschelp langer dan je hand', 'een spiraalschelp (wulk)', 'een lege krabbenschaal', 'een stukje hout met een gaatje', 'een steentje met een witte streep', 'een oesterschelp', 'een hartschelp', 'een stukje zeeglas', 'een lange veer', 'een schelp kleiner dan je pinknagel'],
+        normaal: ['een schelp met een gaatje', 'een scheermesschelp', 'een veer', 'een glad steentje', 'een stukje drijfhout', 'een lege krabbenschaal', 'een schelp groter dan je handpalm', 'twee schelpen die nog aan elkaar vastzitten', 'een oranje schelp', 'droog zeewier', 'een stukje papier- of plastic afval (geen glas!)'],
+        pittig: ['een schelp met drie kleuren', 'een scheermesschelp langer dan je hand', 'een spiraalschelp (wulk)', 'een lege krabbenschaal', 'een stukje hout met een gaatje', 'een steentje met een witte streep', 'een oesterschelp', 'een hartschelp', 'een mosselschelp met een blauwe glans', 'een lange veer', 'een schelp kleiner dan je pinknagel'],
       },
       pick: 8,
       secret: false,
@@ -159,7 +159,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       items: {
         makkelijk: ['een schelp groter dan je handpalm', 'een schelp kleiner dan je pinknagel', 'een veer langer dan je vinger', 'een steentje zo rond als een knikker', 'een stuk hout langer dan je voet', 'de witste schelp die je kan vinden', 'een schelp met minstens drie strepen', 'de zwartste schelp die je kan vinden'],
         normaal: ['een scheermesschelp langer dan je hand', 'een schelp kleiner dan een erwt', 'een veer langer dan je hand', 'een steentje zo plat als een koekje', 'een stuk hout langer dan je arm', 'een schelp met een gaatje in het midden', 'drie schelpen van precies dezelfde grootte', 'een schelp met vier kleuren'],
-        pittig: ['een scheermesschelp langer dan je onderarm', 'een hele schelp kleiner dan een rijstkorrel', 'een veer langer dan je onderarm', 'een steentje in de vorm van een hart', 'een stuk hout met een Y-vorm', 'vijf schelpen van precies dezelfde soort en grootte', 'een schelp die glanst als parelmoer', 'twee schelpen die nog als een vlinder aan elkaar vastzitten'],
+        pittig: ['een scheermesschelp langer dan je onderarm', 'een hele schelp kleiner dan je kleinste teennagel', 'een veer langer dan je onderarm', 'een steentje in de vorm van een hart', 'een stuk hout met een Y-vorm', 'vijf schelpen van precies dezelfde soort en grootte', 'een schelp die glanst als parelmoer', 'twee schelpen die nog als een vlinder aan elkaar vastzitten'],
       },
       pick: 5,
       secret: false,
@@ -167,7 +167,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 5, unit: 'records' },
     sabotage: [
       'Zeg één keer dat je het record al hebt, ook al is je vondst net niet goed genoeg.',
-      'Kies "per ongeluk" net de kleinere schelp.',
+      'Hebben jullie twee vondsten voor hetzelfde record? Kies "per ongeluk" net de minst goede.',
       'Meet een beetje slordig met je hand en zeg dat het klopt.',
       'Zeg dat een record "veel te moeilijk" is, zodat jullie het overslaan.',
     ],
@@ -192,7 +192,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De spelleider leest een raadsel voor, en het antwoord ligt ergens in het bos! Raad het, zoek het en breng het mee, of wijs het aan als je het niet mag oprapen. Hoeveel raadsels lossen jullie op?',
+      'Windy leest een raadsel voor, en het antwoord ligt ergens in het bos! Raad het, zoek het en breng het mee, of wijs het aan als je het niet mag oprapen. Pas als jullie iets gevonden hebben, tikt het hulpje op "Antwoord?". Hoeveel raadsels lossen jullie op voor de tijd om is?',
     list: {
       title: 'Bosraadsels (antwoorden enkel voor de spelleider)',
       items: {
@@ -223,24 +223,25 @@ export const TASKS_NATUUR: TaskDef[] = [
           'Ik reis op de wind en heb soms vleugeltjes, maar ik ben geen vogel. (een zaadje, zoals een helikoptertje)',
           'Ik heb honderden naalden, maar ik kan niet naaien. (een dennentak of dennennaalden)',
           'Ik ben een huis zonder deur en zonder dak. Enkel van ver wijzen! (een vogelnest of een hol)',
-          'Ik volg de boom overal, maar enkel als de zon schijnt. (de schaduw van een boom)',
+          'Ik ben een stekelig jasje, en binnenin zat een glanzende bruine bal. (een kastanjebolster)',
           'Ik lig op de grond en ben een hotel voor kevers en pissebedden. (een omgevallen stam of een hoop blaadjes)',
         ],
       },
       pick: 5,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 5, unit: 'raadsels' },
+    scoring: { type: 'aantal', target: 5, unit: 'opgeloste raadsels' },
     sabotage: [
       'Roep één keer snel een fout antwoord, zodat de anderen de verkeerde kant op denken.',
       'Breng iets mee dat er een beetje op lijkt, maar net niet klopt.',
       'Weet je het antwoord? Zeg het pas als iemand anders het al geraden heeft.',
-      'Vraag de spelleider om het raadsel nog eens voor te lezen, zodat de tijd wegtikt.',
+      'Vraag om het raadsel nog eens te horen, ook als je het goed verstaan hebt, zodat de tijd wegtikt.',
     ],
     detective: [
       'Let op wie snel een antwoord roept dat niet klopt.',
       'Wie lijkt het antwoord te weten, maar zegt het pas heel laat?',
       'Kijk goed of wat iemand meebrengt echt bij het raadsel past.',
+      'Wie wil een raadsel telkens nog eens horen, terwijl het duidelijk was?',
     ],
     dilemma: true,
   },
@@ -255,41 +256,41 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 10,
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Verzamel ongeveer 25 rechte takjes van ongeveer even lang, die al op de grond liggen, en een steentje.',
+    prep: 'Verzamel ongeveer 25 rechte takjes van ongeveer even lang, die al op de grond liggen, plus 3 langere en 3 kortere takjes en een steentje.',
     explain:
-      'Lucifersraadsels, maar dan met takjes uit het bos! De spelleider legt een figuur of een som op de grond. Verleg of verzamel de takjes om het raadsel op te lossen. Hoeveel puzzels kraken jullie?',
+      'Lucifersraadsels, maar dan met takjes uit het bos! Windy leest een puzzel voor, en het hulpje legt de figuur of de som met takjes op de grond. Romeinse cijfers maak je met takjes: één is een staand takje, vijf is een V en tien is een X. Verleg of verzamel de takjes om de puzzel op te lossen. Pas als jullie klaar zijn, tikt het hulpje op "Antwoord?". Hoeveel puzzels kraken jullie voor de tijd om is?',
     list: {
-      title: 'Takjespuzzels (oplossing enkel voor de spelleider)',
+      title: 'Takjespuzzels (antwoord enkel voor de spelleider)',
       items: {
         makkelijk: [
           'Leg met 3 takjes een driehoek. Leg er 2 takjes bij zodat je 2 driehoeken hebt. (tegen één kant van de eerste driehoek)',
-          'Leg: III + I = II. Verleg 1 takje zodat de som klopt. (II + I = III)',
-          'Leg: V + I = IV. Verleg 1 takje zodat de som klopt. (IV + I = V)',
-          'Leg met 12 takjes 4 kleine vierkantjes in een blok van 2 op 2. (een groot vierkant met een kruis erin)',
+          'Leg in Romeinse cijfers: drie plus één is twee. Verleg 1 takje zodat de som klopt. (twee plus één is drie)',
+          'Leg in Romeinse cijfers: vijf plus één is vier. Verleg 1 takje zodat de som klopt. (vier plus één is vijf)',
+          'Leg met 12 takjes 4 kleine vierkantjes in een blok van twee op twee. (een groot vierkant met een kruis erin)',
           'Leg met 4 takjes een vierkant. Maak er 2 driehoeken van met 1 extra, iets langer takje. (schuin van hoek tot hoek)',
-          'Leg: I + I = I. Verleg 1 takje zodat de som klopt. (II − I = I: het staande takje van de plus gaat naar voren)',
+          'Leg in Romeinse cijfers: één plus één is één. Verleg 1 takje zodat de som klopt. (twee min één is één: het staande takje van de plus komt voor de eerste één)',
         ],
         normaal: [
-          'Leg: VI − IV = IX. Verleg 1 takje zodat de som klopt. (VI + IV = X)',
-          'Leg: VI + I = V. Verleg 1 takje zodat de som klopt. (IV + I = V)',
-          'Leg: II − I = II. Verleg 1 takje zodat de som klopt. (I + I = II)',
-          'Leg met 12 takjes een blok van 2 op 2 vierkantjes. Neem 2 takjes weg zodat er precies 2 vierkanten overblijven. (2 middelste takjes die samen een hoekje vormen: het grote vierkant en één klein vierkantje blijven)',
-          'Leg met 7 takjes 3 driehoekjes naast elkaar (om de beurt met de punt omhoog en omlaag). Neem 1 takje weg zodat er 2 driehoeken overblijven. (een buitenste schuin takje)',
+          'Leg in Romeinse cijfers: zes min vier is negen. Verleg 1 takje zodat de som klopt. (zes plus vier is tien)',
+          'Leg in Romeinse cijfers: zes plus één is vijf. Verleg 1 takje zodat de som klopt. (vier plus één is vijf)',
+          'Leg in Romeinse cijfers: twee min één is twee. Verleg 1 takje zodat de som klopt. (één plus één is twee)',
+          'Leg met 12 takjes een blok van twee op twee vierkantjes. Neem 2 takjes weg zodat er precies 2 vierkanten overblijven. (2 middelste takjes die samen een hoekje vormen: het grote vierkant en één klein vierkantje blijven)',
+          'Leg met 7 takjes 3 driehoekjes naast elkaar, om de beurt met de punt omhoog en omlaag. Neem 1 takje weg zodat er 2 driehoeken overblijven. (een buitenste schuin takje)',
           'Leg een grote driehoek met 3 lange takjes, en daarin een omgekeerde driehoek met 3 korte takjes. Hoeveel driehoeken zie je? (5)',
         ],
         pittig: [
-          'Leg met 4 takjes een glas (een V met een voetje) met een steentje erin. Verleg 2 takjes zodat het steentje buiten het glas ligt. (het glas mag omgekeerd of gedraaid staan)',
-          'Maak met 6 takjes 4 driehoeken. (denk in 3D: een piramide met een driehoek als bodem, jullie mogen hem vasthouden)',
-          'Leg: XI + I = X. Verleg 1 takje zodat de som klopt. (IX + I = X)',
-          'Leg: X − I = XI. Verleg 1 takje zodat de som klopt. (X − I = IX)',
-          'Leg met 24 takjes een blok van 3 op 3 vierkantjes. Hoeveel vierkanten zie je in totaal? (14: 9 kleine, 4 middelgrote en 1 groot)',
-          'Leg met 12 takjes een blok van 2 op 2 vierkantjes. Hoeveel vierkanten zie je in totaal? (5: 4 kleine en 1 groot)',
+          'Leg met 4 takjes een glas, een V met een voetje, met een steentje erin. Verleg 2 takjes zodat het steentje buiten het glas ligt. (het glas mag omgekeerd of gedraaid staan)',
+          'Maak met 6 takjes 4 driehoeken. Jullie mogen de takjes optillen en vasthouden. (een piramide met een driehoek als bodem)',
+          'Leg in Romeinse cijfers: elf plus één is tien. Verleg 1 takje zodat de som klopt. (negen plus één is tien)',
+          'Leg in Romeinse cijfers: tien min één is elf. Verleg 1 takje zodat de som klopt. (tien min één is negen)',
+          'Leg met 24 takjes een blok van drie op drie vierkantjes. Hoeveel vierkanten zie je in totaal? (14: 9 kleine, 4 middelgrote en 1 groot)',
+          'Leg met 12 takjes een blok van twee op twee vierkantjes. Hoeveel vierkanten zie je in totaal? (5: 4 kleine en 1 groot)',
         ],
       },
       pick: 3,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 3, unit: 'puzzels' },
+    scoring: { type: 'aantal', target: 3, unit: 'opgeloste puzzels' },
     sabotage: [
       'Verleg één keer snel een takje, maar net het verkeerde.',
       'Zeg dat een puzzel "onmogelijk" is en dat jullie beter de volgende doen.',
@@ -315,7 +316,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 7,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De spelleider leest de aanwijzingen van een geheim bosdier één voor één voor, van moeilijk naar makkelijk. Na elke aanwijzing mogen jullie één keer samen raden. Raden jullie het dier voor de laatste aanwijzing? Dan telt het!',
+      'Windy leest drie aanwijzingen over een geheim bosdier voor. Daarna overleggen jullie en kiezen jullie samen één dier. Pas dan tikt het hulpje op "Antwoord?". Klopt jullie dier? Dan telt het!',
     list: {
       title: 'Geheime bosdieren (antwoord enkel voor de spelleider)',
       items: {
@@ -337,7 +338,7 @@ export const TASKS_NATUUR: TaskDef[] = [
           'Ik zing heel mooi. Ik ben een klein vogeltje. Mijn borst is oranje-rood. (roodborstje)',
           'Ik wacht geduldig op een vlieg. Ik maak een val van draad. Ik heb acht poten. (spin)',
           'Ik ben een vogel. Ik leg mijn eitjes in het nest van een ander. In de lente roep ik mijn eigen naam. (koekoek)',
-          'Ik leg eitjes in het water. Mijn jongen zijn visjes met een staart. Ik kwaak. (kikker)',
+          'Ik leg eitjes in het water. Mijn jongen lijken op visjes met een staart. Ik kwaak. (kikker)',
         ],
         pittig: [
           'Ik ben een roofvogel. Ik zit graag op een paal langs de weg. Ik cirkel boven het bos en roep "pieuw". (buizerd)',
@@ -353,7 +354,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 4,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 4, unit: 'dieren' },
+    scoring: { type: 'aantal', target: 4, unit: 'geraden dieren' },
     sabotage: [
       'Stel een dier voor dat bij één aanwijzing past, maar niet bij de andere.',
       'Zeg één keer "nee, dat kan niet, want..." als iemand het juiste dier noemt.',
@@ -376,41 +377,41 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 8,
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Verzamel een paar schelpen, steentjes en veertjes, en leg de sommen van de lijst in het zand (schrijf de getallen en tekens met een stok).',
+    prep: 'Verzamel een handvol schelpen, steentjes en veertjes, en zoek een stok om mee in het zand te schrijven.',
     explain:
-      'De spelleider legt geheime sommen met schelpen, steentjes en veertjes in het zand. Elk soort ding staat voor een getal. Kraak samen welk getal bij welk ding hoort en zeg het antwoord tegen de spelleider!',
+      'Windy leest een geheime som voor, en het hulpje legt ze meteen in het zand: met schelpen, steentjes en veertjes, en de getallen en tekens geschreven met een stok. Elk soort ding staat voor een getal. Kraak samen welk getal bij welk ding hoort en zeg jullie antwoord. Pas dan tikt het hulpje op "Antwoord?". Hoeveel sommen kraken jullie voor de tijd om is?',
     list: {
       title: 'Schelpensommen (antwoord enkel voor de spelleider)',
       items: {
         makkelijk: [
-          'schelp + schelp = 6. Hoeveel is een schelp? (3)',
-          'steen + steen + steen = 9. Hoeveel is een steen? (3)',
-          'schelp + schelp = 10 en schelp + steen = 7. Hoeveel is een steen? (2)',
-          'veer + veer = 4 en veer + schelp = 5. Hoeveel is een schelp? (3)',
-          'steen + steen = 8 en steen − schelp = 1. Hoeveel is een schelp? (3)',
-          'schelp + schelp + schelp + schelp = 20. Hoeveel is een schelp? (5)',
+          'Schelp plus schelp is 6. Hoeveel is een schelp? (3)',
+          'Steen plus steen plus steen is 9. Hoeveel is een steen? (3)',
+          'Schelp plus schelp is 10, en schelp plus steen is 7. Hoeveel is een steen? (2)',
+          'Veer plus veer is 4, en veer plus schelp is 5. Hoeveel is een schelp? (3)',
+          'Steen plus steen is 8, en steen min schelp is 1. Hoeveel is een schelp? (3)',
+          'Schelp plus schelp plus schelp plus schelp is 20. Hoeveel is een schelp? (5)',
         ],
         normaal: [
-          'schelp + schelp = 8, schelp + steen = 10 en steen + veer = 9. Hoeveel is een veer? (3)',
-          'steen + steen + steen = 12, steen + schelp = 9 en schelp − veer = 3. Hoeveel is een veer? (2)',
-          'schelp + schelp = 14, steen = schelp − 2 en veer = steen + steen. Hoeveel is een veer? (10)',
-          'veer + veer = 6, schelp = veer + veer + veer en steen + schelp = 12. Hoeveel is een steen? (3)',
-          'steen + steen = 10 en schelp + schelp + schelp = steen + 1. Hoeveel is een schelp? (2)',
-          'schelp + steen = 10 en schelp − steen = 2. Hoeveel is een schelp? (6)',
+          'Schelp plus schelp is 8, schelp plus steen is 10, en steen plus veer is 9. Hoeveel is een veer? (3)',
+          'Steen plus steen plus steen is 12, steen plus schelp is 9, en schelp min veer is 3. Hoeveel is een veer? (2)',
+          'Schelp plus schelp is 14, een steen is een schelp min 2, en een veer is steen plus steen. Hoeveel is een veer? (10)',
+          'Veer plus veer is 6, een schelp is veer plus veer plus veer, en steen plus schelp is 12. Hoeveel is een steen? (3)',
+          'Steen plus steen is 10, en schelp plus schelp plus schelp is een steen plus 1. Hoeveel is een schelp? (2)',
+          'Schelp plus steen is 10, en schelp min steen is 2. Hoeveel is een schelp? (6)',
         ],
         pittig: [
-          'schelp + schelp + steen = 11 en schelp + steen = 7. Hoeveel is een steen? (3)',
-          'schelp × schelp = 16, steen + steen = schelp en veer = schelp + steen. Hoeveel is een veer? (6)',
-          'steen + veer = 9, veer + schelp = 11 en schelp + steen = 10. Hoeveel is een veer? (5)',
-          'schelp + schelp + schelp = 15, steen × schelp = 10 en veer − steen = schelp. Hoeveel is een veer? (7)',
-          'veer + veer + veer + veer = 12, schelp = veer + veer + veer en steen = schelp − veer − 1. Hoeveel is een steen? (5)',
-          'schelp + steen + veer = 10, schelp = steen + steen en veer = schelp. Hoeveel is een steen? (2)',
+          'Schelp plus schelp plus steen is 11, en schelp plus steen is 7. Hoeveel is een steen? (3)',
+          'Schelp keer schelp is 16, steen plus steen is een schelp, en een veer is schelp plus steen. Hoeveel is een veer? (6)',
+          'Steen plus veer is 9, veer plus schelp is 11, en schelp plus steen is 10. Hoeveel is een veer? (5)',
+          'Schelp plus schelp plus schelp is 15, steen keer schelp is 10, en veer min steen is een schelp. Hoeveel is een veer? (7)',
+          'Veer plus veer plus veer plus veer is 12, een schelp is veer plus veer plus veer, en een steen is schelp min veer min 1. Hoeveel is een steen? (5)',
+          'Schelp plus steen plus veer is 10, een schelp is steen plus steen, en een veer is evenveel als een schelp. Hoeveel is een steen? (2)',
         ],
       },
       pick: 3,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 3, unit: 'sommen' },
+    scoring: { type: 'aantal', target: 3, unit: 'gekraakte sommen' },
     sabotage: [
       'Reken luidop mee en maak "per ongeluk" een kleine rekenfout.',
       'Roep één keer heel zeker een fout getal voor de anderen klaar zijn met rekenen.',
@@ -434,38 +435,27 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 10,
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Kies de raadsels en tel de antwoorden samen. Kies een startpunt op het droge zand, zet zoveel grote stappen richting de duinen (de schat moet nog op het strand liggen) en begraaf daar ondiep een zakje verpakte snoepjes.',
+    prep: 'Teken op het droge zand een groot kruis: dat is het startpunt. Zet vandaar {stappen} stappen richting de duinen, zo groot als de grote stappen van een kind (de schat moet nog op het strand liggen), en begraaf daar ondiep een zakje verpakte snoepjes.',
     explain:
-      'Kapitein Kenzo heeft zijn schat begraven, maar hij is vergeten waar! Los de piratenraadsels op, tel alle antwoorden samen en zet zoveel grote stappen van het startpunt richting de duinen. Graaf daar voorzichtig met de schepjes: klopt het, dan vinden jullie de schat!',
+      'Kapitein Kenzo heeft zijn schat begraven, maar hij is vergeten waar! Windy leest drie piratenraadsels voor. Tel de drie antwoorden samen en zet zoveel grote stappen vanaf het kruis richting de duinen. Graaf daar voorzichtig met de schepjes, tot twee stappen rond die plek: klopt het, dan vinden jullie de schat!',
+    vars: { stappen: { makkelijk: [16], normaal: [23], pittig: [21] } },
     list: {
       title: 'Piratenraadsels (antwoorden enkel voor de spelleider)',
       items: {
         makkelijk: [
           'Hoeveel armen heeft een zeester meestal? (5)',
-          'Een piraat met een ooglapje: hoeveel ogen zie je? (1)',
-          'Hoeveel poten heeft een meeuw? (2)',
-          'Hoeveel kleuren heeft de Belgische vlag? (3)',
           'Hoeveel armen heeft een octopus? (8)',
-          'Hoeveel wielen heeft een fiets? (2)',
-          'Hoeveel vingers heeft één hand? (5)',
+          'Hoeveel kleuren heeft de Belgische vlag? (3)',
         ],
         normaal: [
           'Hoeveel armen hebben 2 zeesterren samen? (10)',
           'Een piraat heeft 3 papegaaien. Hoeveel papegaaienpoten zijn dat? (6)',
-          'Hoeveel letters heeft het woord SCHAT? (5)',
-          'Een octopus verliest 1 arm (die groeit terug!). Hoeveel armen heeft hij nu? (7)',
-          'Hoeveel dagen heeft een week, zonder de zaterdag en de zondag? (5)',
-          'Hoeveel poten hebben 5 meeuwen samen? (10)',
-          'Hoeveel letters heeft het woord KENZO? (5)',
+          'Een octopus verliest 1 arm. Hoeveel armen heeft hij nog? (7)',
         ],
         pittig: [
           'Kapitein Kenzo heeft 20 goudstukken. Hij geeft de helft aan Windy en dan nog 3 aan ’t Duvelke. Hoeveel houdt hij over? (7)',
-          'Welk getal komt na 2, 4, 6, 8? (10)',
           'Een schip heeft 3 masten met elk 2 zeilen. Een storm scheurt er 1 kapot. Hoeveel hele zeilen blijven er over? (5)',
-          'Wat is de helft van de helft van 16? (4)',
-          'Hoeveel poten hebben 3 meeuwen samen? (6)',
-          'Hoeveel armen hebben 3 zeesterren samen, min 6? (9)',
-          'Hoeveel letters heeft het woord PIRAAT, keer 2? (12)',
+          'Tel de armen van 3 zeesterren samen, en doe daar 6 af. Hoeveel blijft er over? (9)',
         ],
       },
       pick: 3,
@@ -530,7 +520,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zoek een open plek zonder wortels of takken. Iedereen houdt het lange touw vast en doet de ogen dicht. Vorm nu samen een {vorm} met het touw, enkel door te praten en traag te schuifelen. Pas als iedereen denkt dat het klopt, mogen de ogen open!',
+      'Zoek een open plek zonder wortels of takken. Iedereen houdt het lange touw vast en doet de ogen dicht. Vorm nu samen een {vorm} met het touw, enkel door te praten en traag te schuifelen. Pas als iedereen denkt dat het klopt, mogen de ogen open. Ziet het hulpje meteen een {vorm}, met alle hoeken en lijnen op hun plek? Dan is het gelukt!',
     vars: {
       vorm: {
         makkelijk: ['vierkant', 'driehoek'],
@@ -595,8 +585,8 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zet een lege emmer {afstand} grote stappen van een grote zandhoop en ga er in een rij tussen staan. Geef het zand door van hand tot hand, enkel met je handen als schepje: niemand mag lopen met zand! Is de emmer vol voor de tijd om is?',
-    vars: { afstand: { makkelijk: [6], normaal: [8], pittig: [10] } },
+      'Maak een grote zandhoop en zet er een lege emmer bij, net zo ver dat jullie er allemaal in een rij tussen passen, telkens één grote stap uit elkaar. Geef het zand door van hand tot hand, enkel met je handen als schepje: niemand mag lopen met zand! Is de emmer {vulling} voor de tijd om is?',
+    vars: { vulling: { makkelijk: ['voor een kwart vol'], normaal: ['halfvol'], pittig: ['voor driekwart vol'] } },
     scoring: { type: 'gelukt' },
     sabotage: [
       'Hou je handen een beetje open, zodat het zand ertussen glijdt.',
@@ -622,12 +612,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Wandel samen van de start naar de finish, {afstand} grote stappen verder over zacht, droog zand. Er mag maar één spoor voetstappen komen: iedereen stapt precies in de voetstappen van de eerste. Ziet de spelleider daarna extra afdrukken? Dan is het mislukt!',
+      'Wandel samen van de start naar de finish, {afstand} grote stappen verder over zacht, droog zand. Er mag maar één spoor voetstappen komen: iedereen stapt precies in de voetstappen van de eerste. Ziet het hulpje daarna extra afdrukken? Dan is het mislukt!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [25] } },
     scoring: { type: 'gelukt' },
     sabotage: [
       'Zet één keer je voet net een klein beetje naast de voetstap.',
-      'Ben jij de eerste? Zet stappen die net iets te groot zijn voor de kleinsten.',
+      'Ben jij de eerste? Zet stappen die net iets te groot zijn voor de kleinsten. Anders: zet je voet bij een grote stap net op de rand van de afdruk.',
       'Stap net iets te snel achter je voorganger, zodat je minder goed kan mikken.',
     ],
     detective: [
@@ -657,7 +647,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       aantal: { makkelijk: [5], normaal: [8], pittig: [10] },
       seconden: { makkelijk: [60], normaal: [45], pittig: [30] },
     },
-    scoring: { type: 'aantal', target: '{aantal}', unit: 'dingen juist' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'dingen op de juiste plek' },
     sabotage: [
       'Hou vol dat er nog iets anders lag dat er niet bij was.',
       'Leg één keer twee dingen in de verkeerde volgorde, alsof je het vergeten was.',
@@ -681,8 +671,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     minPlayers: 3,
     minutes: 9,
     difficulties: [...ALLE_NIVEAUS],
+    prep: 'Let tijdens de wandeling zelf goed op, zodat je de antwoorden op de vragen weet.',
     explain:
-      'Wandel samen met de volwassene een paar minuten over het pad en kijk goed rond. Jullie weten niet wat er gevraagd wordt! Daarna stelt de spelleider vragen over de wandeling. Overleg en geef samen één antwoord: halen jullie er {doel} juist?',
+      'Wandel samen met de volwassene een paar minuten over het pad en kijk goed rond. Jullie weten niet wat er gevraagd wordt! Daarna stelt het hulpje vragen over de wandeling. Overleg en geef samen één antwoord: halen jullie er {doel} juist?',
     vars: { doel: { makkelijk: [4], normaal: [5], pittig: [6] } },
     list: {
       title: 'Vragen (kies wat past bij jullie wandeling)',
@@ -697,15 +688,15 @@ export const TASKS_NATUUR: TaskDef[] = [
           'Welk geluid hoorden we onderweg?',
           'Hoeveel keer sloegen we af?',
           'Zagen we een paddenstoel? Waar?',
-          'Welke kleur heeft de jas van de volwassene? (niet kijken!)',
+          'Welke kleur heeft mijn jas? Niet kijken!',
           'Lag er een omgevallen boom? Links of rechts van het pad?',
-          'Wat zei de spelleider bij het vertrek?',
+          'Wat zei ik bij het vertrek?',
         ],
       },
-      pick: 6,
+      pick: 8,
       secret: true,
     },
-    scoring: { type: 'aantal', target: '{doel}', unit: 'vragen' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'juiste antwoorden' },
     sabotage: [
       'Zeg bij een telvraag heel zeker een getal dat net niet klopt.',
       'Begin tijdens de wandeling een leuk gesprek, zodat de anderen minder rondkijken.',
@@ -731,7 +722,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     explain:
       'De spelleider legt een ketting van {lengte} natuurdingen op een rij, bijvoorbeeld steen, blad, blad, takje. Jullie kijken 20 tellen, dan draait iedereen zich om en haalt de spelleider de ketting weg. Leg de ketting samen precies na! We doen 3 rondes.',
     vars: { lengte: { makkelijk: [5], normaal: [7], pittig: [10] } },
-    scoring: { type: 'aantal', target: 3, unit: 'rondes juist' },
+    scoring: { type: 'aantal', target: 3, unit: 'juiste rondes' },
     sabotage: [
       'Hou vol dat er twee blaadjes na elkaar lagen, ook als dat niet zo was.',
       'Begin "per ongeluk" aan de verkeerde kant van de ketting.',
@@ -823,7 +814,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 8,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Verzamel {aantal} rechte takjes die op de grond liggen en laat ze als bundel op een vlak stukje grond vallen. Om de beurt neemt iemand één takje weg, zonder dat een ander takje beweegt. Beweegt er iets, dan is die beurt mislukt. Halen jullie samen {doel} takjes?',
+      'Verzamel {aantal} rechte takjes die op de grond liggen en laat ze als bundel op een vlak stukje grond vallen. Om de beurt neemt iemand één takje weg, zonder dat een ander takje beweegt. Beweegt er iets, dan is die beurt mislukt en blijft het takje liggen. Na de derde mislukte beurt stopt het spel. Halen jullie samen {doel} takjes?',
     vars: {
       aantal: { makkelijk: [15], normaal: [20], pittig: [25] },
       doel: { makkelijk: [6], normaal: [10], pittig: [14] },
@@ -1171,7 +1162,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 6,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 6, unit: 'weetjes' },
+    scoring: { type: 'aantal', target: 6, unit: 'juiste antwoorden' },
     sabotage: [
       'Wandel één keer heel zeker als eerste naar de verkeerde boom.',
       'Zeg "dat heb ik in een boek gelezen" bij een fout antwoord.',
@@ -1194,7 +1185,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 10,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Hoe goed kunnen jullie schatten? De spelleider stelt een schattingsvraag, jullie spreken samen één getal af, en daarna meten of tellen jullie het echt na. Zitten jullie er dichtbij genoeg volgens de spelleider, dan telt het! Doel: {doel} van de 5 vragen.',
+      'Hoe goed kunnen jullie schatten? Het hulpje stelt een schattingsvraag, jullie spreken samen één getal af, en daarna meten of tellen jullie het echt na. Zitten jullie er hooguit een kwart naast, dan telt het! Doel: {doel} van de 5 vragen.',
     vars: { doel: { makkelijk: [2], normaal: [3], pittig: [4] } },
     list: {
       title: 'Schattingsvragen',
@@ -1208,13 +1199,13 @@ export const TASKS_NATUUR: TaskDef[] = [
           'Hoeveel blaadjes zitten er aan dit takje dat op de grond ligt?',
           'Hoeveel voetjes (hiel tegen teen) is die omgevallen tak lang?',
           'Hoeveel bomen staan er binnen tien stappen van ons?',
-          'Hoe dik is deze boom: hoeveel keer past de hand van de spelleider rond de stam?',
+          'Hoe dik is deze boom: hoeveel keer past de hand van het hulpje rond de stam?',
         ],
       },
       pick: 5,
       secret: false,
     },
-    scoring: { type: 'aantal', target: '{doel}', unit: 'schattingen' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'goede schattingen' },
     sabotage: [
       'Roep meteen een heel groot of heel klein getal, zodat de groep gaat twijfelen.',
       'Tel "per ongeluk" een paar dennenappels dubbel.',
@@ -1277,7 +1268,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 8,
       secret: true,
     },
-    scoring: { type: 'aantal', target: '{doel}', unit: 'dieren' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'juiste antwoorden' },
     sabotage: [
       'Steek één keer heel zeker je duim de verkeerde kant op.',
       'Vertel een "weetje" dat niet klopt: "mijn nonkel heeft er vorige week nog één gezien!"',
@@ -1344,7 +1335,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 6,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 6, unit: 'vragen' },
+    scoring: { type: 'aantal', target: 6, unit: 'juiste antwoorden' },
     sabotage: [
       'Ga één keer als eerste heel zeker in het verkeerde vak staan.',
       'Twijfel hardop tussen twee antwoorden en kies dan het foute.',
@@ -1397,13 +1388,13 @@ export const TASKS_NATUUR: TaskDef[] = [
           'Welke lange, smalle schelp lijkt op een ouderwets scheermes? (de scheermesschelp)',
           'In welke gemeente ligt de hoogste duin van België, de Hoge Blekker? (Koksijde)',
           'Welke haven aan onze kust is de grootste? (Zeebrugge)',
-          'Hoe lang is de Kusttram ongeveer: 7, 67 of 670 kilometer? (67 kilometer, een van de langste tramlijnen ter wereld)',
+          'Welke grote dieren met snorharen liggen soms te rusten op het strand of op een zandbank? (zeehonden)',
         ],
       },
       pick: 7,
       secret: true,
     },
-    scoring: { type: 'aantal', target: '{doel}', unit: 'antwoorden' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'juiste antwoorden' },
     sabotage: [
       'Zeg één keer heel zeker een fout antwoord, alsof je het echt weet.',
       'Vertel een "echte" vakantieherinnering die het foute antwoord steunt.',
@@ -1436,7 +1427,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     roles: [{ name: 'Beschrijver', count: 1, hint: 'Kies stiekem een boom in de buurt en fluister aan de spelleider welke.' }],
     scoring: { type: 'aantal', target: '{rondes}', unit: 'bomen' },
     sabotage: [
-      'Als Beschrijver: vertel één ding dat net niet klopt, zoals "hij staat links van het pad".',
+      'Ben jij Beschrijver? Vertel één ding dat net niet klopt, zoals "hij staat links van het pad". In de andere rondes: wijs heel zeker de boom aan die er net naast staat.',
       'Stel heel zeker een boom voor die maar half bij de beschrijving past.',
       'Stel een paar vragen tegelijk, zodat de Beschrijver in de war raakt.',
     ],
@@ -1463,7 +1454,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       volgorde: {
         makkelijk: ['lengte, van klein naar groot', 'schoenmaat, van klein naar groot'],
         normaal: ['verjaardag, van januari tot december', 'de eerste letter van je voornaam, van A tot Z'],
-        pittig: ['verjaardag, van januari tot december, met de dag erbij', 'het aantal letters van je voornaam', 'de eerste letter van je familienaam, van A tot Z'],
+        pittig: ['verjaardag, van januari tot december, met de dag erbij', 'het aantal letters van je voornaam, van kort naar lang','de eerste letter van je familienaam, van A tot Z'],
       },
     },
     scoring: { type: 'gelukt' },
@@ -1496,7 +1487,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     roles: [{ name: 'Voeler', count: 1, hint: 'Doe je ogen dicht en steek je handen uit.' }],
     scoring: { type: 'aantal', target: '{rondes}', unit: 'rondes' },
     sabotage: [
-      'Als Voeler: kies één keer een woord dat net niet klopt, zoals "glad" voor iets ruws.',
+      'Ben jij Voeler? Kies één keer een woord dat net niet klopt, zoals "glad" voor iets ruws. In de andere rondes: vraag de Voeler of het "misschien eerder zacht" is, als het eigenlijk hard is.',
       'Breng iets mee dat er een beetje op lijkt en zeg dat het precies hetzelfde is.',
       'Zoek op een plek waar het ding waarschijnlijk niet ligt, maar blijf bij de volwassene.',
     ],
@@ -1504,6 +1495,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Past wat de Voeler zei bij de schat? Kijk na de ronde.',
       'Lijkt wat iemand meebrengt echt op de schat?',
       'Wie zoekt er op plekken waar het niet kan liggen?',
+      'Wie stelt de Voeler vragen die hem of haar aan het twijfelen brengen?',
     ],
   },
   {
@@ -1517,7 +1509,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 7,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga achter elkaar op een rij zitten in het zand. De Eerste zit achteraan, bekijkt stiekem een tekening en tekent die met één vinger op de rug van wie ervoor zit. Zo gaat de tekening de rij door, en wie vooraan zit, tekent in het zand wat hij of zij voelde. We doen 3 tekeningen: lijken ze op het origineel?',
+      'Ga achter elkaar op een rij staan in het zand. De Eerste staat achteraan, bekijkt stiekem een tekening en tekent die met één vinger op de rug van wie ervoor staat. Zo gaat de tekening de rij door, en wie vooraan staat, tekent in het zand wat hij of zij voelde. We doen 3 tekeningen: lijken ze op het origineel?',
     roles: [{ name: 'Eerste', count: 1, hint: 'Bekijk de tekening stiekem op de tablet.' }],
     list: {
       title: 'Rugtekeningen',
@@ -1534,12 +1526,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     sabotage: [
       'Teken net iets te snel, zodat het moeilijker te voelen is.',
       'Voeg stiekem een klein streepje extra toe.',
-      'Zeg dat je "niets voelde" en vraag om het opnieuw te doen, zodat het langer duurt.',
+      'Zeg dat je "niets voelde" en vraag om het opnieuw te doen, zodat het langer duurt. Ben jij de Eerste? Teken de tekening dan net iets te klein.',
     ],
     detective: [
       'Kijk na afloop waar in de rij de tekening veranderde.',
       'Wie vraagt er om de tekening opnieuw te doen?',
-      'Let op wie wel heel snel tekent.',
+      'Let op wie wel heel snel of heel klein tekent.',
     ],
     photo: 'De zandtekening naast het origineel op de tablet.',
   },
@@ -1571,13 +1563,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     scoring: { type: 'aantal', target: 3, unit: 'rondes' },
     sabotage: [
       'Stel een vraag waarvan je het antwoord al weet, zodat er een vraag verloren gaat.',
-      'Als Denker: twijfel één keer en zeg "euh... ja?" als het eigenlijk nee is.',
+      'Ben jij de Denker? Twijfel één keer en zeg "euh... ja?" als het eigenlijk nee is. Anders: stel een vraag die bijna hetzelfde is als een vraag die al gesteld werd.',
       'Doe één of twee wilde gokjes, zodat de vragen sneller op zijn.',
     ],
     detective: [
       'Let op wie vragen stelt waarvan het antwoord al duidelijk is.',
       'Twijfelt de Denker bij een makkelijke vraag?',
       'Wie gokt er al terwijl jullie nog bijna niets weten?',
+      'Wie stelt een vraag die eigenlijk al gesteld werd?',
     ],
     dilemma: true,
   },
@@ -1596,7 +1589,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     explain:
       'Maak voor de tijd om is een slang op de grond van dingen die al in het bos liggen: dennenappels, takjes, blaadjes en steentjes, allemaal tegen elkaar aan. De slang moet minstens {lengte} grote stappen lang zijn, met een kop en twee ogen!',
-    vars: { lengte: { makkelijk: [10], normaal: [15], pittig: [20] } },
+    vars: { lengte: { makkelijk: [5], normaal: [7], pittig: [10] } },
     scoring: { type: 'gelukt' },
     sabotage: [
       'Laat bij jouw stuk een klein gaatje open tussen twee dingen.',
@@ -1705,7 +1698,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Alarm! Windy heeft gehoord dat de vloed komt (dat is maar spel: we blijven ver weg van het water). Bouw voor de tijd om is samen een dijk van zand, {lengte} grote stappen lang en tot aan jullie knie hoog. Staat de dijk nog overeind als de tijd om is?',
+      'Alarm! Windy heeft gehoord dat de vloed komt (dat is maar spel: we blijven ver weg van het water). Bouw voor de tijd om is samen een dijk van zand, {lengte} grote stappen lang en een handbreedte hoog. Gebruik de emmers om zand aan te dragen en de schepjes om het aan te kloppen. Staat de dijk nog overeind als de tijd om is?',
     vars: { lengte: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
     sabotage: [
@@ -1732,7 +1725,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 6,
     timer: 120,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Verzamel een grote hoop van ongeveer {aantal} schelpen en steentjes door elkaar.',
+    prep: 'Verzamel een grote hoop van ongeveer {aantal} schelpen en steentjes door elkaar. Zorg dat er van elk groepje een paar in zitten: {soorten}.',
     explain:
       'Windy’s schelpenwinkel is een puinhoop! Sorteer de hele hoop voor de tijd om is in groepjes: {soorten}. Daarna kijkt de spelleider na: meer dan 2 schelpen op de verkeerde plaats, en het is mislukt!',
     vars: {
@@ -1768,14 +1761,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 10,
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Leg langs een pad van ongeveer {meter} meter tekens van takjes of steentjes: een pijl = deze kant op, een kruis = niet deze weg, een cirkel met een steen erin = einde. Verstop bij het einde een zakje verpakte snoepjes.',
+    prep: 'Leg langs een pad van ongeveer {meter} meter tekens van takjes of steentjes: een pijl betekent deze kant op, een kruis betekent niet deze weg, en een cirkel met een steen erin betekent einde. Verstop bij het einde een zakje verpakte snoepjes.',
     explain:
       'Echte speurders lezen tekens! Een pijl betekent "deze kant op", een kruis betekent "niet deze weg" en een cirkel met een steen erin betekent "einde". Volg het spoor van de spelleider en blijf altijd op het pad. Vinden jullie de verrassing?',
     vars: { meter: { makkelijk: [100], normaal: [200], pittig: [300] } },
     scoring: { type: 'gelukt' },
     sabotage: [
       'Wijs naar een takje dat toevallig op een pijl lijkt.',
-      'Loop snel voorop, net voorbij een pijl.',
+      'Wandel vooraan net iets te snel, zodat de anderen een pijl missen.',
       'Stel voor om "de kortste weg" te nemen in plaats van het spoor te volgen.',
     ],
     detective: [
@@ -1792,14 +1785,14 @@ export const TASKS_NATUUR: TaskDef[] = [
     emoji: '🧭',
     category: 'speuren',
     locations: BOS_PARK,
-    supplies: ['kompas', 'snoep'],
+    supplies: ['kompas', 'snoep', 'papier', 'stiften'],
     minPlayers: 3,
     minutes: 10,
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Verstop een zakje verpakte snoepjes. Bedenk vanaf een startpunt {aantal} kompasopdrachten die er naartoe leiden, zoals "10 stappen naar het noorden", en noteer ze voor jezelf. Blijf op of vlak naast het pad.',
+    prep: 'Verstop een zakje verpakte snoepjes. Bedenk vanaf een startpunt {aantal} kompasopdrachten die er naartoe leiden, zoals "10 stappen naar het noorden", en schrijf ze op papier. Stap de route zelf af met kleine stappen, zo groot als de grote stappen van een kind. Blijf op of vlak naast het pad.',
     explain:
-      'De spelleider leest één voor één kompasopdrachten voor, zoals "10 stappen naar het noorden". Eén iemand houdt het kompas, de rest telt de stappen, en na elke opdracht wissel je van kompasdrager. Kloppen alle stappen? Dan staan jullie bij de verrassing!',
+      'Het hulpje leest één voor één kompasopdrachten voor, zoals "10 stappen naar het noorden". Eén iemand houdt het kompas, de rest telt de stappen, en na elke opdracht wissel je van kompasdrager. Zet telkens gewone grote stappen, allemaal even groot. Kloppen alle stappen? Dan staan jullie bij de verrassing!',
     vars: { aantal: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
     sabotage: [
@@ -1825,17 +1818,17 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 8,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Wie is hier gepasseerd? De spelleider tekent met een takje dierensporen in de aarde of het zand van het pad. Kijk goed: hoeveel tenen, zijn er nagels, is het een hoefje? Raad samen welk dier het was!',
+      'Wie is hier gepasseerd? Windy beschrijft een dierenspoor, en het hulpje tekent het meteen met een takje in de aarde of het zand van het pad. Luister en kijk goed: hoeveel tenen, zijn er nagels, is het een hoefje? Raad samen welk dier het was. Pas dan tikt het hulpje op "Antwoord?".',
     list: {
       title: 'Sporen om te tekenen (antwoord enkel voor de spelleider)',
       items: {
         makkelijk: [
-          'Drie lange tenen vooruit en één korte naar achter. (een vogel, bv. een kraai of fazant)',
+          'Drie lange tenen vooruit en één korte naar achter. (een vogel, bijvoorbeeld een kraai of een fazant)',
           'Twee langwerpige hoefjes naast elkaar, als een gespleten hart. (ree of hert)',
           'Een rond kussentje met vier ronde teentjes, zonder nagels. (kat)',
           'Een kussentje met vier teentjes en vier nagelpuntjes ervoor. (hond of vos)',
           'Een slingerende streep. (slak of slang)',
-          'Twee kleine rondjes naast elkaar en twee langwerpige erachter. (konijn of haas)',
+          'Twee kleine rondjes achter elkaar, met daarvoor twee lange afdrukken naast elkaar. (konijn of haas)',
           'Een schoenzool met ribbeltjes. (een wandelaar!)',
           'Eén lange lijn met een patroontje erin. (een fietser)',
         ],
@@ -1863,7 +1856,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 5,
       secret: true,
     },
-    scoring: { type: 'aantal', target: 5, unit: 'sporen' },
+    scoring: { type: 'aantal', target: 5, unit: 'geraden sporen' },
     sabotage: [
       'Roep meteen een fout dier en klink als een echte boswachter.',
       'Tel het aantal teentjes luidop verkeerd.',
@@ -1892,15 +1885,15 @@ export const TASKS_NATUUR: TaskDef[] = [
       rondes: { normaal: [3] },
     },
     roles: [{ name: 'Detective', count: 1, hint: 'Bekijk goed ieders voetafdruk.' }],
-    scoring: { type: 'aantal', target: '{rondes}', unit: 'juist' },
+    scoring: { type: 'aantal', target: '{rondes}', unit: 'geraden sporen' },
     sabotage: [
-      'Zet je voeten een beetje naar binnen, zodat je spoor op dat van een ander lijkt.',
-      'Als Detective: kies "per ongeluk" iemand met bijna dezelfde schoenen.',
+      'Loop jij het spoor? Zet je voeten een beetje naar binnen, zodat je spoor op dat van een ander lijkt.',
+      'Ben jij Detective? Kies "per ongeluk" iemand met bijna dezelfde schoenen. In de andere rondes: stap bij het rondstappen een paar keer dwars over het echte spoor.',
       'Stap bij het rondstappen net naast het echte spoor, zodat de afdrukken door elkaar lopen.',
     ],
     detective: [
       'Kijk wie zijn voeten anders zet dan bij de eerste afdruk.',
-      'Wie stapt bij het rondstappen precies naast het echte spoor?',
+      'Wie stapt bij het rondstappen precies naast of over het echte spoor?',
       'Twijfelt de Detective tussen twee schoenen? Kijk mee naar de hiel en de tenen.',
     ],
   },
@@ -1916,7 +1909,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Neem om de beurt de verrekijker en speur de zee, het strand en de lucht af. Wie iets van de lijst ziet, roept het en laat het de anderen ook zien. Blijf op het droge zand bij de volwassene, en kijk nooit door de verrekijker naar de zon!',
+      'Neem om de beurt de verrekijker en speur de zee, het strand en de lucht af. Wie iets van de lijst ziet, roept het en laat het de anderen ook zien. Spotten jullie er minstens 5 voor de tijd om is? Blijf op het droge zand bij de volwassene, en kijk nooit door de verrekijker naar de zon!',
     list: {
       title: 'Spot met de verrekijker...',
       items: {
@@ -1926,7 +1919,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       pick: 7,
       secret: false,
     },
-    scoring: { type: 'aantal', target: 7, unit: 'dingen' },
+    scoring: { type: 'aantal', target: 5, unit: 'gespotte dingen' },
     sabotage: [
       'Zeg één keer dat je iets ziet en wijs heel vaag naar de verte.',
       'Hou de verrekijker lang vast en draai "per ongeluk" aan het wieltje, zodat hij onscherp wordt.',
@@ -1954,13 +1947,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Het bos kijkt naar jullie! Zoek dingen die op een gezicht lijken: een knoest met twee ogen, een stronk die lacht, een steen met een neus... Laat de spelleider van elk gezicht een foto maken: vinden jullie er {aantal}? Je mag een gezicht een beetje helpen met één ding van de grond, maar niets afbreken!',
+      'Het bos kijkt naar jullie! Zoek dingen die op een gezicht lijken: een knoest met twee ogen, een stronk die lacht, een steen met een neus... Laat het hulpje van elk gezicht een foto maken: vinden jullie er {aantal}? Je mag een gezicht een beetje helpen met één ding van de grond, maar niets afbreken!',
     vars: { aantal: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'gezichten' },
     sabotage: [
       'Zeg dat een gezicht "helemaal niet op een gezicht lijkt".',
       'Stuur de groep naar een plek waar je al keek en niets zag.',
-      'Laat de spelleider een foto nemen van iets waar echt geen gezicht in zit, en hou vol dat je het ziet.',
+      'Laat het hulpje een foto nemen van iets waar echt geen gezicht in zit, en hou vol dat je het ziet.',
     ],
     detective: [
       'Wie keurt gezichten af die jij wel goed vindt?',
@@ -1981,7 +1974,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen een stripverhaal zonder woorden, in {fotos} foto’s. Het verhaal gaat over "{verhaal}". Bedenk eerst wat er gebeurt, speel dan elke scène en laat de spelleider telkens een foto maken. Snapt de spelleider het verhaal zonder uitleg, dan is het gelukt!',
+      'Maak samen een stripverhaal zonder woorden, in {fotos} foto’s. Het verhaal gaat over "{verhaal}". Bedenk eerst wat er gebeurt, speel dan elke scène en laat het hulpje telkens een foto maken. Toont elke foto duidelijk een stukje van het verhaal, en zit er een begin, een probleem en een einde in? Dan is het gelukt!',
     vars: {
       fotos: { makkelijk: [3], normaal: [4], pittig: [6] },
       verhaal: { normaal: ['verdwaald in het bos', 'de kabouter die zijn muts kwijt is', 'Windy ontmoet een beer', '’t Duvelke steelt de dennenappels', 'het geheim van de oude boom'] },
@@ -2006,7 +1999,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     emoji: '🤳',
     category: 'foto',
     locations: STRAND,
-    supplies: [],
+    supplies: ['emmers', 'handdoeken'],
     minPlayers: 3,
     minutes: 10,
     timer: 480,
@@ -2058,7 +2051,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen een reuzentekening in het zand met enkel jullie voetstappen: geen handen, geen stokken! Het moet een {figuur} worden, zo groot dat je hem best van bovenaf ziet. De spelleider zoekt een hogere plek, zoals de trap naar de dijk, om de foto te nemen.',
+      'Maak samen een reuzentekening in het zand met enkel jullie voetstappen: geen handen, geen stokken! Het moet een {figuur} worden, zo groot dat je hem best van bovenaf ziet. Het hulpje zoekt een hogere plek, zoals de trap naar de dijk, om de foto te nemen. Ziet het hulpje op de foto meteen een {figuur}? Dan is het gelukt!',
     vars: {
       figuur: {
         makkelijk: ['hart', 'zon', 'vis'],
@@ -2091,7 +2084,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga met je rug naar de zon staan en kijk naar jullie schaduwen op het zand. Maak samen met jullie schaduwen een {figuur} en laat de spelleider een foto van de schaduw maken. Geen zon? Dan leggen jullie de figuur met jullie lichamen in het droge zand, en fotografeert de spelleider van bovenaf.',
+      'Ga met je rug naar de zon staan en kijk naar jullie schaduwen op het zand. Maak samen met jullie schaduwen een {figuur} en laat het hulpje een foto van de schaduw maken. Geen zon? Dan leggen jullie de figuur met jullie lichamen in het droge zand, en fotografeert het hulpje van bovenaf. Lijkt de figuur op de foto echt op een {figuur}? Dan is het gelukt!',
     vars: {
       figuur: {
         makkelijk: ['boom', 'huis', 'spin'],
@@ -2123,9 +2116,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     supplies: [],
     minPlayers: 3,
     minutes: 6,
+    timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De spelleider is een slapende uil en zit met de ogen dicht op het pad, {afstand} grote stappen verder. Sluip samen over het pad tot bij de uil, zonder een takje te laten kraken. Hoort de uil iets, dan wijst ze in die richting: wie ze aanwijst, gaat terug naar de start. Tikt iemand de uil zachtjes op de schouder, dan is het gelukt!',
+      'Het hulpje is een slapende uil en zit met de ogen dicht op het pad, {afstand} grote stappen verder. Sluip samen over het pad tot bij de uil, zonder een takje te laten kraken. Hoort de uil iets, dan wijst het hulpje in die richting: wie aangewezen wordt, gaat terug naar de start. Tikt iemand de uil zachtjes op de schouder voor de tijd om is, dan is het gelukt!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
     sabotage: [
@@ -2227,7 +2221,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 120,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Een krab loopt zijwaarts! Ga naast elkaar op een rij staan en loop als een krabbenleger zijwaarts naar de finish, {afstand} grote stappen verder. Elke krab draagt een schelp op de rug van zijn hand. Valt er een schelp, dan wacht het hele leger tot ze terug ligt.',
+      'Een krab loopt zijwaarts! Ga naast elkaar op een rij staan en loop als een krabbenleger zijwaarts naar de finish, {afstand} grote stappen verder. Elke krab draagt een schelp op de rug van zijn hand. Valt er een schelp, dan wacht het hele leger tot ze terug ligt. Komt het hele leger over de finish voor de tijd om is?',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
     sabotage: [
@@ -2264,7 +2258,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     detective: [
       'Wie neemt er vakjes in die een ander nodig had?',
       'Let op wie de anderen aan het lachen brengt.',
-      'Luister zelf goed naar de opdracht van de spelleider.',
+      'Luister zelf goed naar de opdracht van het hulpje.',
     ],
     photo: 'De grootste knoop van armen en benen.',
   },
