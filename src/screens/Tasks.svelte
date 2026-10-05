@@ -321,7 +321,7 @@
       {#if open.supplies.length > 0}<p class="hint">Nodig: {open.supplies.map(supplyLabel).join(', ')}</p>{/if}
       {#if open.prep}<p class="hint">📝 {hostWording(open.prep, open, app.settings.hostName)}</p>{/if}
       <button type="button" class="link" onclick={() => (showSabotage = !showSabotage)}>😈 {showSabotage ? 'Verberg' : 'Toon'} de sabotagetips</button>
-      {#if showSabotage}<ul>{#each open.sabotage as s (s)}<li>{s}</li>{/each}</ul>{/if}
+      {#if showSabotage}<ul>{#each open.sabotage as s (s)}<li>{hostWording(s, open, app.settings.hostName)}</li>{/each}</ul>{/if}
       <div class="row">
         {#if own(open)}
           <BigButton variant="secondary" onclick={() => (editing = open)}>✏️ Bewerken</BigButton>

@@ -34,6 +34,11 @@
   const location = $derived(LOCATIONS.find((l) => l.id === item?.location));
   const explain = $derived(task && item ? hostWording(fillVars(task.explain, item.vars), task, app.settings.hostName) : '');
   const target = $derived(task && item ? targetFor(task, item) : null);
+  /** "de spelleider" wordt "het hulpje" (of Windy, als zij voorleest), ook in rolhints en lijstjes. */
+  function w(text: string): string {
+    return task ? hostWording(text, task, app.settings.hostName) : text;
+  }
+  const shownList = $derived(item ? item.list.map(w) : []);
   const total = $derived(game ? treasure(game.program, game.results, getTask) : { gems: 0, max: 0 });
 
   function name(id: string): string {
@@ -128,7 +133,7 @@
   // Kaartjes-lijsten zijn nooit vraag-en-antwoord, ook al staat er iets tussen haakjes ("niet: ...").
   const answersList = $derived(item && !task?.list?.turns ? hasAnswers(item.list) : false);
   /** Wie bij een kaartjes-opdracht het kaartje leest: de naam van de rol, zonder "Eerste". */
-  const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerstes+/i, '') ?? 'speler');
+  const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerste\s+/i, '').toLowerCase() ?? 'speler');
   let selfRead = $state(false);
   let readDone = $state(false);
   let readScore = $state<number | null>(null);
@@ -183,7 +188,7 @@
                 {@const p = player(id)}
                 <span class="pchip"><span class="av" style="--c:{p?.color}">{p?.avatar}</span>{p?.name}</span>
               {/each}
-              <span class="hint small">{role.hint}</span>
+              <span class="hint small">{w(role.hint)}</span>
             </div>
           {/each}
         </div>
@@ -196,7 +201,7 @@
             <p class="hint small">Tijdens de timer ziet de {cardWho} telkens één kaartje, door het ingedrukt te houden. Niemand ziet de hele lijst.</p>
           </div>
         {:else if task.list.turns}
-          <CardDeck items={item.list} who={cardWho} />
+          <CardDeck items={shownList} who={cardWho} />
         {:else if task.list.secret && answersList && !selfRead}
           <!-- Vragen met antwoorden: Windy leest voor, dan ziet ook een meespelend hulpje de antwoorden niet. -->
           <div class="card">
@@ -204,19 +209,19 @@
             {#if readDone}
               <p class="hint small">Alles voorgelezen: {readScore} van de {item.list.length} juist! Tik op de knop hieronder.</p>
             {:else}
-              <ReadAloud items={item.list} ondone={(n) => ((readDone = true), (readScore = n))} />
+              <ReadAloud items={shownList} ondone={(n) => ((readDone = true), (readScore = n))} />
             {/if}
             <button type="button" class="link" onclick={() => (selfRead = true)}>🤫 Toch liever zelf stiekem lezen (hulpje speelt niet mee)</button>
           </div>
         {:else if task.list.secret}
           <div class="card">
-            <h3>🤫 {hostWording(task.list.title, task, app.settings.hostName)}</h3>
+            <h3>🤫 {w(task.list.title)}</h3>
             <p class="hint small">Enkel voor {listOwner ?? 'het hulpje'}! Hou ingedrukt om te lezen.</p>
             <div class="secret">
               <HoldToReveal label="Hou ingedrukt">
                 <div class="secret-list">
                   <ol>
-                    {#each item.list as entry, i (i)}<li>{entry}</li>{/each}
+                    {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
                   </ol>
                 </div>
               </HoldToReveal>
@@ -224,9 +229,9 @@
           </div>
         {:else}
           <div class="card">
-            <h3>📋 {hostWording(task.list.title, task, app.settings.hostName)}</h3>
+            <h3>📋 {w(task.list.title)}</h3>
             <ul class="open-list">
-              {#each item.list as entry, i (i)}<li>{entry}</li>{/each}
+              {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
             </ul>
           </div>
         {/if}
@@ -260,7 +265,7 @@
       {:else if current.timer}
         <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
         {#if task.list?.turns && item.list.length > 0}
-          <CardDeck items={item.list} who={cardWho} />
+          <CardDeck items={shownList} who={cardWho} />
         {/if}
         <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
         <details class="card reminder">
@@ -272,7 +277,7 @@
         </details>
         {#if task.list && !task.list.secret && item.list.length > 0}
           <ul class="open-list compact">
-            {#each item.list as entry, i (i)}<li>{entry}</li>{/each}
+            {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
           </ul>
         {/if}
       {:else}

@@ -13,6 +13,7 @@
   import { speak } from '../../lib/speech';
   import { app, go, windySays } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
+  import { hostWording } from '../../lib/tasks/wording';
   import FinalTest from './FinalTest.svelte';
   import Slideshow from './Slideshow.svelte';
 
@@ -223,7 +224,7 @@
           {#each game.sabotageLog as s, i (i)}
             {@const item = game.program.find((p) => p.uid === s.taskUid)}
             {@const task = item ? getTask(item.taskId) : undefined}
-            <li><span class="em">{task?.emoji ?? '❓'}</span><span><strong>{task?.title}</strong>{multiple ? ` (${player(s.playerId)?.name})` : ''}: "{s.tip}"</span></li>
+            <li><span class="em">{task?.emoji ?? '❓'}</span><span><strong>{task?.title}</strong>{multiple ? ` (${player(s.playerId)?.name})` : ''}: "{task ? hostWording(s.tip, task, app.settings.hostName) : s.tip}"</span></li>
           {/each}
         </ul>
       {/if}

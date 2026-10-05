@@ -4,6 +4,7 @@
   import { briefingLater, briefingNext, briefingSkip, useJoker } from '../../lib/game';
   import { app } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
+  import { hostWording } from '../../lib/tasks/wording';
 
   const game = $derived(app.game);
   const b = $derived(game?.current?.briefing ?? null);
@@ -65,7 +66,7 @@
       <HoldToReveal onseen={() => (seen = true)} minVisibleMs={1200} label="Hou ingedrukt voor je geheime tip">
         <article class="tip-card">
           <header><span class="label">GEHEIME TIP</span><span class="who">{player.avatar} {player.name}</span></header>
-          <p class="tip">{card.tip}</p>
+          <p class="tip">{task ? hostWording(card.tip, task, app.settings.hostName) : card.tip}</p>
           {#if card.innocent}
             <p class="extra">🔍 Speurneus-info: <strong>{name(card.innocent)}</strong> is zeker géén {sab}.</p>
           {/if}
