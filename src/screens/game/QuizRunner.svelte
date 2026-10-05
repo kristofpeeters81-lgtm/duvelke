@@ -1,5 +1,6 @@
 <script lang="ts">
   import BigButton from '../../components/BigButton.svelte';
+  import { quizOrder } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
   import { onDestroy, untrack } from 'svelte';
   import { speak, stopAll } from '../../lib/speech';
@@ -10,11 +11,14 @@
   interface Props {
     difficulty: Difficulty;
     questions: number[];
+    /** Antwoorden als index in de oorspronkelijke options, niet in de geschudde volgorde. */
     answers: (number | null)[];
+    /** Vaste basis voor het schudden van de antwoorden (de uid van de opdracht). */
+    seed: string;
     ondone: (score: number) => void;
   }
 
-  let { difficulty, questions, answers, ondone }: Props = $props();
+  let { difficulty, questions, answers, seed, ondone }: Props = $props();
 
   // Na herladen verder bij de eerste onbeantwoorde vraag.
   const firstOpen = untrack(() => answers.findIndex((a) => a === null));
@@ -24,14 +28,18 @@
 
   const q = $derived(QUIZ[difficulty][questions[index] ?? 0]);
   const chosen = $derived(answers[index] ?? null);
+  /** order[plaats op het scherm] = index in q.options */
+  const order = $derived(q ? quizOrder(`${seed}:${questions[index] ?? 0}`, q.options.length) : []);
+  const rightLetter = $derived(q ? 'ABCD'[order.indexOf(q.answer)] : '');
   const score = $derived(answers.filter((a, i) => a !== null && a === QUIZ[difficulty][questions[i] ?? 0]?.answer).length);
 
   $effect(() => {
-    if (q && !revealed) void speak(`${q.q} ${q.options.map((o, i) => `${'ABCD'[i]}: ${o}.`).join(' ')}`, $state.snapshot(app.settings.voice));
+    if (q && !revealed) void speak(`${q.q} ${order.map((o, i) => `${'ABCD'[i]}: ${q.options[o]}.`).join(' ')}`, $state.snapshot(app.settings.voice));
   });
 
   onDestroy(stopAll);
 
+  /** i = index in q.options */
   function choose(i: number): void {
     if (revealed) return;
     answers[index] = i;
@@ -52,7 +60,7 @@
     <p class="count">Vraag {index + 1} van {questions.length} · 💎 {score} juist</p>
     <h2>{q.q}</h2>
     <div class="options">
-      {#each q.options as option, i (i)}
+      {#each order as i, pos (i)}
         <button
           type="button"
           class="opt"
@@ -61,12 +69,12 @@
           disabled={revealed}
           onclick={() => choose(i)}
         >
-          <span class="letter">{'ABCD'[i]}</span>{option}
+          <span class="letter">{'ABCD'[pos]}</span>{q.options[i]}
         </button>
       {/each}
     </div>
     {#if revealed}
-      <p class="feedback">{chosen === q.answer ? '🎉 Juist!' : `😬 Fout! Het juiste antwoord was ${'ABCD'[q.answer]}.`}</p>
+      <p class="feedback">{chosen === q.answer ? '🎉 Juist!' : `😬 Fout! Het juiste antwoord was ${rightLetter}.`}</p>
       <BigButton variant="gold" size="large" full onclick={next}>{index + 1 < questions.length ? 'Volgende vraag ▶' : 'Klaar! Naar de schat ▶'}</BigButton>
     {:else}
       <p class="hint center">Overleg samen en tik dan op één antwoord.</p>

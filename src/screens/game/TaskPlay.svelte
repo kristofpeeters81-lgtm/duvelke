@@ -258,6 +258,7 @@
           difficulty={game.settings.difficulty}
           questions={current.quiz}
           answers={current.quizAnswers}
+          seed={item.uid}
           ondone={(score) => setResult('score', Math.round((maxGems(task) * score) / Math.max(1, current.quiz.length)), score)}
         />
       {:else if task.scoring.type === 'stopwatch' && target !== null}

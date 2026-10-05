@@ -7,6 +7,7 @@ import {
   hurryAtMs,
   meddleMoments,
   pickQuiz,
+  quizOrder,
   targetFor,
   timerSeconds,
   treasure,
@@ -121,5 +122,21 @@ describe('pickQuiz', () => {
     expect(picked).toHaveLength(8);
     expect(picked.some((i) => asked.includes(i))).toBe(false);
     expect(Math.max(...picked)).toBeLessThan(QUIZ.normaal.length);
+  });
+});
+
+describe('quizOrder', () => {
+  it('geeft altijd dezelfde volgorde voor dezelfde opdracht en vraag', () => {
+    expect(quizOrder('abc:3', 4)).toEqual(quizOrder('abc:3', 4));
+    expect([...quizOrder('abc:3', 4)].sort()).toEqual([0, 1, 2, 3]);
+  });
+
+  it('zet het juiste antwoord over veel vragen op elke plek', () => {
+    const places = [0, 0, 0, 0];
+    for (let i = 0; i < 400; i++) {
+      const order = quizOrder(`opdracht-${i}:${i % 15}`, 4);
+      places[order.indexOf(1)]! += 1;
+    }
+    for (const n of places) expect(n).toBeGreaterThan(60);
   });
 });

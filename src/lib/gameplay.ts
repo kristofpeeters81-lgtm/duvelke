@@ -6,7 +6,7 @@ import { fillVars, type ProgramItem } from './tasks/program';
 import { QUIZ } from './tasks/quiz';
 import type { TaskDef } from './tasks/types';
 import type { Difficulty } from './types';
-import { shuffle, type Rng } from './util';
+import { seededRng, shuffle, type Rng } from './util';
 
 export const DEFAULT_GEMS = 10;
 
@@ -117,6 +117,18 @@ export function pickQuiz(difficulty: Difficulty, count: number, alreadyAsked: re
   const fresh = all.filter((i) => !alreadyAsked.includes(i));
   const pool = fresh.length >= count ? fresh : all;
   return shuffle(pool, rng).slice(0, count);
+}
+
+/**
+ * In welke volgorde de antwoorden van een quizvraag op het scherm staan (indexen in options).
+ * Vast per opdracht en vraag, zodat herladen dezelfde volgorde geeft. Zo staat het juiste
+ * antwoord niet altijd op dezelfde plek.
+ */
+export function quizOrder(seed: string, optionCount: number): number[] {
+  return shuffle(
+    Array.from({ length: optionCount }, (_, i) => i),
+    seededRng(seed),
+  );
 }
 
 /** Vanaf hoeveel resterende tijd Windy roept dat de tijd bijna om is (enkel bij timers van 45 s of meer). */
