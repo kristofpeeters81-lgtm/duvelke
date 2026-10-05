@@ -1,6 +1,6 @@
 # Wie is 't Duvelke?
 
-Offline speurspel zoals *Wie is de Mol?* voor één gedeelde Android-tablet (Chrome, PWA). Gemaakt voor een kinderfeest (±10 jaar) op 31/10/2026, met 6 kinderen en 2 volwassenen. Presentatrice Windy leidt het spel. Een volwassene of een kind is haar "hulpje".
+Offline speurspel zoals *Wie is de Mol?* voor één gedeelde Android-tablet (Chrome, PWA). Gemaakt voor een kinderfeest (±10 jaar) op za 24/10/2026 (14u-18u, een dagfeest), met 6 kinderen en 2 volwassenen. Presentatrice Windy leidt het spel. Een volwassene of een kind is haar "hulpje".
 
 - **Stappenplan (wat klaar is, wat nog moet, ideeën):** [docs/STAPPENPLAN.md](docs/STAPPENPLAN.md). Lees eerst de index. Open een detailbestand in `docs/stappen/` pas als je die stap nodig hebt.
 - **Ontwerp en spelregels:** [PLAN.md](PLAN.md)
@@ -16,13 +16,13 @@ Vite 8, Svelte 5 (runes), TypeScript strict, vite-plugin-pwa (Workbox). Opslag i
 | `src/screens/` | Schermen. `game/` bevat alles tijdens het spel. |
 | `src/components/` | Herbruikbare onderdelen, waaronder Windy en 't Duvelke (eigen SVG). |
 | `src/lib/` | Logica: `game.ts`, `gameplay.ts`, `finale.ts`, `speech.ts`/`piper.ts`/`robot.ts` (Kenzo zijn machien)/`wav.ts` (opnames vlot aan elkaar)/`pitch.ts` (stem vermommen), `db.ts`, `backup.ts`, `ai.ts`. |
-| `src/lib/tasks/` | Opdrachtenbibliotheek (305), programma, `wording.ts` (Windy of het hulpje leest voor). |
+| `src/lib/tasks/` | Opdrachtenbibliotheek (303), programma, `wording.ts` (Windy of het hulpje leest voor). |
 | `src/lib/data/` | Vaste lijsten: Windy-uitspraken, locaties, spullen, stemmen. |
 
 ## Commando's
 
 - `npm run dev` start de ontwikkelserver.
-- `npm test` draait Vitest (462 tests).
+- `npm test` draait Vitest (±2000 tests, waarvan de meeste per opdracht in `all.test.ts` en `quality.test.ts`).
 - `npm run check` draait svelte-check.
 - `npm run build` maakt de productiebuild.
 

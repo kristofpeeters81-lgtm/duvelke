@@ -44,6 +44,19 @@ De bevindingen uit [S13](S13-proefspel.md) oplossen. Elke fix krijgt een eigen c
 |---|---|---|
 | 13 | De verboden woorden: "Windy leest voor" laat iedereen het woord horen; zelf lezen toont álle woorden; en beide al vóór de timer | Oorzaak: "(niet: ...)" werd aangezien voor een antwoord, dus de lijst leek een vragenlijst. Nieuw: **kaartjes** (`list.turns`, `CardDeck.svelte`) bij de 12 opdrachten waar één speler om de beurt stiekem iets ziet (verboden woorden ×2, uitbeelden, neuriequiz, luchttekenen, rugtekeningen ×3, fluisterketting, lettermannetje, ja-nee aan zee, stuur het standbeeld). Tijdens de timer houdt wie aan de beurt is één kaartje ingedrukt; ✓ Geraden of ⏭ Overslaan geeft het volgende. Het aantal geraden staat al ingevuld bij het resultaat en blijft bewaard na herladen. Windy leest kaartjes nooit voor. |
 
+### Ronde 7 (5/10) ✅ 5/10
+Volledige review van alle 303 opdrachten en de quiz: zie [review-opdrachten.md](../review-opdrachten.md).
+| # | Bevinding | Oplossing |
+|---|---|---|
+| 14 | Vragen die Windy voorleest stonden enkel op het uitlegscherm, dus vóór de timer (16 opdrachten) | Met een timer leest Windy ze nu voor terwijl de timer loopt (`ReadAloud` op het timerscherm). De voortgang staat in `current.cards`, zodat herladen verder gaat. Windy moeit zich niet tussendoor terwijl ze voorleest. |
+| 15 | Een geheime lijst (hou ingedrukt) verdween op het timerscherm (o.a. Boemvakjes, Blind tekenen) | De lijst staat nu ook op het timerscherm. |
+| 16 | "spelleider" bleef staan in sabotage- en speurderstips, rolhints en lijstjes | `hostWording` geldt nu ook daar, en in de terugblik en de bibliotheek. Kaartjes tellen niet meer als voorleeslijst. |
+| 17 | Quiz: het juiste antwoord stond nooit op D | Antwoorden geschud per vraag, vast per opdracht (`quizOrder`), dus gelijk na herladen. |
+| 18 | "Kaartje voor de Eerste Uitlegger" | Regex hersteld. |
+| 19 | Opdrachtteksten | ±190 opdrachten bijgewerkt: rol-tips met een alternatief, onveilige tips vervangen, haalbare doelen, hints/mysteries via een geheime lijst voor het hulpje, voorbereidingen die op voorhand kunnen, geen vaste tijden naast een timer, geen hoofdletters of tekens in voorgelezen tekst, niets over nacht of bed, geen insecten of nat gras in oktober. Nieuwe `quality.test.ts` bewaakt die regels. |
+
+Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en De mysterieverhalen blijven (de geheime lijst staat nu op het timerscherm); De schat van kapitein Kenzo blijft gelukt/mislukt (het doel is de schat vinden), met per niveau precies 3 raadsels zodat de stappen vastliggen; Samen springtouwen krijgt een terugvalregel in plaats van minstens 6 spelers; hoofdletters in geheime lijstjes en kaartjes blijven (Windy leest die nooit voor).
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.
