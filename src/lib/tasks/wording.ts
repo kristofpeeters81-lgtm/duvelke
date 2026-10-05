@@ -8,10 +8,13 @@ import type { TaskDef } from './types';
 
 const WINDY_VERBS = 'leest|stelt|noemt|vertelt|zegt|spelt|vraagt|roept';
 
-/** Heeft de opdracht een lijst met antwoorden tussen haakjes (vragen, raadsels, weetjes)? */
+/**
+ * Heeft de opdracht een lijst met antwoorden tussen haakjes (vragen, raadsels, weetjes)?
+ * Kaartjes nooit: daar staat "(niet: ...)" tussen haakjes, en die leest Windy niet voor.
+ */
 export function windyReadsList(task: TaskDef): boolean {
   const items = task.list?.items.normaal ?? [];
-  return !!task.list?.secret && items.length > 0 && items.every((i) => /\([^()]*\)\s*$/.test(i));
+  return !!task.list?.secret && !task.list.turns && items.length > 0 && items.every((i) => /\([^()]*\)\s*$/.test(i));
 }
 
 export function hostWording(text: string, task: TaskDef, hostName: string): string {

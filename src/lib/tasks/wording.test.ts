@@ -19,9 +19,16 @@ describe('hostWording', () => {
     expect(out).not.toMatch(/spelleider/i);
   });
 
-  it('laat nergens nog "spelleider" staan in de ingebouwde opdrachten', () => {
+  it('leest kaartjes nooit voor, ook al staat er "(niet: ...)" tussen haakjes', () => {
+    const t = task('b-verboden-woorden');
+    expect(t.list?.turns).toBe(true);
+    expect(windyReadsList(t)).toBe(false);
+  });
+
+  it('laat nergens nog "spelleider" staan in de ingebouwde opdrachten, ook niet in tips en lijstjes', () => {
     for (const t of ALL_BUILTIN) {
-      for (const text of [t.explain, t.prep ?? '', t.list?.title ?? '']) {
+      const lists = Object.values(t.list?.items ?? {}).flat();
+      for (const text of [t.explain, t.prep ?? '', t.list?.title ?? '', ...t.sabotage, ...(t.detective ?? []), ...(t.roles ?? []).map((r) => r.hint), ...lists]) {
         expect(hostWording(text, t, 'Windy'), t.id).not.toMatch(/spelleider/i);
       }
     }
