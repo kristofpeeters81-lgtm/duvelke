@@ -16,6 +16,7 @@
   import Settings from './screens/Settings.svelte';
   import Supplies from './screens/Supplies.svelte';
   import Tasks from './screens/Tasks.svelte';
+  import Tv from './screens/Tv.svelte';
   import VoiceTest from './screens/VoiceTest.svelte';
   import WindyScreen from './screens/WindyScreen.svelte';
 
@@ -66,6 +67,8 @@
 
 {#if !app.ready}
   <div class="loading"><Duvelke size={140} /></div>
+{:else if app.screen === 'tv'}
+  <Tv />
 {:else if app.screen === 'spelers'}
   <Players />
 {:else if app.screen === 'instellingen'}

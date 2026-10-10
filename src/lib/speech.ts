@@ -65,6 +65,33 @@ export interface SpeakOptions {
   playerId?: string;
   /** Altijd het machien laten spreken (om de klank te testen). */
   machine?: boolean;
+  /** Enkel op dit toestel, nooit op het tv-scherm (bv. het menu van het hulpje). */
+  local?: boolean;
+}
+
+/** Wat het tv-scherm meekrijgt om zelf te spreken (zonder de callbacks). */
+export type RemoteSpeakOptions = Pick<SpeakOptions, 'lineId' | 'voice' | 'template' | 'playerId' | 'machine'>;
+
+/** Het tv-scherm spreekt in de plaats van dit toestel (zie tv/host). */
+export interface RemoteSpeech {
+  active(): boolean;
+  speak(text: string, v: VoiceSettings, options: RemoteSpeakOptions, onStart?: (speaker: Speaker) => void): Promise<void>;
+  stop(): void;
+  prefetch(text: string, v: VoiceSettings): void;
+}
+
+let remote: RemoteSpeech | null = null;
+
+export function setRemoteSpeech(r: RemoteSpeech | null): void {
+  remote = r;
+}
+
+/** Waar de opnames vandaan komen: de eigen databank, of (op het tv-scherm) wat de tablet doorstuurde. */
+type RecordingSource = (id: string) => Promise<{ audio: Blob } | undefined>;
+let recordingSource: RecordingSource = getRecording;
+
+export function setRecordingSource(source: RecordingSource | null): void {
+  recordingSource = source ?? getRecording;
 }
 
 /** Alle ingesproken stukjes van een zin, in volgorde, of null als er één ontbreekt. */
@@ -72,18 +99,18 @@ async function recordedPieces(options: SpeakOptions): Promise<Blob[] | null> {
   if (!options.lineId) return null;
   const template = options.template ?? '';
   if (!template.includes('{speler}')) {
-    const r = await getRecording(options.lineId);
+    const r = await recordingSource(options.lineId);
     return r ? [r.audio] : null;
   }
   if (!options.playerId) return null;
   const parts = recordingParts({ id: options.lineId, text: template });
   if (parts.length === 0) return null;
-  const name = await getRecording(nameRecordingId(options.playerId));
+  const name = await recordingSource(nameRecordingId(options.playerId));
   if (!name) return null;
   const before = parts.find((p) => p.id.endsWith(':voor'));
   const after = parts.find((p) => p.id.endsWith(':na'));
-  const b = before ? await getRecording(before.id) : undefined;
-  const a = after ? await getRecording(after.id) : undefined;
+  const b = before ? await recordingSource(before.id) : undefined;
+  const a = after ? await recordingSource(after.id) : undefined;
   if ((before && !b) || (after && !a)) return null;
   return [b?.audio, name.audio, a?.audio].filter((x): x is Blob => !!x);
 }
@@ -116,6 +143,10 @@ export async function speak(text: string, v: VoiceSettings, options: SpeakOption
   const mine = ++token;
   stopPiper();
   stopSpeaking();
+  if (remote?.active() && !options.local) {
+    const { lineId, voice, template, playerId, machine } = options;
+    return remote.speak(text, v, { lineId, voice, template, playerId, machine }, options.onStart);
+  }
 
   if (v.useRecordings && options.lineId) {
     try {
@@ -200,6 +231,7 @@ export function stopAll(): void {
   token++;
   stopPiper();
   stopSpeaking();
+  if (remote?.active()) remote.stop();
 }
 
 /** Laadt het stemmodel alvast, zodat de eerste zin in het spel niet lang op zich laat wachten. */
@@ -217,6 +249,10 @@ export async function warmUp(v: VoiceSettings): Promise<void> {
  * als ze nodig is. Stil: fouten negeren we, voorlezen valt dan gewoon terug op het normale pad.
  */
 export async function prefetch(text: string, v: VoiceSettings, isStale?: () => boolean): Promise<void> {
+  if (remote?.active()) {
+    remote.prefetch(text, v);
+    return;
+  }
   if (!v.enabled || !text.trim() || !(await piperReady(v))) return;
   try {
     await synthesize(text, v.piperVoice, isStale);

@@ -6,6 +6,7 @@
   import { speak, stopAll } from '../../lib/speech';
   import { app } from '../../lib/store.svelte';
   import { QUIZ } from '../../lib/tasks/quiz';
+  import { tvUi } from '../../lib/tv/host.svelte';
   import type { Difficulty } from '../../lib/types';
 
   interface Props {
@@ -38,6 +39,12 @@
   });
 
   onDestroy(stopAll);
+
+  // Het tv-scherm toont dezelfde vraag, en het antwoord pas als het hier getoond wordt.
+  $effect(() => {
+    tvUi.quiz = { index, revealed };
+  });
+  onDestroy(() => (tvUi.quiz = undefined));
 
   /** i = index in q.options */
   function choose(i: number): void {

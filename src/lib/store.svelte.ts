@@ -23,7 +23,8 @@ export type Screen =
   | 'nieuw-spel'
   | 'programma'
   | 'paklijst'
-  | 'spel';
+  | 'spel'
+  | 'tv';
 
 export interface GameDraft {
   playerIds: string[];
@@ -72,7 +73,7 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'uitleg', 'nieuw-spel', 'programma', 'paklijst', 'spel'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'uitleg', 'nieuw-spel', 'programma', 'paklijst', 'spel', 'tv'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);

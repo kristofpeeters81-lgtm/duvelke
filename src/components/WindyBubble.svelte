@@ -18,9 +18,11 @@
     size?: number;
     /** Knoppen of inhoud onder de ballon. */
     children?: Snippet;
+    /** Enkel op dit toestel spreken, nooit op het tv-scherm (bv. in het menu van het hulpje). */
+    local?: boolean;
   }
 
-  let { text, lineId, playerId, mood = 'blij', speaker = 'windy', size = 200, children }: Props = $props();
+  let { text, lineId, playerId, mood = 'blij', speaker = 'windy', size = 200, children, local = false }: Props = $props();
 
   let talking = $state(false);
   let runId = 0;
@@ -38,6 +40,7 @@
       playerId,
       template: lineId ? lineTemplate(lineId) : undefined,
       voice: speaker === 'buurvrouw' ? { piperVoice: app.settings.voice.neighbourVoice, piperPitch: app.settings.voice.neighbourPitch } : undefined,
+      local,
       onStart: (w) => {
         if (id !== runId) return;
         who = w;

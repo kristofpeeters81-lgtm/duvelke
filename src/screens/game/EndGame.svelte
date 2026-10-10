@@ -13,6 +13,7 @@
   import { speak } from '../../lib/speech';
   import { app, go, windySays } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
+  import { unmaskOrder } from '../../lib/tv/state';
   import { hostWording } from '../../lib/tasks/wording';
   import FinalTest from './FinalTest.svelte';
   import Slideshow from './Slideshow.svelte';
@@ -25,11 +26,7 @@
   const groupWins = $derived(pct >= 50);
   const saboteurs = $derived(game?.players.filter((p) => p.role === 'saboteur') ?? []);
   // Iedereen komt in de ontmaskering, ook wie De Test oversloeg. 't Duvelke komt altijd als laatste.
-  const innocents = $derived.by(() => {
-    if (!game) return [];
-    const ids = [...(f?.order ?? []), ...game.players.map((p) => p.playerId)];
-    return [...new Set(ids)].map((id) => game.players.find((p) => p.playerId === id)).filter((p) => p && p.role !== 'saboteur');
-  });
+  const innocents = $derived(game ? unmaskOrder(game) : []);
   const ranks = $derived(game && f ? ranking(game.players, f.questions, f.answers) : []);
   const speurneus = $derived(game?.players.find((p) => p.speurneus));
   const speurneusScore = $derived(speurneus && f ? ranks.find((r) => r.playerId === speurneus.playerId) : undefined);

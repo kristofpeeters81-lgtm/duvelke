@@ -3,7 +3,10 @@
   import BigButton from '../../components/BigButton.svelte';
   import Dossier from '../../components/Dossier.svelte';
   import HoldToReveal from '../../components/HoldToReveal.svelte';
+  import QrCode from '../../components/QrCode.svelte';
+  import QrScan from '../../components/QrScan.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
+  import { acceptAnswer, disconnect, startLocal, startQr, tv } from '../../lib/tv/host.svelte';
   import { skipCurrent, type GamePlayer } from '../../lib/game';
   import { getTask } from '../../lib/tasks/registry';
   import { app, go, lineContext, showToast } from '../../lib/store.svelte';
@@ -16,9 +19,11 @@
 
   let { onclose }: Props = $props();
 
-  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma';
+  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma' | 'tv';
 
   let view = $state<View>('hub');
+  let tvScan = $state(false);
+  let tvTyped = $state('');
   let chosen = $state<GamePlayer | null>(null);
   let pinInput = $state('');
 
@@ -73,7 +78,7 @@
         <h2 class="done">🎬 Menu van het hulpje</h2>
       {:else}
         <h2 class="done">🗂️ Alle geheime dossiers zijn uitgedeeld!</h2>
-        {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} />{/if}
+        {#if hubLine}<WindyBubble text={hubLine.text} lineId={hubLine.id} mood="blij" size={170} local />{/if}
       {/if}
 
       {#if game.phase === 'klaar'}
@@ -90,6 +95,7 @@
         {#if onclose}<BigButton variant="gold" full onclick={onclose}>▶ Terug naar het spel</BigButton>{/if}
         <BigButton variant="secondary" full onclick={() => (view = 'kies')}>🆘 Toon mijn rol opnieuw</BigButton>
         {#if game.program.length > 0}<BigButton variant="ghost" full onclick={() => (view = 'programma')}>📋 Programma bekijken</BigButton>{/if}
+        <BigButton variant="ghost" full onclick={() => (view = 'tv')}>📺 Tv-scherm{tv.status === 'verbonden' ? ' ✓ verbonden' : tv.status === 'kwijt' ? ' ⚠️ verbinding kwijt' : ''}</BigButton>
         {#if game.phase === 'opdrachten' && game.current}<BigButton variant="ghost" full onclick={() => (view = 'overslaan')}>⏭ Deze opdracht overslaan</BigButton>{/if}
         {#if game.pin}
           <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht (pincode)</BigButton>
@@ -164,6 +170,45 @@
       </ul>
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
     </div>
+  {:else if view === 'tv'}
+    <div class="panel center">
+      <h2>📺 Tv-scherm</h2>
+      {#if tv.status === 'verbonden'}
+        <p class="big-ok">✓ Het tv-scherm is verbonden{tv.mode === 'lokaal' ? ' (op dit toestel)' : ''}.</p>
+        <p class="hint">De tv toont enkel wat iedereen mag zien, en {app.settings.hostName} spreekt via de tv. Geheimen blijven op de tablet.</p>
+        <BigButton variant="danger" full onclick={disconnect}>Loskoppelen</BigButton>
+      {:else if tv.status === 'wacht' && tv.mode === 'qr'}
+        {#if tvScan}
+          <p class="hint">Scan nu de code die de tv toont.</p>
+          <QrScan onresult={(code) => ((tvScan = false), void acceptAnswer(code))} />
+          <BigButton variant="ghost" full onclick={() => (tvScan = false)}>Terug naar mijn code</BigButton>
+        {:else if tv.offer}
+          <p class="hint"><strong>1.</strong> Open op het tweede toestel 📺 <em>Dit toestel is het tv-scherm</em> en scan deze code:</p>
+          <QrCode value={tv.offer} size={280} />
+          <p class="hint"><strong>2.</strong> Daarna toont de tv een code. Scan die met deze tablet:</p>
+          <BigButton variant="gold" full onclick={() => (tvScan = true)}>📷 Scan de code van de tv</BigButton>
+          <details class="manual">
+            <summary>Codes als tekst (zonder camera)</summary>
+            <textarea readonly rows="3">{tv.offer}</textarea>
+            <textarea bind:value={tvTyped} rows="3" placeholder="Code van de tv"></textarea>
+            <BigButton variant="secondary" disabled={tvTyped.trim() === ''} onclick={() => acceptAnswer(tvTyped)}>Verbinden</BigButton>
+          </details>
+        {:else}
+          <p class="hint">Code maken...</p>
+        {/if}
+        <BigButton variant="ghost" full onclick={disconnect}>Annuleren</BigButton>
+      {:else if tv.status === 'wacht' && tv.mode === 'lokaal'}
+        <p class="hint">Open in Chrome op deze tablet de app op 📺 <em>Dit toestel is het tv-scherm</em> en tik daar op <em>Dit is hetzelfde toestel als de tablet</em>.</p>
+        <BigButton variant="ghost" full onclick={disconnect}>Annuleren</BigButton>
+      {:else}
+        {#if tv.status === 'kwijt'}<p class="warn">De verbinding met de tv is weg. De tablet speelt gewoon verder; koppel opnieuw als het wifi er weer is.</p>{/if}
+        <p class="hint">Toon de opdrachten, de roddels en de finale op een tv. Geheimen (rollen, tips, kaartjes, geheime lijstjes) blijven altijd op de tablet.</p>
+        <BigButton variant="gold" full onclick={() => void startQr()}>📱 Koppel een tweede toestel (QR-code)</BigButton>
+        <BigButton variant="ghost" full onclick={startLocal}>🪟 Op dit toestel, in een tweede venster</BigButton>
+      {/if}
+      {#if tv.error}<p class="warn">{tv.error}</p>{/if}
+      <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
+    </div>
   {:else if view === 'overslaan'}
     <div class="panel center">
       <h2>Opdracht overslaan?</h2>
@@ -198,6 +243,29 @@
 
 <style>
   .hub,
+  .big-ok {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--teal, #29d3c4);
+  }
+
+  .warn {
+    color: var(--red, #ff6b6b);
+    font-weight: 800;
+  }
+
+  .manual {
+    width: 100%;
+    text-align: left;
+  }
+
+  .manual textarea {
+    width: 100%;
+    font-family: monospace;
+    font-size: 0.8rem;
+    margin: 6px 0;
+  }
+
   .panel {
     display: flex;
     flex-direction: column;

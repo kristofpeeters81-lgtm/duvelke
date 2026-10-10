@@ -32,7 +32,14 @@ function tone(freq: number, start: number, duration: number, type: OscillatorTyp
   osc.stop(t0 + duration + 0.05);
 }
 
-export const sfx = {
+/** Is het tv-scherm verbonden, dan klinken de geluidjes daar (zie tv/host). */
+let remote: ((name: SfxName, arg?: number) => void) | null = null;
+
+export function setRemoteSfx(fn: ((name: SfxName, arg?: number) => void) | null): void {
+  remote = fn;
+}
+
+const local = {
   tap(): void {
     tone(660, 0, 0.08, 'triangle', 0.08);
   },
@@ -88,3 +95,21 @@ export const sfx = {
     notes.forEach((f, i) => tone(f, times[i] ?? 0, i === notes.length - 1 ? 0.9 : 0.18, 'square', 0.1));
   },
 };
+
+export type SfxName = keyof typeof local;
+
+/** Speelt een geluidje hier af, ook als er een tv verbonden is (voor het tv-scherm zelf). */
+export function playLocal(name: SfxName, arg?: number): void {
+  if (name === 'drumroll') local.drumroll(arg);
+  else local[name]();
+}
+
+export const sfx = Object.fromEntries(
+  (Object.keys(local) as SfxName[]).map((name) => [
+    name,
+    (arg?: number) => {
+      if (remote) remote(name, arg);
+      else playLocal(name, arg);
+    },
+  ]),
+) as { [K in SfxName]: (typeof local)[K] };

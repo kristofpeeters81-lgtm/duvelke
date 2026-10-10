@@ -60,6 +60,7 @@
       <BigButton variant="ghost" full onclick={() => go('windy')}>🎙️ {app.settings.hostName}</BigButton>
       <BigButton variant="ghost" full onclick={() => go('instellingen')}>⚙️ Instellingen</BigButton>
     </div>
+    <BigButton variant="ghost" full onclick={() => go('tv')}>📺 Dit toestel is het tv-scherm</BigButton>
   </nav>
 
   <p class="status" class:ok={app.offlineReady}>
