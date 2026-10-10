@@ -14,10 +14,19 @@ function clip(silenceBefore: number, sound: number, silenceAfter: number, noise 
 }
 
 describe('trimBounds', () => {
+  it('knipt een zacht wegzakkend einde van de zin niet weg', () => {
+    // Luid stuk, dan een einde op 5% van de sterkte (zoals een stem die wegzakt), dan stilte.
+    const loud = clip(300, 300, 0);
+    const fading = new Float32Array(200).map((_, i) => 0.025 * Math.sin(i));
+    const all = new Float32Array([...loud, ...fading, ...clip(0, 0, 500)]);
+    const { end } = trimBounds(all, RATE);
+    expect(end).toBeGreaterThanOrEqual(800);
+  });
+
   it('knipt de stilte aan beide kanten weg, met een beetje marge', () => {
     const { start, end } = trimBounds(clip(500, 400, 600), RATE);
     expect(start).toBe(500 - 40);
-    expect(end).toBe(900 + 120);
+    expect(end).toBe(900 + 250);
   });
 
   it('knipt nooit buiten de opname', () => {
@@ -37,6 +46,6 @@ describe('trimBounds', () => {
     const all = new Float32Array([...a, ...soft, ...clip(0, 200, 400)]);
     const { start, end } = trimBounds(all, RATE);
     expect(start).toBe(260);
-    expect(end).toBe(1000 + 120);
+    expect(end).toBe(1000 + 250);
   });
 });

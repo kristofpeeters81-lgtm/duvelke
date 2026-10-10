@@ -48,14 +48,19 @@ export function trimBounds(samples: Float32Array, sampleRate: number): { start: 
     rms.push(Math.sqrt(sum / Math.max(1, to - from)));
   }
   const peak = Math.max(0, ...rms);
-  // Ruis van de microfoon telt niet als geluid: hoogstens 1/10 van het luidste stuk, en minstens -40 dB.
+  // Begin: ruis van de microfoon telt niet als geluid (hoogstens 1/10 van het luidste stuk, minstens -40 dB).
   const threshold = Math.max(0.01, peak * 0.1);
   const first = rms.findIndex((r) => r > threshold);
   if (first === -1) return { start: 0, end: samples.length };
+  // Einde: veel voorzichtiger. Een zin zakt op het einde vaak weg ("schatteke"), en dat mag niet weg.
+  // Enkel wat bijna zo stil is als de achtergrondruis, telt als stilte.
+  // De ruis: de stilste blokjes. Is er bijna geen stilte, dan nooit strenger dan 1/20 van het luidste stuk.
+  const noise = [...rms].sort((a, b) => a - b)[Math.floor(rms.length * 0.05)] ?? 0;
+  const endThreshold = Math.max(0.004, peak * 0.02, Math.min(noise * 4, peak * 0.05));
   let last = rms.length - 1;
-  while (last > first && (rms[last] ?? 0) <= threshold) last--;
+  while (last > first && (rms[last] ?? 0) <= endThreshold) last--;
   const before = Math.round(sampleRate * 0.04);
-  const after = Math.round(sampleRate * 0.12);
+  const after = Math.round(sampleRate * 0.25);
   return { start: Math.max(0, first * win - before), end: Math.min(samples.length, (last + 1) * win + after) };
 }
 

@@ -4,7 +4,7 @@
   import Dossier from '../../components/Dossier.svelte';
   import HoldToReveal from '../../components/HoldToReveal.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
-  import { markAbsent, skipCurrent, type GamePlayer } from '../../lib/game';
+  import { skipCurrent, type GamePlayer } from '../../lib/game';
   import { getTask } from '../../lib/tasks/registry';
   import { app, go, lineContext, showToast } from '../../lib/store.svelte';
   import { pickLine, rememberLine } from '../../lib/windy';
@@ -16,7 +16,7 @@
 
   let { onclose }: Props = $props();
 
-  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma' | 'afwezig';
+  type View = 'hub' | 'kies' | 'bevestig' | 'toon' | 'pin' | 'overzicht' | 'stoppen' | 'overslaan' | 'programma';
 
   let view = $state<View>('hub');
   let chosen = $state<GamePlayer | null>(null);
@@ -91,7 +91,6 @@
         <BigButton variant="secondary" full onclick={() => (view = 'kies')}>🆘 Toon mijn rol opnieuw</BigButton>
         {#if game.program.length > 0}<BigButton variant="ghost" full onclick={() => (view = 'programma')}>📋 Programma bekijken</BigButton>{/if}
         {#if game.phase === 'opdrachten' && game.current}<BigButton variant="ghost" full onclick={() => (view = 'overslaan')}>⏭ Deze opdracht overslaan</BigButton>{/if}
-        {#if game.phase === 'opdrachten' || game.phase === 'einde'}<BigButton variant="ghost" full onclick={() => (view = 'afwezig')}>🚪 Wie is er weg?{game.absent.length > 0 ? ` (${game.absent.length})` : ''}</BigButton>{/if}
         {#if game.pin}
           <BigButton variant="ghost" full onclick={() => (view = 'pin')}>🔐 Rollenoverzicht (pincode)</BigButton>
         {/if}
@@ -165,22 +164,6 @@
       </ul>
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
     </div>
-  {:else if view === 'afwezig'}
-    <div class="panel">
-      <h2>🚪 Wie is er weg?</h2>
-      <p class="hint">Wie weg is, wordt overgeslagen bij de geheime briefing en De Test. Tik om aan of af te melden.</p>
-      <div class="grid">
-        {#each game.players as p (p.playerId)}
-          {@const away = game.absent.includes(p.playerId)}
-          <button type="button" class="pl" class:away onclick={() => app.game && markAbsent(app.game, p.playerId, !away)}>
-            <span class="av" style="--c:{p.color}">{p.avatar}</span>
-            <span class="nm">{p.name}</span>
-            <span class="st">{away ? '🚪 weg' : '✓ er'}</span>
-          </button>
-        {/each}
-      </div>
-      <BigButton variant="primary" full onclick={back}>Klaar</BigButton>
-    </div>
   {:else if view === 'overslaan'}
     <div class="panel center">
       <h2>Opdracht overslaan?</h2>
@@ -232,10 +215,6 @@
     font-size: 0.8rem;
     font-weight: 800;
     color: var(--gold);
-  }
-
-  .pl.away {
-    opacity: 0.5;
   }
 
   .prog {

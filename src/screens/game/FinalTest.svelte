@@ -63,7 +63,7 @@
       {#if f.index < f.order.length - 1}
         <button type="button" class="link" onclick={() => app.game && testLater(app.game)}>{player.name} is er even niet: later</button>
       {/if}
-      <button type="button" class="link" onclick={() => app.game && testSkip(app.game)}>{player.name} is weg: overslaan (telt niet mee)</button>
+      <button type="button" class="link" onclick={() => app.game && testSkip(app.game)}>{player.name} doet de test niet mee: overslaan</button>
     </div>
   {:else if f.stage === 'vragen' && question}
     <div class="stack">

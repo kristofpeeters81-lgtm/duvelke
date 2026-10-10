@@ -94,6 +94,7 @@ export interface Game {
   sabotageLog: { taskUid: string; playerId: string; tip: string }[];
   finale: FinaleState | null;
   /** Spelers die (even) weg zijn: die worden overgeslagen bij briefings en De Test. */
+  /** Niet meer gebruikt: wie er even niet is, wordt enkel die ene keer overgeslagen. Blijft voor oude bewaarde spellen. */
   absent: string[];
   /** Hoe vaak elke speler zijn rol opnieuw bekeek (zichtbaar voor iedereen, tegen spieken). */
   roleViews: Record<string, number>;
@@ -521,7 +522,7 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
     if (game.players.find((p) => p.playerId === id)?.role === 'saboteur') game.sabotageLog = [...game.sabotageLog, { taskUid: current.uid, playerId: id, tip: card.tip }];
     if (card.innocent) remember(game, id, card.innocent);
   }
-  const order = shuffle(game.players.map((p) => p.playerId).filter((id) => !game.absent.includes(id)), rng);
+  const order = shuffle(game.players.map((p) => p.playerId), rng);
   game.briefingCount += 1;
   if (order.length === 0) {
     current.step = 'uitleg';
@@ -554,22 +555,14 @@ export function briefingNext(game: Game): void {
   if (b.index >= b.order.length) game.current.step = 'uitleg';
 }
 
-/** Iemand is weg: overslaan zonder het kaartje te tonen, en ook bij volgende briefings en De Test. */
+/** Iemand is er even niet: deze briefing overslaan. Bij de volgende briefing en De Test is die er gewoon weer bij. */
 export function briefingSkip(game: Game): void {
   const b = game.current?.briefing;
   const id = b?.order[b.index];
   if (!b || !id || !game.current) return;
-  markAbsent(game, id, true);
   b.index += 1;
   b.stage = 'geef';
   if (b.index >= b.order.length) game.current.step = 'uitleg';
-}
-
-export function markAbsent(game: Game, playerId: string, absent: boolean): void {
-  const set = new Set(game.absent);
-  if (absent) set.add(playerId);
-  else set.delete(playerId);
-  game.absent = [...set];
 }
 
 /** Iemand is er even niet: achteraan de rij. */
@@ -663,7 +656,7 @@ export function newFinale(game: Game, rng: Rng = Math.random): FinaleState {
   return {
     step: 'intro',
     questions: buildTest(game.players, game.results, title, { jokersGiven: game.jokersGiven }, game.settings.saboteurName, rng),
-    order: shuffle(present(game), rng),
+    order: shuffle(game.players.map((p) => p.playerId), rng),
     index: 0,
     stage: 'geef',
     qIndex: 0,
@@ -672,17 +665,11 @@ export function newFinale(game: Game, rng: Rng = Math.random): FinaleState {
   };
 }
 
-function present(game: Game): string[] {
-  const ids = game.players.map((p) => p.playerId).filter((id) => !game.absent.includes(id));
-  return ids.length > 0 ? ids : game.players.map((p) => p.playerId);
-}
-
-/** Iemand is weg tijdens De Test: overslaan, telt niet mee in de ranglijst. */
+/** Iemand doet De Test niet mee: overslaan. Die komt wel in de ontmaskering en onderaan de uitslag. */
 export function testSkip(game: Game): void {
   const f = game.finale;
   const id = f?.order[f.index];
   if (!f || !id) return;
-  markAbsent(game, id, true);
   delete f.answers[id];
   f.stage = 'klaar';
   nextTestPlayer(game);

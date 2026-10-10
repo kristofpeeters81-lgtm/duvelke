@@ -284,26 +284,33 @@ describe('briefing, jokers, roddels en dilemma', () => {
   });
 });
 
-describe('afwezige spelers', () => {
-  const program: ProgramItem[] = [{ uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] }];
+describe('iemand is er even niet', () => {
+  const program: ProgramItem[] = [
+    { uid: 'u1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+    { uid: 'u2', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+  ];
 
-  it('slaat een afwezige speler over in de briefing en De Test, zonder zijn kaartje te tonen', () => {
+  it('slaat die enkel in deze briefing over: daarna en in De Test is die er gewoon weer bij', () => {
     const game = createGame(players(5), defaultSettings(), null, null, program, seeded(5));
     startTasks(game);
     afterAnnouncement(game);
     const first = game.current!.briefing!.order[0]!;
     briefingSkip(game);
-    expect(game.absent).toEqual([first]);
     expect(game.current!.briefing!.index).toBe(1);
     expect(game.current!.briefing!.stage).toBe('geef');
     skipCurrent(game);
-    expect(game.finale!.order).not.toContain(first);
-    expect(game.finale!.order).toHaveLength(4);
+    afterGossip(game);
+    afterAnnouncement(game);
+    expect(game.current!.briefing!.order).toContain(first);
+    skipCurrent(game);
+    expect(game.finale!.order).toContain(first);
+    expect(game.finale!.order).toHaveLength(5);
   });
 
-  it('kan in De Test iemand overslaan die dan niet in de ranglijst komt', () => {
+  it('kan in De Test iemand overslaan, enkel voor de test', () => {
     const game = createGame(players(4), defaultSettings(), null, null, program, seeded(6));
     startTasks(game);
+    skipCurrent(game);
     skipCurrent(game);
     finaleStep(game, 'test');
     const who = game.finale!.order[0]!;

@@ -56,7 +56,7 @@
       {#if b.index < b.order.length - 1}
         <button type="button" class="link" onclick={() => app.game && briefingLater(app.game)}>{player.name} is er even niet: later</button>
       {/if}
-      <button type="button" class="link" onclick={() => app.game && briefingSkip(app.game)}>{player.name} is weg: overslaan</button>
+      <button type="button" class="link" onclick={() => app.game && briefingSkip(app.game)}>{player.name} is er even niet: deze keer overslaan</button>
     </div>
   {:else}
     <div class="stack">
