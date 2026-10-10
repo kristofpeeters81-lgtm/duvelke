@@ -4,7 +4,7 @@
   import { LOCATIONS } from '../lib/data/locations';
   import { SUPPLIES } from '../lib/data/supplies';
   import { formatDuration } from '../lib/settings';
-  import { app, go } from '../lib/store.svelte';
+  import { app, flagTask, go, showToast } from '../lib/store.svelte';
   import { CATEGORY_LABELS } from '../lib/tasks/labels';
   import {
     alternatives,
@@ -20,11 +20,13 @@
   import { allTasks, getTask } from '../lib/tasks/registry';
   import type { TaskDef } from '../lib/tasks/types';
   import { hostWording } from '../lib/tasks/wording';
+  import PrepBar from '../components/PrepBar.svelte';
+  import { startProef } from '../lib/proef.svelte';
 
   const draft = $derived(app.draft);
   const ctx = $derived<PlanContext | null>(
     draft
-      ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: draft.gameMasterId !== null }
+      ? { settings: draft.settings, playerCount: draft.playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: draft.gameMasterId !== null, flagged: Object.keys(app.taskStats.flags) }
       : null,
   );
   const minutes = $derived(draft && ctx ? programMinutes(draft.program, ctx) : 0);
@@ -32,6 +34,24 @@
   const possible = $derived(ctx ? eligibleTasks(ctx).length : 0);
 
   let open = $state<string | null>(null);
+  /** Een opdracht eruit halen en markeren om na te kijken, met een korte reden. */
+  let flagging = $state<string | null>(null);
+  let flagNote = $state('');
+
+  function proef(index: number): void {
+    const problem = startProef(index);
+    if (problem) showToast(problem, 'error');
+  }
+
+  function flagOut(index: number): void {
+    const item = draft?.program[index];
+    if (!item) return;
+    flagTask(item.taskId, flagNote);
+    remove(index);
+    flagging = null;
+    flagNote = '';
+    showToast('Eruit en gemarkeerd om na te kijken. Voeg eventueel een andere opdracht toe.');
+  }
   let adding = $state(false);
   let confirmRebuild = $state(false);
 
@@ -93,6 +113,7 @@
 
 <main class="page">
   <TopBar title="Het programma" emoji="📋" />
+  {#if app.draft}<PrepBar />{/if}
 
   {#if !draft || !ctx}
     <p class="hint">Er is geen spel in voorbereiding.</p>
@@ -144,6 +165,7 @@
             <div class="actions">
               <button type="button" class="act" aria-label="Omhoog" disabled={i === 0} onclick={() => move(i, -1)}>▲</button>
               <button type="button" class="act" aria-label="Omlaag" disabled={i === draft.program.length - 1} onclick={() => move(i, 1)}>▼</button>
+              <button type="button" class="act" aria-label="Proefronde" title="Proefronde: speel deze opdracht eens uit" onclick={() => proef(i)}>🧪</button>
               <button type="button" class="act" aria-label="Wisselen" onclick={() => swap(i)}>🔄</button>
               <button type="button" class="act del" aria-label="Schrappen" onclick={() => remove(i)}>✕</button>
             </div>
@@ -154,6 +176,16 @@
                   <p class="hint">Nodig: {task.supplies.map(supplyLabel).join(', ')}</p>
                 {/if}
                 {#if task.prep}<p class="hint">📝 Voorbereiding: {hostWording(fillVars(task.prep, item.vars), task, app.settings.hostName)}</p>{/if}
+                <div class="test-actions">
+                  <BigButton variant="secondary" onclick={() => proef(i)}>🧪 Proefronde</BigButton>
+                  {#if flagging === item.uid}
+                    <input class="text-input" bind:value={flagNote} maxlength="300" placeholder="Waarom? (niet verplicht) bv. te moeilijk voor 10 jaar" />
+                    <BigButton variant="danger" onclick={() => flagOut(i)}>🚩 Eruit en markeren</BigButton>
+                    <BigButton variant="ghost" onclick={() => (flagging = null)}>Annuleer</BigButton>
+                  {:else}
+                    <BigButton variant="ghost" onclick={() => ((flagging = item.uid), (flagNote = ''))}>🚩 Niet goed: eruit</BigButton>
+                  {/if}
+                </div>
               </div>
             {/if}
           </li>
@@ -317,6 +349,17 @@
   .tag.prep {
     background: rgba(255, 207, 63, 0.15);
     color: var(--gold);
+  }
+
+  .test-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .test-actions input {
+    flex: 1 1 100%;
   }
 
   .tag.host {

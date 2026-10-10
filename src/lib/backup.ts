@@ -8,6 +8,7 @@ import { normalizeSettings } from './settings';
 import type { TaskDef } from './tasks/types';
 import { validateTask } from './tasks/validate';
 import type { Player, Settings } from './types';
+import { normalizePreps, type Prep } from './prep';
 import { isRecord } from './util';
 import { normalizeLineState, type WindyLineState } from './windy';
 
@@ -30,7 +31,9 @@ export interface Backup {
   settings: Settings;
   windyLines: WindyLineState;
   customTasks: TaskDef[];
-  taskStats: { ratings: Record<string, number>; recent: string[] };
+  taskStats: { ratings: Record<string, number>; recent: string[]; flags: Record<string, { note: string; at: number }> };
+  /** Opgeslagen voorbereidingen (sinds 10/2026; oudere back-ups hebben er geen). */
+  preps: Prep[];
   recordings: BackupRecording[];
 }
 
@@ -88,6 +91,12 @@ export function readBackup(raw: unknown): Omit<Backup, 'recordings'> & { recordi
   const stats = isRecord(raw.taskStats) ? raw.taskStats : {};
   const ratings: Record<string, number> = {};
   if (isRecord(stats.ratings)) for (const [k, v] of Object.entries(stats.ratings)) if (typeof v === 'number') ratings[k] = v;
+  const flags: Record<string, { note: string; at: number }> = {};
+  if (isRecord(stats.flags)) {
+    for (const [k, v] of Object.entries(stats.flags)) {
+      if (isRecord(v)) flags[k] = { note: typeof v.note === 'string' ? v.note.slice(0, 300) : '', at: typeof v.at === 'number' ? v.at : Date.now() };
+    }
+  }
   const recordings: Recording[] = [];
   if (Array.isArray(raw.recordings)) {
     for (const r of raw.recordings) {
@@ -112,7 +121,8 @@ export function readBackup(raw: unknown): Omit<Backup, 'recordings'> & { recordi
     settings,
     windyLines: normalizeLineState(raw.windyLines),
     customTasks,
-    taskStats: { ratings, recent: Array.isArray(stats.recent) ? stats.recent.filter((x): x is string => typeof x === 'string') : [] },
+    taskStats: { ratings, recent: Array.isArray(stats.recent) ? stats.recent.filter((x): x is string => typeof x === 'string') : [], flags },
+    preps: normalizePreps(raw.preps),
     recordings,
   };
 }

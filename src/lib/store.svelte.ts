@@ -5,6 +5,8 @@ import { setRecordedIds } from './speech';
 import { defaultSettings, normalizeSettings } from './settings';
 import type { ProgramItem } from './tasks/program';
 import { setExtraTasks } from './tasks/registry';
+import { newId } from './ids';
+import { normalizePreps, prepFile, prepFingerprint, readPrepFile, withGameFields, type Prep } from './prep';
 import type { TaskDef } from './tasks/types';
 import { validateTask } from './tasks/validate';
 import type { Player, Settings } from './types';
@@ -24,7 +26,8 @@ export type Screen =
   | 'programma'
   | 'paklijst'
   | 'spel'
-  | 'tv';
+  | 'tv'
+  | 'voorbereidingen';
 
 export interface GameDraft {
   playerIds: string[];
@@ -32,6 +35,13 @@ export interface GameDraft {
   pin: string | null;
   settings: Settings;
   program: ProgramItem[];
+  /** Hoort dit spel bij een (opgeslagen) voorbereiding? saved = vingerafdruk van de opgeslagen versie. */
+  prep?: { id: string | null; name: string; saved: string } | null;
+}
+
+export interface TaskFlag {
+  note: string;
+  at: number;
 }
 export const app = $state({
   ready: false,
@@ -47,7 +57,9 @@ export const app = $state({
   /** Een spel in voorbereiding (spelers, programma), nog niet gestart. */
   draft: null as GameDraft | null,
   /** Duimpjes per opdracht en de recent gespeelde opdrachten (over alle spellen heen). */
-  taskStats: { ratings: {} as Record<string, number>, recent: [] as string[] },
+  taskStats: { ratings: {} as Record<string, number>, recent: [] as string[], flags: {} as Record<string, TaskFlag> },
+  /** Opgeslagen voorbereidingen. */
+  preps: [] as Prep[],
   /** Zelf gemaakte en door AI bedachte opdrachten. */
   customTasks: [] as TaskDef[],
   /** Gemini-sleutel: blijft op dit toestel, nooit in een back-up. */
@@ -73,7 +85,7 @@ export function lineContext(speler?: string): LineContext {
   return { saboteur: s.saboteurName, zoon: s.sonName, windy: s.hostName, speler };
 }
 
-const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'uitleg', 'nieuw-spel', 'programma', 'paklijst', 'spel', 'tv'];
+const SCREENS: Screen[] = ['home', 'spelers', 'instellingen', 'benodigdheden', 'windy', 'stemtest', 'opdrachten', 'uitleg', 'nieuw-spel', 'programma', 'paklijst', 'spel', 'tv', 'voorbereidingen'];
 
 function screenFromHash(): Screen {
   const hash = location.hash.slice(1);
@@ -153,7 +165,7 @@ export function startFromHome(screen: Screen): void {
 }
 export async function loadAll(): Promise<void> {
   try {
-    const [players, rawSettings, rawLines, rawGame, recorded, rawStats, rawCustom, rawAi, rawDraft] = await Promise.all([
+    const [players, rawSettings, rawLines, rawGame, recorded, rawStats, rawCustom, rawAi, rawDraft, rawPreps] = await Promise.all([
       db.getAllPlayers(),
       db.getValue('settings'),
       db.getValue('windyLines'),
@@ -163,7 +175,9 @@ export async function loadAll(): Promise<void> {
       db.getValue('customTasks'),
       db.getValue('ai'),
       db.getValue('draft'),
+      db.getValue('preps'),
     ]);
+    app.preps = normalizePreps(rawPreps);
     if (rawAi && typeof rawAi === 'object') {
       const a = rawAi as Record<string, unknown>;
       app.ai = { geminiKey: typeof a.geminiKey === 'string' ? a.geminiKey : '', model: typeof a.model === 'string' ? a.model : '' };
@@ -220,7 +234,7 @@ export async function deletePlayer(id: string): Promise<boolean> {
   }
 }
 
-export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats' | 'customTasks' | 'ai' | 'draft';
+export type PersistKey = 'settings' | 'windyLines' | 'game' | 'taskStats' | 'customTasks' | 'ai' | 'draft' | 'preps';
 
 const lastSaved = new Map<PersistKey, string>();
 /** Per sleutel één wachtrij, zodat een oudere versie nooit een nieuwere overschrijft. */
@@ -235,7 +249,7 @@ export function persistValue(key: PersistKey, value: unknown): Promise<void> {
       await db.setValue(key, JSON.parse(json));
       lastSaved.set(key, json);
     } catch (err) {
-      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes', customTasks: 'de eigen opdrachten', ai: 'de AI-sleutel', draft: 'het spel in voorbereiding' }[key];
+      const what = { settings: 'de instellingen', windyLines: "Windy's uitspraken", game: 'het spel', taskStats: 'de duimpjes', customTasks: 'de eigen opdrachten', ai: 'de AI-sleutel', draft: 'het spel in voorbereiding', preps: 'de voorbereidingen' }[key];
       showToast(`Opslaan van ${what} is mislukt.`, 'error');
       console.error(err);
     }
@@ -250,7 +264,9 @@ export function persistAllNow(): void {
   if (!app.ready || app.loadError) return;
   void persistValue('settings', $state.snapshot(app.settings));
   void persistValue('windyLines', $state.snapshot(app.windyLines));
-  void persistValue('game', $state.snapshot(app.game));
+  // Een proefronde wordt nooit bewaard: het echte spel (als dat er is) blijft onaangeroerd.
+  if (!app.game?.test) void persistValue('game', $state.snapshot(app.game));
+  void persistValue('preps', $state.snapshot(app.preps));
   void persistValue('taskStats', $state.snapshot(app.taskStats));
   void persistValue('customTasks', $state.snapshot(app.customTasks));
   void persistValue('ai', $state.snapshot(app.ai));
@@ -286,15 +302,113 @@ export async function deleteRecording(lineId: string): Promise<boolean> {
     return false;
   }
 }
-function normalizeTaskStats(raw: unknown): { ratings: Record<string, number>; recent: string[] } {
-  const stats = { ratings: {} as Record<string, number>, recent: [] as string[] };
+function normalizeTaskStats(raw: unknown): { ratings: Record<string, number>; recent: string[]; flags: Record<string, TaskFlag> } {
+  const stats = { ratings: {} as Record<string, number>, recent: [] as string[], flags: {} as Record<string, TaskFlag> };
   if (typeof raw !== 'object' || raw === null) return stats;
   const r = raw as Record<string, unknown>;
   if (typeof r.ratings === 'object' && r.ratings !== null) {
     for (const [k, v] of Object.entries(r.ratings)) if (typeof v === 'number' && Number.isFinite(v)) stats.ratings[k] = Math.max(-10, Math.min(10, v));
   }
   if (Array.isArray(r.recent)) stats.recent = r.recent.filter((x): x is string => typeof x === 'string').slice(0, 30);
+  if (typeof r.flags === 'object' && r.flags !== null) {
+    for (const [k, v] of Object.entries(r.flags)) {
+      if (typeof v !== 'object' || v === null) continue;
+      const f = v as Record<string, unknown>;
+      stats.flags[k] = { note: typeof f.note === 'string' ? f.note.slice(0, 300) : '', at: typeof f.at === 'number' ? f.at : Date.now() };
+    }
+  }
   return stats;
+}
+
+// --- Na te kijken ---------------------------------------------------------------
+
+/** Een opdracht markeren om na te kijken: tot de vlag weg is, kiest het programma ze niet meer. */
+export function flagTask(taskId: string, note: string): void {
+  app.taskStats.flags[taskId] = { note: note.trim().slice(0, 300), at: Date.now() };
+}
+
+export function unflagTask(taskId: string): void {
+  delete app.taskStats.flags[taskId];
+}
+
+export function flaggedIds(): string[] {
+  return Object.keys(app.taskStats.flags);
+}
+
+// --- Voorbereidingen ------------------------------------------------------------
+
+/** Een nieuwe, lege voorbereiding: de standaardinstellingen als vertrekpunt. */
+export function newPrep(): void {
+  const settings = $state.snapshot(app.settings);
+  app.draft = { playerIds: [], gameMasterId: null, pin: null, settings, program: [], prep: { id: null, name: '', saved: '' } };
+  go('nieuw-spel');
+}
+
+/** Een opgeslagen voorbereiding openen: alles blijft aanpasbaar, het origineel verandert pas bij Opslaan. */
+export function openPrep(id: string): void {
+  const p = app.preps.find((x) => x.id === id);
+  if (!p) return;
+  const known = new Set(app.players.map((x) => x.id));
+  const playerIds = p.playerIds.filter((pid) => known.has(pid));
+  const settings = withGameFields($state.snapshot(app.settings), $state.snapshot(p.settings));
+  const gameMasterId = p.gameMasterId && playerIds.includes(p.gameMasterId) ? p.gameMasterId : null;
+  const program = structuredClone($state.snapshot(p.program));
+  app.draft = { playerIds, gameMasterId, pin: null, settings, program, prep: { id: p.id, name: p.name, saved: prepFingerprint({ ...p, playerIds, gameMasterId }) } };
+  go('nieuw-spel');
+}
+
+/** Zijn er wijzigingen die nog niet in de opgeslagen voorbereiding staan? */
+export function prepDirty(d: GameDraft | null): boolean {
+  return !!d?.prep && prepFingerprint(d) !== d.prep.saved;
+}
+
+/** Bewaart het spel in voorbereiding (onder een nieuwe naam als asNew). */
+export function savePrep(name: string, asNew = false): void {
+  const d = app.draft;
+  if (!d) return;
+  const now = Date.now();
+  const existing = !asNew && d.prep?.id ? app.preps.find((x) => x.id === d.prep?.id) : undefined;
+  const prep: Prep = {
+    id: existing?.id ?? newId(),
+    name: name.trim().slice(0, 60) || 'Voorbereiding',
+    createdAt: existing?.createdAt ?? now,
+    updatedAt: now,
+    playerIds: [...d.playerIds],
+    gameMasterId: d.gameMasterId,
+    settings: $state.snapshot(d.settings),
+    program: $state.snapshot(d.program),
+  };
+  app.preps = [prep, ...app.preps.filter((x) => x.id !== prep.id)];
+  d.prep = { id: prep.id, name: prep.name, saved: prepFingerprint(prep) };
+  showToast(`Voorbereiding "${prep.name}" bewaard.`);
+}
+
+export function deletePrep(id: string): void {
+  app.preps = app.preps.filter((x) => x.id !== id);
+  if (app.draft?.prep?.id === id) app.draft.prep = { id: null, name: app.draft.prep.name, saved: '' };
+}
+
+/** Eén voorbereiding als bestand (met de spelers erbij). */
+export function prepAsFile(id: string): File | null {
+  const p = app.preps.find((x) => x.id === id);
+  if (!p) return null;
+  const safe = p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'voorbereiding';
+  return new File([JSON.stringify(prepFile($state.snapshot(p), $state.snapshot(app.players)))], `duvelke-${safe}.json`, { type: 'application/json' });
+}
+
+/** Een voorbereidingsbestand inladen; ontbrekende spelers worden toegevoegd. */
+export async function importPrep(file: File): Promise<string> {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(await file.text());
+  } catch {
+    throw new Error('Dit bestand kan ik niet lezen.');
+  }
+  const { prep, newPlayers } = readPrepFile(raw, app.players);
+  for (const p of newPlayers) await savePlayer(p);
+  app.preps = [prep, ...app.preps];
+  const extra = newPlayers.length ? `, met ${newPlayers.length} nieuwe speler${newPlayers.length > 1 ? 's' : ''}` : '';
+  return `Voorbereiding "${prep.name}" ingeladen${extra}.`;
 }
 
 /** Duimpje en "recent gespeeld" bijhouden voor de keuze van volgende programma's. */
@@ -353,6 +467,7 @@ export async function exportBackup(): Promise<File> {
       windyLines: $state.snapshot(app.windyLines),
       customTasks: $state.snapshot(app.customTasks),
       taskStats: $state.snapshot(app.taskStats),
+      preps: $state.snapshot(app.preps),
     },
     await db.getAllRecordings(),
   );
@@ -378,6 +493,8 @@ export async function importBackup(file: File): Promise<string> {
   app.customTasks = data.customTasks;
   setExtraTasks(data.customTasks);
   app.taskStats = data.taskStats;
+  // Voorbereidingen uit de back-up komen erbij; wat er al stond, blijft.
+  app.preps = [...data.preps.filter((p) => !app.preps.some((x) => x.id === p.id)), ...app.preps];
   app.recordedLineIds = await db.listRecordingIds();
   return `${data.players.length} spelers, ${data.customTasks.length} eigen opdrachten en ${data.recordings.length} opnames teruggezet.`;
 }
@@ -390,7 +507,9 @@ function normalizeDraft(raw: unknown, knownPlayers: string[]): GameDraft | null 
   if (typeof raw !== 'object' || raw === null) return null;
   const r = raw as Record<string, unknown>;
   const playerIds = Array.isArray(r.playerIds) ? r.playerIds.filter((id): id is string => typeof id === 'string' && knownPlayers.includes(id)) : [];
-  if (playerIds.length === 0) return null;
+  const pr = typeof r.prep === 'object' && r.prep !== null ? (r.prep as Record<string, unknown>) : null;
+  const prep = pr ? { id: typeof pr.id === 'string' ? pr.id : null, name: typeof pr.name === 'string' ? pr.name : '', saved: typeof pr.saved === 'string' ? pr.saved : '' } : null;
+  if (playerIds.length === 0 && !prep) return null;
   const gameMasterId = typeof r.gameMasterId === 'string' && playerIds.includes(r.gameMasterId) ? r.gameMasterId : null;
   return {
     playerIds,
@@ -398,5 +517,6 @@ function normalizeDraft(raw: unknown, knownPlayers: string[]): GameDraft | null 
     pin: gameMasterId === null && typeof r.pin === 'string' && isValidPin(r.pin) ? r.pin : null,
     settings: normalizeSettings(r.settings),
     program: normalizeProgram(r.program),
+    prep,
   };
 }

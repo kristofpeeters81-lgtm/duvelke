@@ -85,6 +85,11 @@ Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en
 | 30 | De boodschappenlijst ging veel te snel | Onthouden leest elk ding apart met een pauze; één lange lijst wordt twee keer voorgelezen ("Nog één keer"). |
 | 31 | Windy moeit zich minder | Sinds Windy veel voorleest, zweeg ze tijdens elke voorleesopdracht. Nu moeit ze zich ook daar, zodra er even niets gezegd wordt (`speechBusy`); enkel bij roepen en willekeurig roepen niet. |
 
+### Ronde 12 (10/10) ✅ 10/10
+| # | Vraag | Oplossing |
+|---|---|---|
+| 32 | Een spel voorbereiden en bewaren, opdrachten testen, slechte eruit, later laden en starten | **Voorbereidingen** (, , ): spelers, hulpje, spelinstellingen (: duur, moeilijkheid, plekken, schat, geheimen; namen en stem blijven de standaard) en programma, met een naam. Wijzigingen pas bewaard bij Opslaan (vingerafdruk → "niet opgeslagen wijzigingen"), ook Opslaan als nieuwe. Als bestand (met de spelers, herkend op naam) en in de back-up. **Proefronde** (): één opdracht echt spelen zonder briefing/roddel/dilemma, nooit bewaard, een lopend spel blijft onaangeroerd; daarna goed / wisselen / eruit. **Na te kijken** ( met reden): niet meer gekozen tot vrijgegeven in de bibliotheek, lijst kopieerbaar. De spelinstellingen staan nu in , gedeeld door Instellingen en Nieuw spel. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.

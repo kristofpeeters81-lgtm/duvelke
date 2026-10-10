@@ -11,7 +11,8 @@ describe('back-up', () => {
         settings: { ...defaultSettings(), hostName: 'Wendy' },
         windyLines: { custom: [{ id: 'x', category: 'zoon', text: 'Onzen {zoon} slaapt.', builtIn: false }], disabled: ['w001'] },
         customTasks: [],
-        taskStats: { ratings: { bekertoren: 2 }, recent: ['bekertoren'] },
+        taskStats: { ratings: { bekertoren: 2 }, recent: ['bekertoren'], flags: { kleurenjacht: { note: 'te moeilijk', at: 3 } } },
+        preps: [{ id: 'v1', name: 'Feest', createdAt: 1, updatedAt: 2, playerIds: ['p1'], gameMasterId: null, settings: defaultSettings(), program: [] }],
       },
       [{ lineId: 'w001', audio, durationMs: 1200, createdAt: 5 }],
     );
@@ -20,8 +21,17 @@ describe('back-up', () => {
     expect(restored.settings.hostName).toBe('Wendy');
     expect(restored.windyLines.custom).toHaveLength(1);
     expect(restored.taskStats.ratings['bekertoren']).toBe(2);
+    expect(restored.taskStats.flags['kleurenjacht']?.note).toBe('te moeilijk');
+    expect(restored.preps.map((p) => p.name)).toEqual(['Feest']);
     expect(restored.recordings).toHaveLength(1);
     expect([...new Uint8Array(await restored.recordings[0]!.audio.arrayBuffer())]).toEqual([1, 2, 3, 250]);
+  });
+
+  it('leest ook oudere back-ups, zonder vlaggen of voorbereidingen', () => {
+    const old = { kind: BACKUP_KIND, version: 1, createdAt: 1, players: [], settings: defaultSettings(), windyLines: {}, customTasks: [], taskStats: { ratings: {}, recent: [] }, recordings: [] };
+    const restored = readBackup(old);
+    expect(restored.taskStats.flags).toEqual({});
+    expect(restored.preps).toEqual([]);
   });
 
   it('weigert bestanden die geen back-up zijn', () => {

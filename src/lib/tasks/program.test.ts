@@ -167,3 +167,15 @@ describe('swapItem en packingList', () => {
     for (const p of list.prep) expect(p.text).not.toMatch(/\{\w+\}/);
   });
 });
+
+describe('gemarkeerde opdrachten', () => {
+  it('worden niet gekozen zolang ze gemarkeerd zijn', () => {
+    const c = ctx({ durationMinutes: 240 });
+    const flagged = c.tasks.slice(0, 20).map((t) => t.id);
+    for (let seed = 1; seed < 20; seed++) {
+      const program = buildProgram({ ...c, flagged }, seeded(seed));
+      expect(program.filter((p) => flagged.includes(p.taskId))).toEqual([]);
+    }
+    expect(whyNot(c.tasks[0]!, { ...c, flagged })).toBe('gemarkeerd om na te kijken');
+  });
+});

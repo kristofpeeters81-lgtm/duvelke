@@ -52,6 +52,7 @@
         🎒 Benodigdheden <span class="count">{app.settings.supplies.length}</span>
       </BigButton>
     </div>
+    <BigButton variant="secondary" full onclick={() => go('voorbereidingen')}>📁 Voorbereidingen <span class="count">{app.preps.length}</span></BigButton>
     <div class="grid">
       <BigButton variant="ghost" full onclick={() => go('opdrachten')}>📚 Opdrachten</BigButton>
       <BigButton variant="ghost" full onclick={() => go('uitleg')}>❓ Hoe werkt het?</BigButton>

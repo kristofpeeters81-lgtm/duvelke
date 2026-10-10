@@ -25,6 +25,8 @@ export interface PlanContext {
   recentTaskIds?: readonly string[];
   /** Speelt het hulpje mee? Dan komen er maar een paar opdrachten in die het hulpje leidt. */
   hostPlays?: boolean;
+  /** Opdrachten die gemarkeerd zijn om na te kijken: die worden niet gekozen. */
+  flagged?: readonly string[];
 }
 
 /** Zoveel opdrachten die het hulpje leidt, kiest het programma hoogstens als het hulpje meespeelt. */
@@ -37,6 +39,7 @@ function hostFull(chosen: readonly TaskDef[], ctx: PlanContext): boolean {
 /** Waarom een opdracht niet kan, of null als ze wel kan. */
 export function whyNot(task: TaskDef, ctx: PlanContext): string | null {
   const { settings, playerCount } = ctx;
+  if (ctx.flagged?.includes(task.id)) return 'gemarkeerd om na te kijken';
   if (!task.difficulties.includes(settings.difficulty)) return 'past niet bij deze moeilijkheid';
   if (!task.locations.some((l) => settings.locations.includes(l))) return 'niet op de gekozen plekken';
   if (playerCount < task.minPlayers) return `minstens ${task.minPlayers} spelers nodig`;

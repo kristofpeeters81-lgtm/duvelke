@@ -28,6 +28,7 @@
   import ResultPicker from './ResultPicker.svelte';
   import StopwatchRunner from './StopwatchRunner.svelte';
   import TaskTimer from './TaskTimer.svelte';
+  import { endProef } from '../../lib/proef.svelte';
 
   const game = $derived(app.game);
   const current = $derived(game?.current ?? null);
@@ -147,6 +148,8 @@
   const cardWho = $derived(task?.roles?.[0]?.name.replace(/^eerste\s+/i, '').toLowerCase() ?? 'speler');
   /** Windy leest de vragen voor (tenzij het hulpje ze toch liever zelf stiekem leest). */
   let selfRead = $state(false);
+  /** Proefronde: waarom de opdracht niet goed was (niet verplicht). */
+  let proefNote = $state('');
   $effect(() => {
     void item?.uid;
     selfRead = false;
@@ -353,8 +356,19 @@
       {#if reaction}
         {#key reaction.id}<WindyBubble text={reaction.text} lineId={reaction.id} playerId={reaction.playerId} mood={reaction.happy ? 'blij' : 'geschokt'} size={150} />{/key}
       {/if}
-      <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
-      <BigButton variant="primary" size="large" full onclick={() => app.game && afterTreasure(app.game)}>Verder ▶</BigButton>
+      {#if game.test}
+        <div class="card verdict">
+          <h3>🧪 Hoe was deze opdracht?</h3>
+          <p class="hint small">Was ze goed uitvoerbaar, en werkt ze voor deze groep?</p>
+          <BigButton variant="secondary" size="large" full onclick={() => endProef('goed')}>👍 Goed, ze blijft in het spel</BigButton>
+          <BigButton variant="ghost" full onclick={() => endProef('wissel')}>🔄 Wissel ze voor een andere</BigButton>
+          <input class="text-input" bind:value={proefNote} maxlength="300" placeholder="Waarom niet goed? (niet verplicht)" />
+          <BigButton variant="danger" full onclick={() => endProef('eruit', proefNote)}>🚩 Niet goed: eruit en markeren om na te kijken</BigButton>
+        </div>
+      {:else}
+        <PhotoButton taskUid={item.uid} caption={task.title} idea={task.photo} />
+        <BigButton variant="primary" size="large" full onclick={() => app.game && afterTreasure(app.game)}>Verder ▶</BigButton>
+      {/if}
     </div>
   {:else if current.step === 'duim'}
     <div class="stack center">
@@ -522,6 +536,14 @@
 
   .reminder p {
     margin: 8px 0 0;
+  }
+
+  .verdict {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
   }
 
   .gain {

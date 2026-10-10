@@ -10,7 +10,7 @@
   import { AiError, askGemini, buildPrompt } from '../lib/ai';
   import { LOCATIONS } from '../lib/data/locations';
   import { SUPPLIES } from '../lib/data/supplies';
-  import { app, deleteCustomTask, saveCustomTask, showToast } from '../lib/store.svelte';
+  import { app, deleteCustomTask, flagTask, saveCustomTask, showToast, unflagTask } from '../lib/store.svelte';
   import { CATEGORY_LABELS } from '../lib/tasks/labels';
   import { fillVars } from '../lib/tasks/program';
   import { allTasks } from '../lib/tasks/registry';
@@ -33,6 +33,26 @@
   let showSabotage = $state(false);
   let editing = $state<TaskDef | null | 'nieuw'>(null);
   let confirmDelete = $state(false);
+
+  // --- Na te kijken (gemarkeerd tijdens een voorbereiding of hier) ---
+  const flagged = $derived(
+    Object.entries(app.taskStats.flags)
+      .map(([id, f]) => ({ task: allTasks().find((t) => t.id === id), id, ...f }))
+      .sort((a, b) => b.at - a.at),
+  );
+  let flagNote = $state('');
+  let flaggingOpen = $state(false);
+
+  /** De hele lijst als tekst, om door te geven (bv. om de opdrachten te laten verbeteren). */
+  async function copyFlagged(): Promise<void> {
+    const text = flagged.map((f) => `- ${f.task?.title ?? f.id} (${f.id})${f.note ? `: ${f.note}` : ''}`).join('\n');
+    try {
+      await navigator.clipboard.writeText(`Na te kijken opdrachten:\n${text}`);
+      showToast('Lijst gekopieerd.');
+    } catch {
+      showToast('Kopiëren lukt niet op dit toestel.', 'error');
+    }
+  }
 
   // Na een wijziging opnieuw berekenen (eigen opdrachten zitten in app.customTasks).
   const tasks = $derived.by(() => {
@@ -176,6 +196,23 @@
     </div>
 
     {#if tab === 'bieb'}
+      {#if flagged.length > 0}
+        <details class="section flags">
+          <summary>🚩 Na te kijken ({flagged.length}): worden niet meer gekozen</summary>
+          <ul class="flag-list">
+            {#each flagged as f (f.id)}
+              <li>
+                <button type="button" class="flag-title" onclick={() => f.task && ((open = f.task), (showSabotage = false), (confirmDelete = false))}>
+                  {f.task?.emoji ?? '❓'} {f.task?.title ?? f.id}
+                </button>
+                <span class="hint small">{f.note || 'geen reden'} · {new Date(f.at).toLocaleDateString('nl-BE')}</span>
+                <button type="button" class="link" onclick={() => unflagTask(f.id)}>✓ Nagekeken: vlag weg</button>
+              </li>
+            {/each}
+          </ul>
+          <BigButton variant="ghost" onclick={copyFlagged}>📋 Kopieer de lijst</BigButton>
+        </details>
+      {/if}
       <section class="section filters">
         <input class="text-input" bind:value={search} placeholder="🔎 Zoeken..." />
         <div class="selects">
@@ -200,10 +237,10 @@
         {#each filtered as t (t.id)}
           {@const rating = app.taskStats.ratings[t.id] ?? 0}
           <li>
-            <button type="button" class="item" onclick={() => ((open = t), (showSabotage = false), (confirmDelete = false))}>
+            <button type="button" class="item" onclick={() => ((open = t), (showSabotage = false), (confirmDelete = false), (flaggingOpen = false))}>
               <span class="em">{t.emoji}</span>
               <span class="info">
-                <span class="title">{t.title} {t.source === 'ai' ? '✨' : t.source === 'eigen' ? '✏️' : ''}</span>
+                <span class="title">{t.title} {t.source === 'ai' ? '✨' : t.source === 'eigen' ? '✏️' : ''}{app.taskStats.flags[t.id] ? ' 🚩' : ''}</span>
                 <span class="meta">{CATEGORY_LABELS[t.category]} · {t.locations.map((l) => LOCATIONS.find((x) => x.id === l)?.emoji).join('')} · {t.minutes} min{rating !== 0 ? ` · ${rating > 0 ? '👍' : '👎'}${Math.abs(rating)}` : ''}</span>
               </span>
             </button>
@@ -322,6 +359,15 @@
       {#if open.prep}<p class="hint">📝 {hostWording(open.prep, open, app.settings.hostName)}</p>{/if}
       <button type="button" class="link" onclick={() => (showSabotage = !showSabotage)}>😈 {showSabotage ? 'Verberg' : 'Toon'} de sabotagetips</button>
       {#if showSabotage}<ul>{#each open.sabotage as s (s)}<li>{hostWording(s, open, app.settings.hostName)}</li>{/each}</ul>{/if}
+      {#if app.taskStats.flags[open.id]}
+        <p class="flag-note">🚩 Gemarkeerd om na te kijken{app.taskStats.flags[open.id]?.note ? `: ${app.taskStats.flags[open.id]?.note}` : ''}. Deze opdracht wordt niet gekozen.</p>
+        <BigButton variant="ghost" onclick={() => open && unflagTask(open.id)}>✓ Nagekeken: vlag weg</BigButton>
+      {:else if flaggingOpen}
+        <input class="text-input" bind:value={flagNote} maxlength="300" placeholder="Waarom? (niet verplicht)" />
+        <BigButton variant="danger" onclick={() => open && (flagTask(open.id, flagNote), (flaggingOpen = false), (flagNote = ''))}>🚩 Markeren</BigButton>
+      {:else}
+        <button type="button" class="link" onclick={() => (flaggingOpen = true)}>🚩 Markeren om na te kijken</button>
+      {/if}
       <div class="row">
         {#if own(open)}
           <BigButton variant="secondary" onclick={() => (editing = open)}>✏️ Bewerken</BigButton>
@@ -340,6 +386,39 @@
 {/if}
 
 <style>
+  .flags summary {
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .flag-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .flag-list li {
+    display: grid;
+    gap: 2px;
+  }
+
+  .flag-title {
+    background: none;
+    border: none;
+    color: inherit;
+    font-weight: 800;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .flag-note {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
   .tabs {
     margin-bottom: 18px;
   }

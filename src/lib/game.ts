@@ -98,6 +98,8 @@ export interface Game {
   absent: string[];
   /** Hoe vaak elke speler zijn rol opnieuw bekeek (zichtbaar voor iedereen, tegen spieken). */
   roleViews: Record<string, number>;
+  /** Een proefronde van één opdracht uit een voorbereiding (index in het programma). Wordt nooit bewaard. */
+  test?: { index: number };
 }
 
 export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'terugblik' | 'fotos';
@@ -355,7 +357,8 @@ export function newCurrent(game: Game, rng: Rng = Math.random): CurrentTask | nu
     pending: null,
     briefing: null,
     gossip,
-    dilemma: task.dilemma ? rng() < 0.7 : rng() < 0.15,
+    // In een proefronde geen dilemma: enkel de opdracht zelf.
+    dilemma: game.test ? false : task.dilemma ? rng() < 0.7 : rng() < 0.15,
     cards: { index: 0, guessed: 0 },
   };
 }
@@ -519,7 +522,8 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
   const item = game.program[game.taskIndex];
   const task = item ? getTask(item.taskId) : undefined;
   if (!current || !task) return;
-  if (game.taskIndex % game.settings.briefingEvery !== 0) {
+  // Een proefronde heeft geen geheime briefing.
+  if (game.test || game.taskIndex % game.settings.briefingEvery !== 0) {
     current.step = 'uitleg';
     return;
   }

@@ -9,6 +9,7 @@
   import { machineOn } from '../lib/speech';
   import { app, windySays } from '../lib/store.svelte';
   import { getTask } from '../lib/tasks/registry';
+  import { endProef } from '../lib/proef.svelte';
   import { keepScreenOn } from '../lib/wakelock';
   import EndGame from './game/EndGame.svelte';
   import GameMenu from './game/GameMenu.svelte';
@@ -60,7 +61,12 @@
       {#if game.phase === 'opdrachten'}
         <span class="progress">Opdracht {game.taskIndex + 1}/{game.program.length}</span>
       {/if}
-      <button type="button" class="menu" aria-label="Menu van het hulpje" onclick={() => (menuOpen = !menuOpen)}>☰</button>
+      {#if game.test}
+        <span class="proef">🧪 Proefronde</span>
+        <button type="button" class="stop" onclick={() => endProef('stop')}>✕ Stop</button>
+      {:else}
+        <button type="button" class="menu" aria-label="Menu van het hulpje" onclick={() => (menuOpen = !menuOpen)}>☰</button>
+      {/if}
     </header>
   {/if}
 
@@ -119,6 +125,22 @@
     border: 2px solid var(--line);
     background: rgba(255, 255, 255, 0.08);
     font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .proef {
+    margin-left: auto;
+    font-weight: 800;
+    color: var(--gold);
+  }
+
+  .stop {
+    border: 2px solid var(--line);
+    background: rgba(255, 255, 255, 0.08);
+    color: inherit;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-weight: 800;
     cursor: pointer;
   }
 

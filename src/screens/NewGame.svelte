@@ -6,7 +6,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import BigButton from '../components/BigButton.svelte';
-  import Toggle from '../components/Toggle.svelte';
+  import GameSettingsFields from '../components/GameSettingsFields.svelte';
+  import PrepBar from '../components/PrepBar.svelte';
   import TopBar from '../components/TopBar.svelte';
   import { LOCATIONS } from '../lib/data/locations';
   import { isValidPin, MAX_PLAYERS, MIN_PLAYERS } from '../lib/game';
@@ -17,12 +18,13 @@
   import { app, go, showToast } from '../lib/store.svelte';
 
   const knownIds = new Set(app.players.map((p) => p.id));
-  let selected = $state<string[]>(remembered.selected.filter((id) => knownIds.has(id)));
-  let gameMaster = $state<string | 'geen' | null>(remembered.gameMaster);
+  /** Een voorbereiding: elke keuze hier gaat meteen naar het spel in voorbereiding (zie de opslaanbalk). */
+  const prep = app.draft?.prep ? app.draft : null;
+  let selected = $state<string[]>(prep ? prep.playerIds.filter((id) => knownIds.has(id)) : remembered.selected.filter((id) => knownIds.has(id)));
+  let gameMaster = $state<string | 'geen' | null>(prep ? (prep.gameMasterId ?? (prep.playerIds.length > 0 ? 'geen' : null)) : remembered.gameMaster);
   let pin = $state('');
-  // Per spel aan te passen, zonder de standaardinstellingen te wijzigen.
-  let speurneus = $state(app.settings.speurneusEnabled);
-  let bemoeial = $state(app.settings.bemoeialEnabled);
+  // De instellingen van dit spel: aan te passen zonder de standaardinstellingen te wijzigen.
+  let gameSettings = $state($state.snapshot(prep ? prep.settings : app.settings));
 
   // Waarschuwen als de AI-stem nog niet op de tablet staat: beter nu dan tijdens het feest.
   let voiceMissing = $state(false);
@@ -34,6 +36,16 @@
 
   $effect(() => {
     remembered = { selected: [...selected], gameMaster };
+  });
+
+  $effect(() => {
+    const settings = $state.snapshot(gameSettings);
+    const ids = app.players.filter((p) => selected.includes(p.id)).map((p) => p.id);
+    const gm = gameMaster === 'geen' || gameMaster === null || !ids.includes(gameMaster) ? null : gameMaster;
+    if (!prep || !app.draft?.prep) return;
+    app.draft.playerIds = ids;
+    app.draft.gameMasterId = gm;
+    app.draft.settings = settings;
   });
 
   const chosen = $derived(app.players.filter((p) => selected.includes(p.id)));
@@ -48,7 +60,7 @@
     return null;
   });
 
-  const s = $derived(app.settings);
+  const s = $derived(gameSettings);
   const locationText = $derived(
     LOCATIONS.filter((l) => s.locations.includes(l.id))
       .map((l) => `${l.emoji} ${l.label}`)
@@ -64,7 +76,7 @@
       showToast(problem, 'error');
       return;
     }
-    const settings = { ...$state.snapshot(app.settings), speurneusEnabled: speurneus, bemoeialEnabled: bemoeial };
+    const settings = $state.snapshot(gameSettings);
     const gm = gameMaster === 'geen' ? null : gameMaster;
     const playerIds = chosen.map((p) => p.id);
     // Een eerder aangepast programma behouden als spelers en instellingen niet veranderd zijn.
@@ -74,17 +86,20 @@
       JSON.stringify(previous.playerIds) === JSON.stringify(playerIds) &&
       JSON.stringify(previous.settings) === JSON.stringify(settings) &&
       (previous.gameMasterId === null) === (gm === null);
+    // Een voorbereiding houdt haar programma (ook na andere instellingen): opnieuw kiezen doe je zelf (🎲).
+    const keep = (same || !!previous?.prep) && previous !== null && previous.program.length > 0;
     const program =
-      same && previous
+      keep && previous
         ? previous.program
-        : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: gm !== null });
-    app.draft = { playerIds, gameMasterId: gm, pin: gm === null && pin !== '' ? pin : null, settings, program };
+        : buildProgram({ settings, playerCount: playerIds.length, tasks: allTasks(), ratings: app.taskStats.ratings, recentTaskIds: app.taskStats.recent, hostPlays: gm !== null, flagged: Object.keys(app.taskStats.flags) });
+    app.draft = { playerIds, gameMasterId: gm, pin: gm === null && pin !== '' ? pin : null, settings, program, prep: previous?.prep ?? null };
     go('programma');
   }
 </script>
 
 <main class="page">
-  <TopBar title="Nieuw spel" emoji="🎲" />
+  <TopBar title={prep ? 'Voorbereiding' : 'Nieuw spel'} emoji={prep ? '📁' : '🎲'} />
+  {#if prep}<PrepBar canSave={false} />{/if}
 
   <section class="section">
     <div class="head">
@@ -159,11 +174,11 @@
       <li><span>📍</span> {locationText}</li>
       <li><span>💎</span> {s.treasureMode === 'virtueel' ? 'Virtuele schat' : 'Echte schat'}</li>
     </ul>
-    <button type="button" class="link" onclick={() => go('instellingen')}>Standaardinstellingen aanpassen</button>
-    <div class="toggles">
-      <Toggle label="🔍 Speurneus" description="Eén speler krijgt stiekem onschuldige namen." checked={speurneus} onchange={(v) => (speurneus = v)} />
-      <Toggle label="🙋 Bemoeial" description="Eén speler moet zich overal mee bemoeien." checked={bemoeial} onchange={(v) => (bemoeial = v)} />
-    </div>
+    <details class="adjust">
+      <summary>⚙️ Instellingen voor dit spel aanpassen</summary>
+      <p class="hint">Enkel voor dit spel{prep ? ' (en deze voorbereiding)' : ''}: de standaardinstellingen blijven zoals ze zijn.</p>
+      <GameSettingsFields s={gameSettings} />
+    </details>
   </section>
 
   <div class="start">
@@ -294,8 +309,14 @@
     width: 30px;
   }
 
-  .toggles {
-    margin-top: 8px;
+  .adjust {
+    margin-top: 10px;
+  }
+
+  .adjust summary {
+    font-weight: 800;
+    cursor: pointer;
+    padding: 8px 0;
   }
 
   .start {

@@ -32,6 +32,15 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 
 ## 2. Een spel voorbereiden
 
+**📁 Voorbereidingen (op voorhand, bv. thuis):** zet een spel klaar en bewaar het met een naam.
+1. Startscherm → 📁 **Voorbereidingen** → **＋ Nieuwe voorbereiding**.
+2. Kies wie meedoet en het hulpje. Onder ⚙️ *Instellingen voor dit spel aanpassen* stel je de speelduur, moeilijkheid, plekken, schat en geheimen in, enkel voor dit spel.
+3. In het programma: **🧪** speelt een opdracht eens uit (zonder briefing, roddel of schat, telt nergens mee). Daarna kies je 👍 goed, 🔄 wisselen of 🚩 eruit (met een reden). Gemarkeerde opdrachten worden niet meer gekozen tot je ze in 📚 Opdrachten → *🚩 Na te kijken* weer vrijgeeft. Daar kan je de lijst ook kopiëren.
+4. Tik op **💾 Opslaan**. Na wijzigingen staat er *niet opgeslagen wijzigingen*: het origineel verandert pas als je opslaat (of kies *Opslaan als nieuwe*).
+5. Later: open de voorbereiding, pas aan wat nodig is (ook wie er meedoet), en start het spel via de paklijst.
+6. **💾 Als bestand** bewaart één voorbereiding apart, om naar een ander toestel te brengen; daar kies je *📂 Bestand kiezen*. Voorbereidingen zitten ook in de gewone back-up.
+
+
 1. **▶ Nieuw spel**:
    - vink aan wie meespeelt (3 tot 16);
    - kies **het hulpje van Windy**. Windy leidt het spel (uitleggen, voorlezen, uitslagen); het hulpje doet wat Windy niet kan: klaarleggen, verstoppen, resultaten aanduiden en foto's nemen. Speelt het hulpje niet mee, dan kan je een pincode instellen.

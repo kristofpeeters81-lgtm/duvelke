@@ -17,6 +17,7 @@
   import Supplies from './screens/Supplies.svelte';
   import Tasks from './screens/Tasks.svelte';
   import Tv from './screens/Tv.svelte';
+  import Preps from './screens/Preps.svelte';
   import VoiceTest from './screens/VoiceTest.svelte';
   import WindyScreen from './screens/WindyScreen.svelte';
 
@@ -31,11 +32,13 @@
 
   // Automatisch bewaren. Instellingen kort na het typen; het spel meteen bij elke stap, zodat er
   // niets verloren gaat als de tablet plots dicht gaat.
+  const SKIP = Symbol('niet bewaren');
+
   function autosave(key: PersistKey, read: () => unknown, delay: number): void {
     let timer: ReturnType<typeof setTimeout> | undefined;
     $effect(() => {
       const snapshot = read();
-      if (!app.ready || app.loadError) return;
+      if (!app.ready || app.loadError || snapshot === SKIP) return;
       clearTimeout(timer);
       if (delay === 0) void persistValue(key, snapshot);
       else timer = setTimeout(() => void persistValue(key, snapshot), delay);
@@ -44,7 +47,9 @@
 
   autosave('settings', () => $state.snapshot(app.settings), 400);
   autosave('windyLines', () => $state.snapshot(app.windyLines), 400);
-  autosave('game', () => $state.snapshot(app.game), 0);
+  // Een proefronde (voorbereiding) wordt nooit bewaard: het echte spel blijft zoals het was.
+  autosave('game', () => (app.game?.test ? SKIP : $state.snapshot(app.game)), 0);
+  autosave('preps', () => $state.snapshot(app.preps), 300);
   autosave('taskStats', () => $state.snapshot(app.taskStats), 300);
   autosave('customTasks', () => $state.snapshot(app.customTasks), 300);
   autosave('ai', () => $state.snapshot(app.ai), 300);
@@ -69,6 +74,8 @@
   <div class="loading"><Duvelke size={140} /></div>
 {:else if app.screen === 'tv'}
   <Tv />
+{:else if app.screen === 'voorbereidingen'}
+  <Preps />
 {:else if app.screen === 'spelers'}
   <Players />
 {:else if app.screen === 'instellingen'}
