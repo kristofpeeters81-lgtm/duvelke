@@ -75,6 +75,24 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 5. **Terugblik**: welke sabotagetips 't Duvelke kreeg en welke roddels gelogen waren.
 6. **Bewijsfoto's**: diavoorstelling, met een knop om ze in de galerij te bewaren. Foto's ouder dan 60 dagen worden automatisch opgeruimd, dus bewaar ze tijdig.
 
+## 4b. Tv-scherm (extraatje)
+
+Met een tweede toestel (een gsm of tablet met Chrome) komt het spel op de tv. Dat toestel toont enkel wat iedereen mag zien: de opdrachten, de timer, de quiz, de roddels, de schat en de finale. Geheimen (rollen, dossiers, geheime tips, kaartjes, geheime lijstjes) blijven altijd op de tablet. Daarom mag je het tweede toestel gewoon volledig casten.
+
+**Eén keer vooraf (met internet):** open op het tweede toestel de app en download de AI-stem (🎙️ Windy → Stem). Anders spreekt daar de voorleesstem van het toestel.
+
+**Koppelen:**
+1. Tweede toestel: startscherm → 📺 **Dit toestel is het tv-scherm**. Cast dit scherm naar de tv (Samsung: Smart View).
+2. Tablet: ☰ → 📺 **Tv-scherm** → **Koppel een tweede toestel**. De tablet toont een QR-code.
+3. Tweede toestel: tik op 📷 **Scan de code van de tablet** en scan die code. Nu toont het tweede toestel een QR-code.
+4. Tablet: tik op 📷 **Scan de code van de tv** en scan die code. Klaar!
+
+Beide toestellen moeten op hetzelfde wifi-netwerk zitten (niet op een gastennetwerk). Windy spreekt dan via de tv, met jullie eigen opnames, die de tablet bij het koppelen meestuurt.
+
+**Geen wifi (bv. buiten)?** Gewoon verder spelen: de tablet doet alles zelf, Windy praat weer op de tablet. Terug binnen koppel je opnieuw (stap 2 tot 4). De tv springt dan meteen naar waar het spel is.
+
+**Zonder tweede toestel:** tablet ☰ → 📺 Tv-scherm → **Op dit toestel, in een tweede venster**, en open de app in Chrome op 📺 *Dit toestel is het tv-scherm* → *Dit is hetzelfde toestel*. Dat werkt enkel als je tablet één app apart kan casten.
+
 ## 5. Rollen
 
 | Rol | Wat |

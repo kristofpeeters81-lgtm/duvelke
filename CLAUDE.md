@@ -15,7 +15,7 @@ Vite 8, Svelte 5 (runes), TypeScript strict, vite-plugin-pwa (Workbox). Opslag i
 |---|---|
 | `src/screens/` | Schermen. `game/` bevat alles tijdens het spel. |
 | `src/components/` | Herbruikbare onderdelen, waaronder Windy en 't Duvelke (eigen SVG). |
-| `src/lib/` | Logica: `game.ts`, `gameplay.ts`, `finale.ts`, `speech.ts`/`piper.ts`/`robot.ts` (Kenzo zijn machien)/`wav.ts` (opnames vlot aan elkaar)/`pitch.ts` (stem vermommen), `db.ts`, `backup.ts`, `ai.ts`. |
+| `src/lib/` | Logica: `game.ts`, `gameplay.ts`, `finale.ts`, `speech.ts`/`piper.ts`/`robot.ts` (Kenzo zijn machien)/`wav.ts` (opnames vlot aan elkaar)/`pitch.ts` (stem vermommen), `db.ts`, `backup.ts`, `ai.ts`. `tv/`: het tv-scherm (`state.ts` bepaalt wat er openbaar mag, `transport.ts` WebRTC met QR-codes, `host`/`viewer`). |
 | `src/lib/tasks/` | Opdrachtenbibliotheek (303), programma, `wording.ts` (Windy of het hulpje leest voor). |
 | `src/lib/data/` | Vaste lijsten: Windy-uitspraken, locaties, spullen, stemmen. |
 
