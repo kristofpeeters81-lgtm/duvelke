@@ -48,7 +48,9 @@
     introStep = next;
   }
 
-  const playing = $derived(game?.phase === 'opdrachten' || game?.phase === 'einde');
+  // De balk met het menu (☰) staat er van bij het begin, zodat je bv. al voor de intro het tv-scherm kan koppelen.
+  // In 'klaar' (oude spellen zonder programma) is het menu zelf het scherm.
+  const playing = $derived(!!game && game.phase !== 'klaar');
 </script>
 
 {#if game}
