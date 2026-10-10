@@ -50,7 +50,7 @@ describe('opdrachten: kwaliteit', () => {
     const spoken = [t.explain, ...(windyReadsList(t) ? Object.values(t.list?.items ?? {}).flat() : [])];
     for (const text of spoken) {
       expect(text, 'woorden in hoofdletters leest de stem slecht').not.toMatch(/\b[A-ZÀ-Ý]{3,}\b/);
-      expect(text, 'tekens leest de stem slecht').not.toMatch(/[=+×→%&]|\bbv\.|\bkm\b/);
+      expect(text, 'tekens leest de stem slecht').not.toMatch(/[=+×→%&✓✗]|\bbv\.|\bkm\b/);
     }
   });
 
@@ -79,7 +79,7 @@ describe('quiz', () => {
       expect(q.answer).toBeGreaterThanOrEqual(0);
       expect(q.answer).toBeLessThan(q.options.length);
       expect(new Set(q.options).size, q.q).toBe(q.options.length);
-      expect([q.q, ...q.options].join(' '), q.q).not.toMatch(/[=+×→%&]|\bkm\b/);
+      expect([q.q, ...q.options].join(' '), q.q).not.toMatch(/[=+×→%&✓✗]|\bkm\b/);
     }
   });
 });

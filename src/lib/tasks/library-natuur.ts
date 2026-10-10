@@ -1392,6 +1392,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
       pick: 6,
       secret: true,
+      unanimous: true,
     },
     scoring: { type: 'aantal', target: 6, unit: 'juiste antwoorden' },
     sabotage: [

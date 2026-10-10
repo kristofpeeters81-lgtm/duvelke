@@ -145,6 +145,8 @@ export function validateTask(
       const pick = typeof raw.list.pick === 'number' ? Math.max(1, Math.min(normaal.length, Math.round(raw.list.pick))) : Math.min(5, normaal.length);
       list = { title: str(raw.list.title, 60) || 'Lijst', items: { normaal }, pick, secret: raw.list.secret === true };
       if (raw.list.turns === true) list.turns = true;
+      if (raw.list.streak === true) list.streak = true;
+      if (raw.list.unanimous === true) list.unanimous = true;
       if (raw.list.read === 'roepen' || raw.list.read === 'onthouden' || raw.list.read === 'hints' || raw.list.read === 'willekeurig') list.read = raw.list.read;
       const m = strList(items.makkelijk);
       const p = strList(items.pittig);

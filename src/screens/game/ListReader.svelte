@@ -17,7 +17,7 @@
   import BigButton from '../../components/BigButton.svelte';
   import Machine from '../../components/Machine.svelte';
   import Windy from '../../components/Windy.svelte';
-  import { nextCard } from '../../lib/game';
+  import { nextCard, streakNext } from '../../lib/game';
   import { machineOn, prefetch, speak, stopAll } from '../../lib/speech';
   import { app } from '../../lib/store.svelte';
   import { splitAnswer } from './ReadAloud.svelte';
@@ -31,14 +31,19 @@
     mode: 'roepen' | 'onthouden' | 'hints';
     /** Zoals bij ReadAloud: false = wacht op de timer, true = begin, undefined = startknop. */
     timerRunning?: boolean;
+    /** Roepen met ✓/✗ en een teller "op een rij" (zie TaskList.streak). */
+    streak?: boolean;
+    /** Het doel van die teller, als de opdracht er een heeft. */
+    goal?: number | null;
   }
 
-  let { items, mode, timerRunning }: Props = $props();
+  let { items, mode, timerRunning, streak = false, goal = null }: Props = $props();
 
   // De voortgang staat in het spel, zodat herladen verder gaat waar het was.
   const cards = $derived(app.game?.current?.cards ?? { index: 0, guessed: 0 });
   const index = $derived(cards.index);
-  const done = $derived(index >= items.length);
+  // Een reeks "op een rij" stopt niet als de lijst op is: dan begint ze gewoon opnieuw.
+  const done = $derived(!streak && index >= items.length);
   /** Enkel tellen als er meer dan één ding is (een boodschappenlijst van één blok tel je zelf). */
   const counts = $derived(mode !== 'roepen' && items.length > 1);
 
@@ -52,7 +57,7 @@
   let hint = $state(0);
   let talking = $state(false);
 
-  const item = $derived(items[index] ?? '');
+  const item = $derived(items[streak ? index % Math.max(1, items.length) : index] ?? '');
   const memo = $derived(splitAnswer(item));
   const hinted = $derived(splitHints(item));
 
@@ -68,12 +73,39 @@
     talking = false;
   }
 
+  let run = 0;
+  const pause = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+
+  /**
+   * Onthouden: elk ding apart, met een korte pauze ertussen, zodat het niet te snel gaat. Is het één
+   * lange lijst (een boodschappenlijst), dan nog een tweede keer.
+   */
+  async function sayMemory(text: string, mine: number): Promise<void> {
+    const parts = text.split(/,\s*/).filter((p) => p.trim() !== '');
+    const rounds = items.length === 1 && parts.length > 2 ? 2 : 1;
+    for (let r = 0; r < rounds; r++) {
+      if (r > 0) {
+        await pause(1200);
+        if (mine !== run || shown) return;
+        await say('Nog één keer.');
+      }
+      for (const part of parts) {
+        if (mine !== run || shown) return;
+        await say(part);
+        await pause(450);
+      }
+    }
+  }
+
   $effect(() => {
     if (!started || done) return;
     const text = spokenFor(item, hint);
-    void say(text);
+    const mine = ++run;
+    if (mode === 'onthouden') void sayMemory(text, mine);
+    else void say(text);
     // Het volgende alvast klaarmaken, zodat er geen pauze valt (belangrijk bij "Windy zegt").
-    const next = mode === 'hints' && hint + 1 < hinted.hints.length ? spokenFor(item, hint + 1) : items[index + 1] ? spokenFor(items[index + 1] ?? '', 0) : null;
+    const following = streak ? items[(index + 1) % Math.max(1, items.length)] : items[index + 1];
+    const next = mode === 'hints' && hint + 1 < hinted.hints.length ? spokenFor(item, hint + 1) : following && mode !== 'onthouden' ? spokenFor(following, 0) : null;
     if (next) void prefetch(next, $state.snapshot(app.settings.voice));
   });
 
@@ -88,6 +120,10 @@
     shown = false;
     hint = 0;
     if (app.game) nextCard(app.game, right);
+  }
+
+  function streakTap(ok: boolean): void {
+    if (app.game) streakNext(app.game, ok);
   }
 </script>
 
@@ -104,7 +140,15 @@
       <span class="count">{index + 1} van {items.length}{counts ? ` · ✓ ${cards.guessed} juist` : ''}</span>
     </div>
 
-    {#if mode === 'roepen'}
+    {#if mode === 'roepen' && streak}
+      <p class="q">{item}</p>
+      <p class="streak">🔥 {cards.guessed} op een rij{goal ? ` · doel ${goal}` : ''}{goal && cards.guessed >= goal ? ' · 🎉 Doel gehaald!' : ''}</p>
+      <div class="row">
+        <BigButton variant="ghost" onclick={() => say(item)}>🔊 Nog eens</BigButton>
+        <BigButton variant="secondary" onclick={() => streakTap(true)}>✓ Goed</BigButton>
+        <BigButton variant="danger" onclick={() => streakTap(false)}>✗ Fout: opnieuw</BigButton>
+      </div>
+    {:else if mode === 'roepen'}
       <p class="q">{item}</p>
       <div class="row">
         <BigButton variant="ghost" onclick={() => say(item)}>🔊 Nog eens</BigButton>
@@ -182,6 +226,14 @@
     font-family: var(--font-title);
     font-size: clamp(1.3rem, 4vw, 1.7rem);
     line-height: 1.3;
+  }
+
+  .streak {
+    margin: 0;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--gold);
   }
 
   .q.hidden {

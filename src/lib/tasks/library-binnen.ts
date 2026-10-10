@@ -856,7 +856,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     minutes: 5,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy stuurt Kenzo naar de winkel, maar Kenzo vergeet altijd alles. Windy leest het boodschappenlijstje één keer traag voor. Daarna zeggen jullie samen alles op, in eender welke volgorde. {regel} Opschrijven mag niet! Tik daarna op Nakijken en tel samen hoeveel boodschappen juist waren. Doel: {doel} boodschappen.',
+      'Windy stuurt Kenzo naar de winkel, maar Kenzo vergeet altijd alles. Windy leest het boodschappenlijstje twee keer traag voor. Daarna zeggen jullie samen alles op, in eender welke volgorde. {regel} Opschrijven mag niet! Tik daarna op Nakijken en tel samen hoeveel boodschappen juist waren. Doel: {doel} boodschappen.',
     vars: {
       doel: { makkelijk: [6], normaal: [8], pittig: [10] },
       regel: {
@@ -1989,7 +1989,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga in een kring staan. Windy stelt snel strikvragen, aan iedereen om de beurt. Wie aan de beurt is, antwoordt, en na elk antwoord tikt iemand op Volgende voor de volgende vraag. Antwoorden moet, maar "ja" en "nee" zijn verboden! Ook knikken of nee schudden telt als fout. Halen jullie samen {doel} vragen na elkaar zonder fout? Na een fout begint het tellen opnieuw.',
+      'Ga in een kring staan. Windy stelt snel strikvragen, aan iedereen om de beurt. Wie aan de beurt is, antwoordt, en na elk antwoord tikt iemand op het vinkje (goed geantwoord) of het kruisje (fout): dan komt meteen de volgende vraag. Antwoorden moet, maar "ja" en "nee" zijn verboden! Ook knikken of nee schudden telt als fout. Halen jullie samen {doel} vragen na elkaar zonder fout? Na een fout begint het tellen opnieuw.',
     vars: { doel: { makkelijk: [8], normaal: [12], pittig: [16] } },
     list: {
       title: 'Strikvragen (Windy stelt ze)',
@@ -2030,19 +2030,20 @@ export const TASKS_BINNEN: TaskDef[] = [
       pick: 30,
       secret: false,
       read: 'roepen',
+      streak: true,
     },
     scoring: { type: 'gelukt' },
     sabotage: [
       'Zeg zelf één keer "per ongeluk" ja, maar niet meteen.',
       'Knik stiekem als iemand anders antwoordt, zodat die ook begint te knikken.',
       'Antwoord heel traag, zodat de volgende zenuwachtig wordt.',
-      'Tik net iets te snel op Volgende, zodat de volgende geen tijd heeft om na te denken.',
+      'Tik net iets te snel op ✓, zodat de volgende geen tijd heeft om na te denken.',
     ],
     detective: [
       'Wie zegt ja of nee terwijl dat makkelijk te vermijden was?',
       'Kijk wie knikt of schudt als iemand anders aan de beurt is.',
       'Wie neemt zoveel tijd dat de volgende zenuwachtig wordt?',
-      'Wie tikt telkens heel snel op Volgende, nog voor de volgende klaar is?',
+      'Wie tikt telkens heel snel, nog voor de volgende klaar is?',
     ],
   },
   {
@@ -2895,7 +2896,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy roept de bevelen. Begint het bevel met "Windy zegt", dan doet iedereen het. Zonder "Windy zegt" doet niemand iets! Wie de tablet heeft, tikt telkens op Volgende, en jullie letten samen op wie er beweegt. Doet iemand iets fout? Dan begint het tellen opnieuw. Halen jullie samen {doel} bevelen na elkaar zonder fout?',
+      'Windy roept de bevelen. Begint het bevel met "Windy zegt", dan doet iedereen het. Zonder "Windy zegt" doet niemand iets! Let samen op wie er beweegt. Na elk bevel tikt wie de tablet heeft op het vinkje als iedereen het goed deed, of op het kruisje bij een fout: dan begint het tellen opnieuw. Halen jullie samen {doel} bevelen na elkaar zonder fout?',
     vars: { doel: { makkelijk: [10], normaal: [15], pittig: [20] } },
     list: {
       title: 'Bevelen (Windy roept ze, soms met "Windy zegt" en soms zonder)',
@@ -2946,6 +2947,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       pick: 40,
       secret: false,
       read: 'roepen',
+      streak: true,
     },
     scoring: { type: 'gelukt' },
     sabotage: [

@@ -490,6 +490,14 @@ function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
 }
 
 /** Kaartjes: het woord is geraden (telt mee), of overgeslagen. Daarna komt het volgende kaartje. */
+/** "Na elkaar zonder fout" (Windy zegt...): goed telt er één bij, fout begint de teller opnieuw. */
+export function streakNext(game: Game, ok: boolean): void {
+  const c = game.current?.cards;
+  if (!c) return;
+  c.guessed = ok ? c.guessed + 1 : 0;
+  c.index += 1;
+}
+
 export function nextCard(game: Game, guessed: boolean): void {
   const c = game.current?.cards;
   if (!c) return;

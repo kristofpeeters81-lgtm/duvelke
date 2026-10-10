@@ -6,6 +6,8 @@
   import { gossipSentence } from '../../lib/secrets';
   import { machineOn } from '../../lib/speech';
   import { app, windySays } from '../../lib/store.svelte';
+  import { tvUi } from '../../lib/tv/host.svelte';
+  import { onDestroy } from 'svelte';
 
   const game = $derived(app.game);
   const gossip = $derived(game?.current?.gossip ?? null);
@@ -24,6 +26,24 @@
   const neighbourText = $derived(`Hallo schatjes, ${nbName} hier! Ik heb gehoord dat... ${sentence.charAt(0).toLowerCase()}${sentence.slice(1)} Maar dat heb je niet van mij hé!`);
 
   const log = $derived(game?.gossipLog ?? []);
+
+  // Het tv-scherm toont de roddel op dezelfde manier, zodra hij hier verteld wordt.
+  $effect(() => {
+    if (!gossip || !game) return;
+    const fromWindy = gossip.source === 'windy';
+    tvUi.gossip = {
+      stage,
+      badge: fromWindy
+        ? machine
+          ? `🤖 ${machineName} heeft het opgenomen: dit klopt altijd!`
+          : `👀 ${game.settings.hostName} zag het zelf: dit klopt altijd!`
+        : `🗣️ Roddel van ${nbName}: die vertelt soms zever!`,
+      tone: fromWindy ? 'ok' : 'warn',
+      speaker: fromWindy ? (machine ? 'machien' : 'windy') : 'buurvrouw',
+      text: fromWindy ? windyText : neighbourText,
+    };
+  });
+  onDestroy(() => (tvUi.gossip = undefined));
 </script>
 
 {#if game && gossip}

@@ -31,8 +31,19 @@ export interface TvQuiz {
   right: number | null;
 }
 
+/** De roddel zoals de tablet hem toont (pas als hij verteld wordt). */
+export interface TvGossip {
+  stage: 'intro' | 'roddel';
+  badge: string;
+  /** ok = klopt altijd (Windy of het machien), warn = de buurvrouw (soms zever). */
+  tone: 'ok' | 'warn';
+  speaker: 'windy' | 'buurvrouw' | 'machien';
+  text: string;
+}
+
 export type TvState =
   | { kind: 'wacht'; emoji: string; title: string; text: string }
+  | { kind: 'roddel'; gossip: TvGossip | null }
   | { kind: 'aankondiging'; nr: number; total: number; emoji: string; title: string; tags: string[] }
   | {
       kind: 'opdracht';
@@ -70,6 +81,7 @@ export interface TvScreen {
 /** Wat de tablet zelf nog weet maar niet in het spel bewaart (bv. welke quizvraag nu getoond wordt). */
 export interface TvUi {
   quiz?: { index: number; revealed: boolean };
+  gossip?: TvGossip;
 }
 
 function tvPlayer(p: GamePlayer): TvPlayer {
@@ -109,8 +121,8 @@ function taskState(game: Game, ui: TvUi): TvState {
 
   switch (current.step) {
     case 'roddel':
-      // De roddel zelf hoort iedereen als Windy (of de buurvrouw) hem vertelt; vooraf nog niets verklappen.
-      return wait(current.gossip?.source === 'buurvrouw' ? '🗣️' : '👀', 'Roddeltijd!', 'Luister goed...');
+      // Pas als de tablet de roddel vertelt, staat hij ook op de tv; vooraf nog niets verklappen.
+      return { kind: 'roddel', gossip: ui.gossip?.stage === 'roddel' ? ui.gossip : null };
     case 'aankondiging': {
       const loc = LOCATIONS.find((l) => l.id === item.location);
       return { kind: 'aankondiging', nr, total, emoji: task.emoji, title: task.title, tags: [CATEGORY_LABELS[task.category], ...(loc ? [`${loc.emoji} ${loc.label}`] : [])] };
@@ -131,6 +143,10 @@ function taskState(game: Game, ui: TvUi): TvState {
       if (list && !open && item.list.length > 0) {
         if (list.turns) note = `🃏 Kaartjes: ${current.cards.index} van ${item.list.length} gespeeld, ✓ ${current.cards.guessed} geraden`;
         else if (list.read === 'willekeurig') note = `🔊 ${host} roept af en toe iets: luister goed!`;
+        else if (list.streak) {
+          const goal = Number(item.vars.doel) || null;
+          note = `🔥 ${current.cards.guessed} op een rij${goal ? ` (doel: ${goal})` : ''}${goal && current.cards.guessed >= goal ? ' 🎉' : ''}`;
+        }
         else if (list.read || windyReadsList(task)) note = `🔊 ${host} leest voor: ${Math.min(current.cards.index + 1, item.list.length)} van ${item.list.length}`;
         else {
           const owner = Object.values(current.roles)[0]?.[0];

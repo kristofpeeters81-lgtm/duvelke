@@ -867,7 +867,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     minutes: 5,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy moet naar de winkel, maar ze is haar lijstje vergeten! Windy leest haar boodschappenlijst van 10 dingen één keer rustig voor, daarna verdwijnt het lijstje. Dan noemt de groep samen zoveel mogelijk dingen op, in eender welke volgorde. Kijk daarna na en tel zelf hoeveel jullie er hadden. Doel: {doel} dingen.',
+      'Windy moet naar de winkel, maar ze is haar lijstje vergeten! Windy leest haar boodschappenlijst van 10 dingen twee keer rustig voor, daarna verdwijnt het lijstje. Dan noemt de groep samen zoveel mogelijk dingen op, in eender welke volgorde. Kijk daarna na en tel zelf hoeveel jullie er hadden. Doel: {doel} dingen.',
     vars: { doel: { makkelijk: [6], normaal: [7], pittig: [8] } },
     list: {
       title: 'Boodschappenlijst',
@@ -1367,6 +1367,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
       pick: 6,
       secret: true,
+      unanimous: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'juiste antwoorden' },
     sabotage: [
@@ -2446,8 +2447,8 @@ export const TASKS_OVERAL: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy roept de bevelen, zoals "Windy zegt: spring drie keer!" Begint het bevel met "Windy zegt", dan doet iedereen het, zonder "Windy zegt" beweegt niemand! Jullie krijgen 15 bevelen en mogen samen maximum {fouten} fouten maken. Houd zelf de fouten bij.',
-    vars: { fouten: { makkelijk: [4], normaal: [3], pittig: [1] } },
+      'Windy roept de bevelen, zoals "Windy zegt: spring drie keer!" Begint het bevel met "Windy zegt", dan doet iedereen het, zonder "Windy zegt" beweegt niemand! Na elk bevel tikt wie de tablet heeft op het vinkje als iedereen het goed deed, of op het kruisje bij een fout: dan begint het tellen opnieuw. Halen jullie samen {doel} bevelen na elkaar zonder fout?',
+    vars: { doel: { makkelijk: [6], normaal: [8], pittig: [10] } },
     list: {
       title: 'Bevelen',
       items: {
@@ -2477,6 +2478,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       pick: 15,
       secret: true,
       read: 'roepen',
+      streak: true,
     },
     scoring: { type: 'gelukt' },
     sabotage: [

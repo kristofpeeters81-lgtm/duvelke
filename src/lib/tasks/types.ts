@@ -55,6 +55,13 @@ export interface TaskList {
    * - willekeurig: tijdens de timer op een onverwacht moment één item roepen (bv. "Duvel!").
    */
   read?: 'roepen' | 'onthouden' | 'hints' | 'willekeurig';
+  /**
+   * Bij roepen: "na elkaar zonder fout" (Windy zegt...). In plaats van Volgende tik je ✓ of ✗: fout zet
+   * de teller terug op 0. De lijst begint opnieuw als ze op is.
+   */
+  streak?: boolean;
+  /** Bij vragen die Windy voorleest: iedereen moet hetzelfde kiezen (extra knop "niet iedereen hetzelfde"). */
+  unanimous?: boolean;
 }
 
 export interface TaskRole {

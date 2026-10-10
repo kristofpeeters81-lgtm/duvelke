@@ -74,6 +74,17 @@ Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en
 |---|---|---|
 | 24 | Het scherm casten naar een Android TV, zonder geheimen | Gewone schermcast spiegelt alles, en Chrome op Android kan geen tabblad apart casten. Gekozen: een **tweede toestel** als tv-scherm, dat je volledig mag casten. De tablet stuurt enkel `publicState()` (`src/lib/tv/state.ts`: vaste lijst openbare info, nooit het spel); `state.test.ts` bewaakt dat er geen tips, geheime lijstjes, kaartjes of Test-vragen in zitten. Koppelen via WebRTC met twee QR-codes (`qrcode-generator` om te tonen, de ingebouwde `BarcodeDetector` om te scannen, of de code plakken), zonder server of internet, op hetzelfde wifi. Windy spreekt via de tv (`setRemoteSpeech`), met de eigen opnames die de tablet meestuurt; geluidjes en verkleinde bewijsfoto's ook. Valt de verbinding weg, dan speelt de tablet alleen verder; opnieuw koppelen kan altijd. Ook als tweede venster op hetzelfde toestel (BroadcastChannel). Nog op de tablet te testen: QR scannen met de camera, wifi zonder internet, de stem met eigen opnames op de tv. |
 
+### Ronde 11 (10/10) ✅ 10/10, na de eerste proef met het tv-scherm
+| # | Bevinding | Oplossing |
+|---|---|---|
+| 25 | Een cast-knop in de app? | Kan niet: een webapp mag de schermcast van Android niet starten. Op het tv-toestel: twee keer naar beneden vegen → Smart View (geen Google Home nodig). |
+| 26 | Op de tv stond de uitleg twee keer | De ondertitel verdwijnt als dezelfde tekst al groot op het scherm staat (uitleg, quizvraag, roddel). |
+| 27 | Roddels op de tv zonder figuren en zonder "Josée vertelt soms zever" | De tv toont de roddel zoals de tablet (`tvUi.gossip`): figuur, waarschuwing en tekst, pas als de tablet hem vertelt. |
+| 28 | Windy zegt: direct gelukt of niet aanduiden, zonder Volgende | `list.streak`: ✓ Goed / ✗ Fout, fout zet de teller op 0, meteen het volgende bevel; de lijst begint opnieuw als ze op is. Voor de drie Windy-zegt-spelletjes, "Ja en nee zijn verboden" en Tik-tak-tik. o-windy-zegt is nu ook "na elkaar zonder fout". |
+| 29 | Waar of niet waar: wat als niet iedereen hetzelfde aanwijst? | `list.unanimous`: extra knop "🤷 Niet iedereen hetzelfde" (telt als fout) bij de vier vragenopdrachten waar iedereen hetzelfde moet kiezen. |
+| 30 | De boodschappenlijst ging veel te snel | Onthouden leest elk ding apart met een pauze; één lange lijst wordt twee keer voorgelezen ("Nog één keer"). |
+| 31 | Windy moeit zich minder | Sinds Windy veel voorleest, zweeg ze tijdens elke voorleesopdracht. Nu moeit ze zich ook daar, zodra er even niets gezegd wordt (`speechBusy`); enkel bij roepen en willekeurig roepen niet. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.

@@ -11,7 +11,7 @@
   import { afterAnnouncement, afterTreasure, finishCurrent } from '../../lib/game';
   import { gemsForStopwatch, marginFor, maxGems, targetFor, treasure, type Outcome } from '../../lib/gameplay';
   import { sfx } from '../../lib/sfx';
-  import { prefetch } from '../../lib/speech';
+  import { prefetch, speechBusy } from '../../lib/speech';
   import { app, recordTaskPlayed, windySays } from '../../lib/store.svelte';
   import { CATEGORY_LABELS } from '../../lib/tasks/labels';
   import { fillVars } from '../../lib/tasks/program';
@@ -79,7 +79,16 @@
   // Windy moeit zich tussendoor met de opdracht.
   let popup = $state<{ id: string; text: string; playerId?: string; key: number } | null>(null);
   let popupKey = 0;
-  function moei(category: 'bemoeien' | 'tijd'): void {
+  /**
+   * Windy moeit zich, maar valt niemand in de rede: wordt er net iets voorgelezen, dan probeert ze het
+   * wat later nog eens (hoogstens drie keer).
+   */
+  function moei(category: 'bemoeien' | 'tijd', tries = 0): void {
+    if (noMeddle) return;
+    if (speechBusy()) {
+      if (tries < 3) setTimeout(() => moei(category, tries + 1), 4000);
+      return;
+    }
     const line = untrack(() => windySays(category));
     if (line) popup = { ...line, key: ++popupKey };
   }
@@ -87,7 +96,7 @@
   // Zonder timer: na een tijdje toch eens komen moeien (niet als Windy vragen voorleest).
   $effect(() => {
     const step = current?.step;
-    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || appSpeaks;
+    const quiet = !!current?.timer || task?.scoring.type === 'quiz' || task?.scoring.type === 'stopwatch' || noMeddle;
     if (step !== 'uitleg' || quiet) return;
     const first = setTimeout(() => moei('bemoeien'), 75000);
     const second = setTimeout(() => moei('bemoeien'), 180000);
@@ -146,7 +155,13 @@
   /** De app leest een lijst zelf voor (roepen, onthouden, hints), tenzij het hulpje het toch zelf doet. */
   const listMode = $derived(selfRead ? undefined : task?.list?.read);
   /** Windy of het machien is aan het voorlezen: dan niet tussendoor moeien. */
-  const appSpeaks = $derived(windyReads || !!listMode);
+  /**
+   * Bij roepen (Windy zegt...) en willekeurig roepen nooit tussendoor moeien: dat zou op een bevel lijken.
+   * Bij vragen en voorlezen wel, als er net niets gezegd wordt.
+   */
+  const noMeddle = $derived(listMode === 'roepen' || listMode === 'willekeurig');
+  /** Het doel van een reeks "op een rij", als de opdracht er een heeft. */
+  const streakGoal = $derived(Number(item?.vars.doel) || null);
 
   const listOwner = $derived.by(() => {
     const first = current ? Object.values(current.roles)[0]?.[0] : undefined;
@@ -241,7 +256,7 @@
             {#if current.timer}
               <p class="hint small">Zodra de timer loopt, leest {app.settings.hostName} voor.</p>
             {:else}
-              <ListReader items={shownList} mode={listMode} />
+              <ListReader items={shownList} mode={listMode} streak={!!task.list.streak} goal={streakGoal} />
             {/if}
             <button type="button" class="link" onclick={() => (selfRead = true)}>🙋 Toch liever zelf voorlezen (hulpje)</button>
           </div>
@@ -252,7 +267,7 @@
             {#if current.timer}
               <p class="hint small">Zodra de timer loopt, leest {app.settings.hostName} de vragen één voor één voor.</p>
             {:else}
-              <ReadAloud items={shownList} />
+              <ReadAloud items={shownList} unanimous={!!task.list.unanimous} />
             {/if}
             <button type="button" class="link" onclick={() => (selfRead = true)}>🤫 Toch liever zelf stiekem lezen (hulpje speelt niet mee)</button>
           </div>
@@ -296,16 +311,16 @@
         />
       {:else if current.timer}
         <!-- Leest Windy vragen voor, dan komt ze niet tussendoor moeien: dat zou de vraag onderbreken. -->
-        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => !appSpeaks && moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
+        <TaskTimer timer={current.timer} ondone={() => go('resultaat')} onmoment={(kind) => moei(kind === 'moeien' ? 'bemoeien' : 'tijd')} />
         {#if task.list && item.list.length > 0}
           {#if task.list.turns}
             <CardDeck items={shownList} who={cardWho} />
           {:else if listMode === 'willekeurig'}
             <div class="card"><RandomCaller items={shownList} running={current.timer.endsAt !== null} /></div>
           {:else if listMode}
-            <div class="card"><ListReader items={shownList} mode={listMode} timerRunning={current.timer.endsAt !== null} /></div>
+            <div class="card"><ListReader items={shownList} mode={listMode} timerRunning={current.timer.endsAt !== null} streak={!!task.list.streak} goal={streakGoal} /></div>
           {:else if windyReads}
-            <div class="card"><ReadAloud items={shownList} timerRunning={current.timer.endsAt !== null} /></div>
+            <div class="card"><ReadAloud items={shownList} timerRunning={current.timer.endsAt !== null} unanimous={!!task.list.unanimous} /></div>
           {:else if task.list.secret}
             {@render secretList()}
           {/if}

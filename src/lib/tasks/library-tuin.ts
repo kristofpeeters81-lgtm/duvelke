@@ -1264,6 +1264,7 @@ export const TASKS_TUIN: TaskDef[] = [
       },
       pick: 6,
       secret: true,
+      unanimous: true,
     },
     scoring: { type: 'aantal', target: 6, unit: 'juiste antwoorden' },
     sabotage: [
@@ -1439,6 +1440,7 @@ export const TASKS_TUIN: TaskDef[] = [
       },
       pick: 8,
       secret: true,
+      unanimous: true,
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'juiste antwoorden' },
     sabotage: [
@@ -1707,7 +1709,7 @@ export const TASKS_TUIN: TaskDef[] = [
     minutes: 5,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy roept een opdracht, zoals "Raak iets van hout aan!" Het hulpje telt dan luidop tot {seconden}: tegen dan moet iedereen iets aanraken dat klopt, en niemand mag hetzelfde ding aanraken als een ander! Het hulpje kijkt na of het klopt. Lukt het {doel} keer na elkaar?',
+      'Windy roept een opdracht, zoals "Raak iets van hout aan!" Het hulpje telt dan luidop tot {seconden}: tegen dan moet iedereen iets aanraken dat klopt, en niemand mag hetzelfde ding aanraken als een ander! Het hulpje kijkt na en tikt op het vinkje of het kruisje: bij een fout begint het tellen opnieuw. Lukt het {doel} keer na elkaar?',
     vars: { seconden: { makkelijk: [10], normaal: [7], pittig: [5] }, doel: { makkelijk: [5], normaal: [6], pittig: [8] } },
     list: {
       title: 'Opdrachten',
@@ -1738,6 +1740,7 @@ export const TASKS_TUIN: TaskDef[] = [
       pick: 20,
       secret: false,
       read: 'roepen',
+      streak: true,
     },
     scoring: { type: 'gelukt' },
     sabotage: [
@@ -2157,7 +2160,7 @@ export const TASKS_TUIN: TaskDef[] = [
     minutes: 5,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy roept de bevelen. Doe enkel wat Windy roept als de zin begint met "Windy zegt". Begint de zin met "’t Duvelke zegt", of zonder "Windy zegt" ervoor? Dan doe je niets! Iedereen doet tegelijk mee: vergist iemand zich, dan begint het tellen opnieuw. Halen jullie {doel} opdrachten na elkaar zonder fout?',
+      'Windy roept de bevelen. Doe enkel wat Windy roept als de zin begint met "Windy zegt". Begint de zin met "’t Duvelke zegt", of zonder "Windy zegt" ervoor? Dan doe je niets! Iedereen doet tegelijk mee. Na elk bevel tikt wie de tablet heeft op het vinkje als iedereen het goed deed, of op het kruisje bij een fout: dan begint het tellen opnieuw. Halen jullie {doel} opdrachten na elkaar zonder fout?',
     vars: { doel: { makkelijk: [8], normaal: [12], pittig: [16] } },
     list: {
       title: 'Bevelen',
@@ -2204,6 +2207,7 @@ export const TASKS_TUIN: TaskDef[] = [
       pick: 36,
       secret: false,
       read: 'roepen',
+      streak: true,
     },
     scoring: { type: 'gelukt' },
     sabotage: [

@@ -16,6 +16,14 @@ import { speak as speakDevice, stopSpeaking } from './voice';
 import { nameRecordingId, recordingParts } from './windy';
 
 let token = 0;
+
+/** Wordt er nu iets gezegd (of net)? Dan komt Windy niet tussendoor moeien. */
+let speaking = 0;
+let lastEnd = 0;
+
+export function speechBusy(): boolean {
+  return speaking > 0 || Date.now() - lastEnd < 3000;
+}
 let storedCache: string[] | null = null;
 
 export function invalidateStoredVoices(): void {
@@ -140,6 +148,16 @@ async function prepareRecording(pieces: Blob[], options: SpeakOptions, v: VoiceS
 
 export async function speak(text: string, v: VoiceSettings, options: SpeakOptions = {}): Promise<void> {
   if (!v.enabled || text.trim() === '') return;
+  speaking++;
+  try {
+    await speakNow(text, v, options);
+  } finally {
+    speaking--;
+    lastEnd = Date.now();
+  }
+}
+
+async function speakNow(text: string, v: VoiceSettings, options: SpeakOptions): Promise<void> {
   const mine = ++token;
   stopPiper();
   stopSpeaking();

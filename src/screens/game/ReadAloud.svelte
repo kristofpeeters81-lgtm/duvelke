@@ -22,6 +22,8 @@
 
   interface Props {
     items: string[];
+    /** Iedereen moet hetzelfde kiezen: extra knop als dat niet zo was (telt als fout). */
+    unanimous?: boolean;
     /**
      * Op het timerscherm: false zolang de timer nog niet loopt, true zodra hij loopt (dan begint het
      * voorlezen vanzelf). Zonder timer (undefined) start het hulpje het voorlezen met een knop.
@@ -29,7 +31,7 @@
     timerRunning?: boolean;
   }
 
-  let { items, timerRunning }: Props = $props();
+  let { items, timerRunning, unanimous = false }: Props = $props();
 
   // De voortgang staat in het spel, net als bij de kaartjes: na herladen gaat het verder waar het was.
   const cards = $derived(app.game?.current?.cards ?? { index: 0, guessed: 0 });
@@ -92,6 +94,7 @@
     <div class="row">
       <BigButton variant="secondary" onclick={() => next(true)}>✓ Juist geraden</BigButton>
       <BigButton variant="ghost" onclick={() => next(false)}>✗ Fout</BigButton>
+      {#if unanimous}<BigButton variant="ghost" onclick={() => next(false)}>🤷 Niet iedereen hetzelfde</BigButton>{/if}
     </div>
   {:else}
     <p class="hint center">Overleg samen. Klaar met kiezen? Dan zegt {app.settings.hostName} het antwoord.</p>

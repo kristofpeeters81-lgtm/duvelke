@@ -27,6 +27,12 @@
   const screen = $derived(view.screen);
   const s = $derived(screen?.state ?? null);
   const connected = $derived(view.status === 'verbonden');
+  /** Staat wat Windy zegt al groot op het scherm (de uitleg, de quizvraag, de roddel)? Dan geen dubbele ondertitel. */
+  const captionOnStage = $derived.by(() => {
+    if (!view.caption || !s) return false;
+    const key = JSON.stringify(view.caption.text.slice(0, 40)).slice(1, -1);
+    return JSON.stringify(s).includes(key);
+  });
 
   // Het scherm mag niet uitgaan zolang het tv-scherm open staat.
   let lock: { release: () => Promise<void> } | null = null;
@@ -133,6 +139,22 @@
           <span class="huge">{s.emoji}</span>
           <h1>{s.title}</h1>
           {#if s.text}<p class="big">{s.text}</p>{/if}
+        </div>
+      {:else if s.kind === 'roddel'}
+        <div class="center">
+          <h1>🤫 Roddeltijd!</h1>
+          {#if s.gossip}
+            <p class="badge {s.gossip.tone}">{s.gossip.badge}</p>
+            <div class="gossip">
+              <span class="who">
+                {#if s.gossip.speaker === 'machien'}<Machine size={180} talking={!!view.caption} />{:else if s.gossip.speaker === 'buurvrouw'}<Neighbour size={180} talking={!!view.caption} />{:else}<Windy size={180} talking={!!view.caption} mood="geschokt" />{/if}
+              </span>
+              <p class="bubble">{s.gossip.text}</p>
+            </div>
+          {:else}
+            <Windy size={180} talking={!!view.caption} mood="stiekem" />
+            <p class="big">Luister goed...</p>
+          {/if}
         </div>
       {:else if s.kind === 'aankondiging'}
         <div class="center">
@@ -248,7 +270,7 @@
       {/if}
     </section>
 
-    {#if view.caption}
+    {#if view.caption && !captionOnStage}
       <aside class="caption">
         <span class="who">
           {#if view.caption.speaker === 'machien'}<Machine size={110} talking />{:else if view.caption.speaker === 'buurvrouw'}<Neighbour size={110} talking />{:else}<Windy size={110} talking mood="blij" />{/if}
@@ -583,6 +605,43 @@
     max-height: 78dvh;
     border-radius: 18px;
     animation: fade 0.6s;
+  }
+
+  .badge {
+    margin: 0;
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 2.4vw, 2rem);
+  }
+
+  .badge.ok {
+    background: rgba(41, 211, 196, 0.2);
+    color: #29d3c4;
+  }
+
+  .badge.warn {
+    background: rgba(255, 159, 67, 0.2);
+    color: #ff9f43;
+  }
+
+  .gossip {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .bubble {
+    flex: 1;
+    margin: 0;
+    background: #fff;
+    color: #2a1454;
+    border-radius: 24px;
+    padding: 18px 24px;
+    font-size: clamp(1.3rem, 2.8vw, 2.4rem);
+    font-weight: 700;
+    text-align: left;
   }
 
   .caption {
