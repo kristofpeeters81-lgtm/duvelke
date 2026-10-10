@@ -18,6 +18,11 @@
   let now = $state(Date.now());
   let photo = $state(0);
   let voiceMissing = $state(false);
+  /** De QR-code zo groot als het scherm toelaat: dan scant de tablet ze het makkelijkst. */
+  let qrSize = $state(340);
+  function fitQr(): void {
+    qrSize = Math.max(240, Math.min(window.innerWidth - 48, window.innerHeight - 260, 640));
+  }
 
   const screen = $derived(view.screen);
   const s = $derived(screen?.state ?? null);
@@ -37,6 +42,8 @@
 
   onMount(() => {
     void keepAwake();
+    fitQr();
+    window.addEventListener('resize', fitQr);
     document.addEventListener('visibilitychange', onVisible);
     const tick = setInterval(() => (now = Date.now()), 250);
     const slides = setInterval(() => (photo += 1), 4000);
@@ -44,6 +51,7 @@
     return () => {
       clearInterval(tick);
       clearInterval(slides);
+      window.removeEventListener('resize', fitQr);
     };
   });
 
@@ -76,7 +84,8 @@
       <h1>📺 Tv-scherm</h1>
       {#if view.status === 'antwoord'}
         <p class="big"><strong>Nu de tablet:</strong> tik daar op 📷 <em>Scan de code van de tv</em> en scan deze code.</p>
-        <QrCode value={view.answer} size={340} />
+        <QrCode value={view.answer} size={qrSize} />
+        <p class="hint">Tip: zet dit scherm op volle helderheid en hou de tablet er 20 tot 30 cm van.</p>
         <details class="manual">
           <summary>De code als tekst</summary>
           <textarea readonly rows="3">{view.answer}</textarea>

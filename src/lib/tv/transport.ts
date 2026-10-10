@@ -5,6 +5,7 @@
  * - Zelfde toestel (tweede venster, voor "één app casten"): via een BroadcastChannel.
  * Grote berichten (opnames, foto's) worden in stukjes verstuurd.
  */
+import { decodeCode, encodeCode } from './code';
 
 export interface Transport {
   send(message: unknown): void;
@@ -116,34 +117,6 @@ export function localTransport(role: 'host' | 'viewer', events: TransportEvents)
 
 // --- Tweede toestel: WebRTC met een code ------------------------------------------
 
-/** Enkel wat nodig is voor een datakanaal: de rest van de beschrijving laten we weg (kleinere QR-code). */
-function slimSdp(sdp: string): string {
-  return sdp
-    .split(/\r?\n/)
-    .filter((l) => l !== '' && !/^a=(extmap-allow-mixed|msid-semantic|ice-options)/.test(l))
-    .join('\n');
-}
-
-async function pack(kind: 'A' | 'B', sdp: string): Promise<string> {
-  const bytes = new TextEncoder().encode(slimSdp(sdp));
-  const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
-  const zipped = new Uint8Array(await new Response(stream).arrayBuffer());
-  let bin = '';
-  for (const b of zipped) bin += String.fromCharCode(b);
-  return `${kind}${btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')}`;
-}
-
-async function unpack(code: string, kind: 'A' | 'B'): Promise<string> {
-  const clean = code.trim();
-  if (!clean.startsWith(kind)) throw new Error(kind === 'A' ? 'Dit is niet de code van de tablet.' : 'Dit is niet de code van de tv.');
-  const b64 = clean.slice(1).replace(/-/g, '+').replace(/_/g, '/');
-  const bin = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
-  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
-  const text = await new Response(stream).text();
-  return text.split('\n').join('\r\n') + '\r\n';
-}
-
 /**
  * Zonder internet vinden de toestellen elkaar op het wifi rechtstreeks. Is er internet, dan helpt een
  * gratis STUN-server van Google: die vertelt elk toestel enkel zijn eigen netwerkadres (handig als de
@@ -209,13 +182,13 @@ export async function rtcHost(
   const transport = wire(pc, channel, events);
   await pc.setLocalDescription(await pc.createOffer());
   await gathered(pc);
-  const code = await pack('A', pc.localDescription?.sdp ?? '');
+  const code = encodeCode('A', pc.localDescription?.sdp ?? '');
   return {
     code,
     transport,
     state: () => `${pc.iceConnectionState}/${pc.connectionState}`,
     accept: async (answer) => {
-      await pc.setRemoteDescription({ type: 'answer', sdp: await unpack(answer, 'B') });
+      await pc.setRemoteDescription({ type: 'answer', sdp: decodeCode(answer, 'B') });
     },
   };
 }
@@ -235,10 +208,10 @@ export async function rtcViewer(offer: string, events: TransportEvents): Promise
       resolve(transport);
     };
   });
-  await pc.setRemoteDescription({ type: 'offer', sdp: await unpack(offer, 'A') });
+  await pc.setRemoteDescription({ type: 'offer', sdp: decodeCode(offer, 'A') });
   await pc.setLocalDescription(await pc.createAnswer());
   await gathered(pc);
-  const code = await pack('B', pc.localDescription?.sdp ?? '');
+  const code = encodeCode('B', pc.localDescription?.sdp ?? '');
   // Het kanaal komt pas als de tablet het antwoord gescand heeft; tot dan sturen we niets.
   const proxy: Transport = {
     send: (m) => transport?.send(m),
