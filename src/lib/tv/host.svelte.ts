@@ -17,6 +17,8 @@ export const tv = $state({
   /** Code A voor de QR-code. */
   offer: '',
   error: '',
+  /** De code van de tv is gescand; nu wachten tot de verbinding er is. */
+  connecting: false,
 });
 
 /** Wat de tablet nog weet maar niet in het spel bewaart (bv. welke quizvraag op het scherm staat). */
@@ -24,6 +26,8 @@ export const tvUi = $state<TvUi>({});
 
 let transport: Transport | null = null;
 let accept: ((answer: string) => Promise<void>) | null = null;
+let rtcState: (() => string) | null = null;
+let connectTimer: ReturnType<typeof setTimeout> | undefined;
 let lastScreen = '';
 let photosFor = '';
 
@@ -137,7 +141,9 @@ function detach(): void {
 
 const events: TransportEvents = {
   onopen: () => {
+    clearTimeout(connectTimer);
     tv.status = 'verbonden';
+    tv.connecting = false;
     tv.error = '';
     attach();
   },
@@ -173,6 +179,7 @@ export async function startQr(): Promise<void> {
     const host = await rtcHost(events);
     transport = host.transport;
     accept = host.accept;
+    rtcState = host.state;
     tv.offer = host.code;
   } catch (err) {
     tv.error = err instanceof Error ? err.message : String(err);
@@ -185,6 +192,14 @@ export async function acceptAnswer(code: string): Promise<void> {
   try {
     tv.error = '';
     await accept?.(code);
+    tv.connecting = true;
+    clearTimeout(connectTimer);
+    // Lukt het niet binnen 15 s, dan zeggen we het (meestal ligt het aan het wifi).
+    connectTimer = setTimeout(() => {
+      if (tv.status === 'verbonden') return;
+      tv.connecting = false;
+      tv.error = `Verbinden lukt niet. Zitten de tablet en het tv-toestel op hetzelfde wifi-netwerk (geen gastennetwerk, geen mobiele data)? Probeer daarna opnieuw. (${rtcState?.() ?? '?'})`;
+    }, 15000);
   } catch (err) {
     tv.error = err instanceof Error ? err.message : 'Die code klopt niet.';
   }
@@ -202,6 +217,9 @@ export function disconnect(): void {
   const t = transport;
   transport = null;
   accept = null;
+  rtcState = null;
+  clearTimeout(connectTimer);
+  tv.connecting = false;
   t?.close();
   detach();
   tv.status = 'uit';

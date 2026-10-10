@@ -75,7 +75,7 @@
     <div class="pair">
       <h1>📺 Tv-scherm</h1>
       {#if view.status === 'antwoord'}
-        <p class="big">Laat de tablet deze code scannen:</p>
+        <p class="big"><strong>Nu de tablet:</strong> tik daar op 📷 <em>Scan de code van de tv</em> en scan deze code.</p>
         <QrCode value={view.answer} size={340} />
         <details class="manual">
           <summary>De code als tekst</summary>

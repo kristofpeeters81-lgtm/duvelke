@@ -144,6 +144,13 @@ async function unpack(code: string, kind: 'A' | 'B'): Promise<string> {
   return text.split('\n').join('\r\n') + '\r\n';
 }
 
+/**
+ * Zonder internet vinden de toestellen elkaar op het wifi rechtstreeks. Is er internet, dan helpt een
+ * gratis STUN-server van Google: die vertelt elk toestel enkel zijn eigen netwerkadres (handig als de
+ * router de verborgen ".local"-namen van Chrome niet doorgeeft). Er gaat geen spelinfo langs.
+ */
+const RTC_CONFIG: RTCConfiguration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+
 /** Wacht tot alle eigen adressen gekend zijn (zonder server zijn dat er maar een paar), hoogstens 4 s. */
 function gathered(pc: RTCPeerConnection): Promise<void> {
   if (pc.iceGatheringState === 'complete') return Promise.resolve();
@@ -194,8 +201,10 @@ function wire(pc: RTCPeerConnection, channel: RTCDataChannel, events: TransportE
 }
 
 /** Tablet: maakt een aanbod (code A) en wacht op het antwoord van de tv (code B). */
-export async function rtcHost(events: TransportEvents): Promise<{ code: string; accept: (answer: string) => Promise<void>; transport: Transport }> {
-  const pc = new RTCPeerConnection({ iceServers: [] });
+export async function rtcHost(
+  events: TransportEvents,
+): Promise<{ code: string; accept: (answer: string) => Promise<void>; transport: Transport; state: () => string }> {
+  const pc = new RTCPeerConnection(RTC_CONFIG);
   const channel = pc.createDataChannel('duvelke', { ordered: true });
   const transport = wire(pc, channel, events);
   await pc.setLocalDescription(await pc.createOffer());
@@ -204,6 +213,7 @@ export async function rtcHost(events: TransportEvents): Promise<{ code: string; 
   return {
     code,
     transport,
+    state: () => `${pc.iceConnectionState}/${pc.connectionState}`,
     accept: async (answer) => {
       await pc.setRemoteDescription({ type: 'answer', sdp: await unpack(answer, 'B') });
     },
@@ -212,7 +222,7 @@ export async function rtcHost(events: TransportEvents): Promise<{ code: string; 
 
 /** Tv: leest het aanbod (code A) en geeft een antwoord (code B) terug. */
 export async function rtcViewer(offer: string, events: TransportEvents): Promise<{ code: string; transport: Transport }> {
-  const pc = new RTCPeerConnection({ iceServers: [] });
+  const pc = new RTCPeerConnection(RTC_CONFIG);
   let transport: Transport | null = null;
   const pending: TransportEvents = {
     onmessage: (m) => events.onmessage(m),

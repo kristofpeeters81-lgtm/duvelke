@@ -178,7 +178,9 @@
         <p class="hint">De tv toont enkel wat iedereen mag zien, en {app.settings.hostName} spreekt via de tv. Geheimen blijven op de tablet.</p>
         <BigButton variant="danger" full onclick={disconnect}>Loskoppelen</BigButton>
       {:else if tv.status === 'wacht' && tv.mode === 'qr'}
-        {#if tvScan}
+        {#if tv.connecting}
+          <p class="big-ok">⏳ Verbinden met de tv...</p>
+        {:else if tvScan}
           <p class="hint">Scan nu de code die de tv toont.</p>
           <QrScan onresult={(code) => ((tvScan = false), void acceptAnswer(code))} />
           <BigButton variant="ghost" full onclick={() => (tvScan = false)}>Terug naar mijn code</BigButton>
