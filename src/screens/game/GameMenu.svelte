@@ -209,6 +209,7 @@
         <BigButton variant="ghost" full onclick={startLocal}>🪟 Op dit toestel, in een tweede venster</BigButton>
       {/if}
       {#if tv.error}<p class="warn">{tv.error}</p>{/if}
+      <p class="hint">Versie {__BUILD__}: die moet op de tv dezelfde zijn.</p>
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
     </div>
   {:else if view === 'overslaan'}

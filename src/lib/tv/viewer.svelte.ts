@@ -97,7 +97,11 @@ const events: TransportEvents = {
         break;
       }
       case 'rec':
-        recordings.set(String(m.id), fromBase64(String(m.data), String(m.mime || 'audio/webm')));
+        try {
+          recordings.set(String(m.id), fromBase64(String(m.data), String(m.mime || 'audio/webm')));
+        } catch {
+          /* een kapotte opname slaan we over: dan spreekt de AI-stem die zin */
+        }
         view.recDone = recordings.size;
         break;
       case 'photos':

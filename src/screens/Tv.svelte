@@ -114,6 +114,7 @@
       {#if voiceMissing}
         <p class="hint">Tip: download de AI-stem ook op dit toestel (🎙️ {app.settings.hostName} → Stem), anders spreekt de voorleesstem van het toestel.</p>
       {/if}
+      <p class="hint">Versie {__BUILD__}</p>
       <button type="button" class="link" onclick={() => go('home')}>◀ Terug</button>
     </div>
   {:else}

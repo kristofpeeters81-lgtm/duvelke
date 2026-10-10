@@ -52,6 +52,10 @@ describe('koppelcode', () => {
   it('weigert de verkeerde code met een duidelijke uitleg', () => {
     const code = encodeCode('A', OFFER);
     expect(() => decodeCode(code, 'B')).toThrow(/niet de code van de tv/);
-    expect(() => decodeCode('A|x', 'A')).toThrow(/niet volledig/);
+    expect(() => decodeCode('A~|x', 'A')).toThrow(/niet volledig/);
+  });
+
+  it('herkent een code van een oudere versie van de app', () => {
+    expect(() => decodeCode('AeJzLSM3JyQcABiwCFQ', 'A')).toThrow(/andere versie/);
   });
 });

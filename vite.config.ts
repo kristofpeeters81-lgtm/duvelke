@@ -5,8 +5,12 @@ import { VitePWA } from 'vite-plugin-pwa';
 // BASE_PATH wordt bij het publiceren op GitHub Pages gezet (bv. "/DeMol/").
 const base = process.env.BASE_PATH ?? './';
 
+// Versie van deze build (datum en uur), zichtbaar bij het koppelen van het tv-scherm.
+const build = new Date().toLocaleString('nl-BE', { timeZone: 'Europe/Brussels', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+
 export default defineConfig({
   base,
+  define: { __BUILD__: JSON.stringify(build) },
   plugins: [
     svelte(),
     VitePWA({

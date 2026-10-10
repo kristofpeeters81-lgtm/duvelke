@@ -3,12 +3,16 @@
  * (sleutel, wachtwoord, vingerafdruk en de netwerkadressen); de rest van de beschrijving bouwen we aan
  * de andere kant zelf weer op. Zo wordt de QR-code grof genoeg om vlot van een gsm-scherm te scannen.
  *
- * Vorm: <A|B><ufrag>|<pwd>|<vingerafdruk>|<adres>,<adres>...
+ * Vorm: <A|B>~<ufrag>|<pwd>|<vingerafdruk>|<adres>,<adres>...
+ * De ~ (die nooit in een oudere code stond) toont dat beide toestellen dezelfde versie hebben.
  * A = aanbod van de tablet, B = antwoord van de tv.
  * Adres: <h|s><poort in base36>.<ip, of @ + de .local-naam als 16 bytes>
  */
 
 export type CodeKind = 'A' | 'B';
+
+export const VERSION_MISMATCH =
+  'Deze code komt van een andere versie van de app. Sluit de app op beide toestellen helemaal af (ook uit de recente apps) en open ze opnieuw. Kijk daarna of de versie op beide toestellen gelijk is.';
 
 const PRIORITY = { host: 2122260223, srflx: 1686052607 } as const;
 
@@ -20,7 +24,12 @@ function toB64(bytes: Uint8Array): string {
 
 function fromB64(s: string): Uint8Array {
   const b64 = s.replace(/-/g, '+').replace(/_/g, '/');
-  const bin = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
+  let bin: string;
+  try {
+    bin = atob(b64 + '='.repeat((4 - (b64.length % 4)) % 4));
+  } catch {
+    throw new Error('Die code is niet goed gelezen. Scan nog eens.');
+  }
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 
@@ -53,14 +62,15 @@ export function encodeCode(kind: CodeKind, sdp: string): string {
     const entry = `${m[4] === 'srflx' ? 's' : 'h'}${Number(m[3]).toString(36)}.${packAddress(m[2] ?? '')}`;
     if (!cands.includes(entry)) cands.push(entry);
   }
-  return `${kind}${ufrag}|${pwd}|${fp}|${cands.join(',')}`;
+  return `${kind}~${ufrag}|${pwd}|${fp}|${cands.join(',')}`;
 }
 
 /** Bouwt uit de korte code weer een volledige beschrijving voor de browser. */
 export function decodeCode(code: string, kind: CodeKind): string {
   const clean = code.trim();
   if (!clean.startsWith(kind)) throw new Error(kind === 'A' ? 'Dit is niet de code van de tablet.' : 'Dit is niet de code van de tv.');
-  const [ufrag, pwd, fp, list] = clean.slice(1).split('|');
+  if (clean[1] !== '~') throw new Error(VERSION_MISMATCH);
+  const [ufrag, pwd, fp, list] = clean.slice(2).split('|');
   if (!ufrag || !pwd || !fp) throw new Error('Die code is niet volledig. Scan nog eens.');
   const fpHex = [...fromB64(fp)].map((b) => b.toString(16).toUpperCase().padStart(2, '0')).join(':');
   const cands = (list ?? '')
