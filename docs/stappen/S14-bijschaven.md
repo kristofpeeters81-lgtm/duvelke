@@ -63,6 +63,12 @@ Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en
 | 20 | Is er rekening gehouden met een meespelend hulpje? | Nee, `gameMasterId` werd tijdens het spel niet gebruikt. Nieuw: `host` op opdrachten die het hulpje leidt (het kent het antwoord, verstopt iets, geeft bevelen). Speelt het hulpje mee, dan krijgt het daar geen rol, kiest het als 't Duvelke zelf tussen eerlijk spelen of iets kleins saboteren (eigen leider-tips per opdracht), en kunnen speurders een tip krijgen om op het hulpje te letten. Het programma kiest dan hoogstens 3 zulke opdrachten (`MAX_HOST_TASKS`), met een badge 🎬. |
 | 21 | Laat Windy of het machien overnemen wat het hulpje voorlas | `list.read`: **roepen** (één bevel per tik), **onthouden** (één keer voorlezen, verbergen, nakijken), **hints** (hint per hint, dan het antwoord), **willekeurig** (tijdens de timer op een onverwacht moment iets roepen). Altijd, ook als het hulpje niet meespeelt; "Toch liever zelf voorlezen" blijft. ±30 opdrachten omgezet (`ListReader.svelte`, `RandomCaller.svelte`). Waar het hulpje daarna niets meer leidt, is `host` weg; ±70 opdrachten houden het (verstoppen, ja/nee over een geheim, kijken wie beweegt, voordoen). |
 
+### Ronde 9 (10/10) ✅ 10/10, na het eerste proefspel
+| # | Bevinding | Oplossing |
+|---|---|---|
+| 22 | Eigen opnames werden op het einde afgeknipt | `trimBounds` knipte alles weg wat stiller was dan 1/10 van het luidste stuk, dus ook een zin die op het einde wegzakt. Het einde rekent nu met de achtergrondruis (hoogstens 1/20 van het luidste stuk) en houdt 0,25 s marge. |
+| 23 | De Test had maar 1 speler, de ontmaskering begon meteen bij 't Duvelke, de uitslag toonde 1 persoon | Oorzaak: "is weg: overslaan" bij een briefing maakte iemand voor de rest van het spel afwezig (`game.absent`). Nu geldt overslaan enkel die ene keer; De Test, de ontmaskering en de uitslag tonen altijd iedereen. Wie de test oversloeg, staat onder de uitslag. Het menu "Wie is er weg?" is weg. 't Duvelke komt in de ontmaskering altijd als laatste. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.

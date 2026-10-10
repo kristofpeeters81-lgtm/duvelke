@@ -64,11 +64,13 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 - rollenoverzicht (met pincode);
 - stoppen.
 
+**Is iemand er even niet?** Tik bij de geheime briefing op *er even niet: deze keer overslaan*, of op *later* als die zo terug is. Dat geldt enkel voor die ene keer: bij de volgende briefing, De Test, de ontmaskering en de uitslag is iedereen er weer bij.
+
 ## 4. De finale
 
-1. **De Test**: iedereen beantwoordt apart dezelfde vragen over 't Duvelke. Per ongeluk verkeerd getikt? Met **◀ Vorige vraag** ga je terug, zolang je de tablet nog niet doorgegeven hebt. Bij een gelijke stand wint wie 't Duvelke juist had, en daarna wie het snelst was.
+1. **De Test**: iedereen beantwoordt apart dezelfde vragen over 't Duvelke. Per ongeluk verkeerd getikt? Met **◀ Vorige vraag** ga je terug, zolang je de tablet nog niet doorgegeven hebt. Bij een gelijke stand wint wie 't Duvelke juist had, en daarna wie het snelst was. Doet iemand de test niet mee, tik dan op *doet de test niet mee*: die staat onderaan de uitslag, maar komt wel in de ontmaskering.
 2. **De schat**: minstens 50%, dan wint de groep. Anders wint 't Duvelke. Bij een echte schat zegt de app hoeveel iedereen krijgt.
-3. **De ontmaskering**: de onschuldigen vallen één voor één weg.
+3. **De ontmaskering**: de onschuldigen vallen één voor één weg, iedereen komt aan de beurt, en 't Duvelke blijft als laatste over.
 4. **De uitslag**, met de Speurneus-medaille als die rol meedeed.
 5. **Terugblik**: welke sabotagetips 't Duvelke kreeg en welke roddels gelogen waren.
 6. **Bewijsfoto's**: diavoorstelling, met een knop om ze in de galerij te bewaren. Foto's ouder dan 60 dagen worden automatisch opgeruimd, dus bewaar ze tijdig.
