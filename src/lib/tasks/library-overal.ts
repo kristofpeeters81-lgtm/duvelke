@@ -1598,9 +1598,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Uitlegger ziet stiekem een woord op de tablet, met drie verboden woorden erbij. Leg het woord uit zonder het woord zelf of de verboden woorden te zeggen! Zeg je toch een verboden woord? Dan telt dat woord niet. Geraden of fout? Dan is de volgende Uitlegger aan de beurt. Doel: {doel} woorden voor de tijd om is.',
+      'De Uitlegger ziet stiekem een woord op de tablet, met drie verboden woorden erbij. Leg het woord uit zonder het woord zelf of de verboden woorden te zeggen! Zeg je toch een verboden woord? Dan telt dat woord niet. Wie het woord raadt, krijgt de tablet en wordt de volgende Uitlegger. Niet geraden of een verboden woord? Dan legt dezelfde Uitlegger het volgende woord uit. Doel: {doel} woorden voor de tijd om is.',
     vars: { doel: { makkelijk: [4], normaal: [5], pittig: [6] } },
-    roles: [{ name: 'Eerste Uitlegger', count: 1, hint: 'Lees het woord en de verboden woorden stiekem op de tablet.' }],
+    roles: [{ name: 'Eerste uitlegger', count: 1, hint: 'Lees het woord en de verboden woorden stiekem op de tablet. Wie het raadt, legt het volgende uit.' }],
     list: {
       title: 'Woorden (met verboden woorden)',
       items: {
@@ -1615,7 +1615,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'geraden woorden' },
     sabotage: [
       'Ben jij de Uitlegger? Geef een uitleg die naar een ander woord wijst. Anders: roep bij het raden heel zeker een woord dat erbij past, maar niet klopt.',
-      'Raad een paar keer snel een woord dat bijna klopt, zodat de anderen de verkeerde kant op denken.',
+      'Raad een paar keer snel een woord dat bijna klopt, zodat de anderen de verkeerde kant op denken. Of raad juist: dan word jij Uitlegger en kan je het volgende woord moeilijk maken.',
       'Ben jij de Uitlegger? Zeg één keer "per ongeluk" een verboden woord, dan telt het woord niet. Anders: zeg het woord bij het raden pas heel laat, ook als je het al lang weet.',
     ],
     detective: [
@@ -1623,6 +1623,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie zegt als Uitlegger toch een verboden woord?',
       'Wie roept snel woorden die bijna kloppen?',
       'Wie lijkt het woord al te weten, maar zegt het pas veel later?',
+      'Wie raadt vaak juist, maar legt daarna zelf heel onhandig uit?',
     ],
     dilemma: true,
   },
@@ -1638,9 +1639,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Tekenaar ziet stiekem een woord op de tablet en tekent het met één vinger heel groot in de lucht. Geen woorden, geen geluiden en geen letters! Geraden? Dan is de volgende Tekenaar aan de beurt. Doel: {doel} woorden voor de tijd om is.',
+      'De Tekenaar ziet stiekem een woord op de tablet en tekent het met één vinger heel groot in de lucht. Geen woorden, geen geluiden en geen letters! Wie het woord raadt, krijgt de tablet en wordt de volgende Tekenaar. Lukt het niet? Tik dan op Overslaan, en dezelfde Tekenaar tekent het volgende woord. Doel: {doel} woorden voor de tijd om is.',
     vars: { doel: { makkelijk: [5], normaal: [6], pittig: [6] } },
-    roles: [{ name: 'Eerste Tekenaar', count: 1, hint: 'Bekijk het woord stiekem op de tablet.' }],
+    roles: [{ name: 'Eerste tekenaar', count: 1, hint: 'Bekijk het woord stiekem op de tablet. Wie het raadt, tekent het volgende.' }],
     list: {
       title: 'Luchttekenwoorden',
       items: {
@@ -1655,7 +1656,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'geraden woorden' },
     sabotage: [
       'Ben jij de Tekenaar? Teken net iets te snel, en begin één keer opnieuw. Anders: vraag één keer of de Tekenaar opnieuw wil beginnen, terwijl het goed ging.',
-      'Raad luidop een woord dat op de tekening lijkt, maar niet klopt.',
+      'Raad luidop een woord dat op de tekening lijkt, maar niet klopt. Of raad juist: dan word jij Tekenaar en kan je het volgende woord met kleine details beginnen.',
       'Ben jij de Tekenaar? Begin met een klein detail in plaats van de grote vorm. Anders: roep bij elk lijntje meteen een gok, zodat de anderen niet rustig kunnen kijken.',
     ],
     detective: [
@@ -1663,6 +1664,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wie begint met kleine details in plaats van de grote vorm?',
       'Wie raadt woorden die op de tekening lijken, maar niet kloppen?',
       'Wie laat de Tekenaar opnieuw beginnen of roept al gokken na één lijntje?',
+      'Wie raadt vaak juist, maar tekent daarna zelf heel onduidelijk?',
     ],
   },
   {

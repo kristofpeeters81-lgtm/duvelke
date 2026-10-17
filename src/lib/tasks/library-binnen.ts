@@ -1714,9 +1714,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Neurier leest stiekem een liedje op de tablet en neuriet het, zonder woorden. De rest raadt welk liedje het is. Geraden? Dan wordt iemand anders Neurier voor het volgende liedje. Hoeveel liedjes raden jullie voor de tijd om is? Doel: {doel}.',
+      'De Neurier leest stiekem een liedje op de tablet en neuriet het, zonder woorden. De rest raadt welk liedje het is. Wie het raadt, krijgt de tablet en wordt de volgende Neurier. Lukt het niet? Tik dan op Overslaan, en dezelfde Neurier neuriet het volgende liedje. Hoeveel liedjes raden jullie voor de tijd om is? Doel: {doel}.',
     vars: { doel: { makkelijk: [4], normaal: [5], pittig: [6] } },
-    roles: [{ name: 'Neurier', count: 1, hint: 'Lees het liedje stiekem op de tablet en neurie het, zonder woorden!' }],
+    roles: [{ name: 'Eerste neurier', count: 1, hint: 'Lees het liedje stiekem op de tablet en neurie het, zonder woorden! Wie het raadt, neuriet het volgende.' }],
     list: {
       title: 'Liedjes om te neuriën',
       items: {
@@ -1743,9 +1743,10 @@ export const TASKS_BINNEN: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: '{doel}', unit: 'liedjes' },
     sabotage: [
-      'Ben jij Neurier? Neurie net een beetje vals of veel te traag. Anders: zeg "ik ken het, maar ik kom niet op de naam" en laat de anderen wachten.',
+      'Ben jij Neurier? Neurie net een beetje vals of veel te traag. Anders: raad snel een liedje juist, zodat jij de tablet krijgt, en neurie het volgende dan net een beetje vals.',
       'Roep af en toe titels van liedjes die er een beetje op lijken.',
       'Ben jij Neurier? Begin bij een minder bekend stukje van het liedje. Anders: zeg bij een juist antwoord "nee, dat klinkt anders".',
+      'Raad zo vaak mogelijk juist: wie raadt, wordt Neurier, en dan kan jij het volgende liedje moeilijk maken door bij een onbekend stukje te beginnen.',
     ],
     detective: [
       'Klinkt het neuriën raar of heel traag? Misschien doet de Neurier dat expres.',
@@ -1753,6 +1754,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Begint de Neurier bij het bekendste stukje van het liedje?',
       'Wie zegt vaak dat hij het bijna weet, maar komt nooit met een titel?',
       'Wie twijfelt aan een titel die juist blijkt?',
+      'Wie raadt opvallend vaak juist, maar neuriet daarna zelf heel slecht?',
     ],
     dilemma: true,
   },
@@ -1922,9 +1924,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Uitlegger leest stiekem een woord op de tablet, met drie verboden woorden erbij. Leg het woord uit zonder het woord zelf of de verboden woorden te zeggen, en zonder gebaren! Zeg je toch een verboden woord? Dan sla je dat kaartje over. Geraden? Dan wordt iemand anders Uitlegger. Doel: {doel} woorden voor de tijd om is.',
+      'De Uitlegger leest stiekem een woord op de tablet, met drie verboden woorden erbij. Leg het woord uit zonder het woord zelf of de verboden woorden te zeggen, en zonder gebaren! Zeg je toch een verboden woord? Dan sla je dat kaartje over. Wie het woord raadt, krijgt de tablet en wordt de volgende Uitlegger. Overgeslagen? Dan legt dezelfde Uitlegger het volgende woord uit. Doel: {doel} woorden voor de tijd om is.',
     vars: { doel: { makkelijk: [5], normaal: [5], pittig: [4] } },
-    roles: [{ name: 'Uitlegger', count: 1, hint: 'Lees het woord en de verboden woorden stiekem op de tablet.' }],
+    roles: [{ name: 'Eerste uitlegger', count: 1, hint: 'Lees het woord en de verboden woorden stiekem op de tablet. Wie het raadt, legt het volgende uit.' }],
     list: {
       title: 'Woorden (met verboden woorden)',
       items: {
@@ -1981,7 +1983,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     scoring: { type: 'aantal', target: '{doel}', unit: 'geraden woorden' },
     sabotage: [
       'Ben jij Uitlegger? Zeg "per ongeluk" een verboden woord, zodat je dat kaartje moet overslaan. Anders: roep "dat was een verboden woord!" bij een woord dat eigenlijk mocht.',
-      'Raad af en toe iets dat er dicht bij ligt, zodat de Uitlegger in de war raakt.',
+      'Raad af en toe iets dat er dicht bij ligt, zodat de Uitlegger in de war raakt. Of raad snel juist: dan word jij Uitlegger en kan je het volgende woord moeilijk uitleggen.',
       'Ben jij Uitlegger? Geef een uitleg die klopt, maar eerst naar iets anders wijst. Anders: roep snel een fout woord net als de anderen het bijna hebben.',
     ],
     detective: [
@@ -1989,6 +1991,7 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Wie raadt dingen die de Uitlegger in de war brengen?',
       'Begint een uitleg bij iets heel anders? Dat kan expres zijn.',
       'Wie roept "verboden!" bij een woord dat eigenlijk mocht?',
+      'Wie raadt vaak juist, maar legt daarna zelf heel onhandig uit?',
     ],
     dilemma: true,
   },

@@ -714,7 +714,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Eén iemand beeldt uit, zonder te praten of geluid te maken. De rest raadt. Is het geraden? Dan geef je de tablet door en beeldt de volgende het volgende woord uit. Hoeveel woorden raden jullie voor de tijd om is?',
+      'Eén iemand beeldt uit, zonder te praten of geluid te maken. De rest raadt. Wie het woord raadt, krijgt de tablet en beeldt het volgende woord uit. Lukt het niet? Tik dan op Overslaan, en dezelfde speler beeldt het volgende uit. Hoeveel woorden raden jullie voor de tijd om is?',
     roles: [{ name: 'Eerste uitbeelder', count: 1, hint: 'Bekijk het eerste woord stiekem op de tablet.' }],
     list: {
       title: 'Uitbeeldwoorden',
@@ -729,7 +729,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
     },
     scoring: { type: 'aantal', target: 6, unit: 'woorden' },
     sabotage: [
-      'Raad één of twee keer fout, maar met veel enthousiasme.',
+      'Raad één of twee keer fout, maar met veel enthousiasme. Of raad juist: dan mag jij uitbeelden en kan je het volgende woord vaag uitbeelden.',
       'Beeld zelf een beetje vaag uit, alsof je het moeilijk vindt.',
       'Roep een fout antwoord net als iemand anders het goede zegt.',
     ],
@@ -737,6 +737,7 @@ export const BUILTIN_TASKS: TaskDef[] = [
       'Wie beeldt opvallend vaag uit, terwijl het woord makkelijk is?',
       'Wie roept iets fout net als iemand anders het goede antwoord zegt?',
       'Wie raadt telkens net naast het antwoord?',
+      'Wie raadt vaak juist, maar beeldt daarna zelf opvallend vaag uit?',
     ],
     photo: 'De grappigste uitbeelding.',
   },
