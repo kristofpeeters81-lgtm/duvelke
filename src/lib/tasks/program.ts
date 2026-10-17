@@ -105,6 +105,38 @@ export function taskCost(task: TaskDef, playerCount: number, settings: Settings)
   return task.minutes + briefing + resultAndGossip;
 }
 
+export interface TimeBreakdown {
+  intro: number;
+  dossiers: number;
+  test: number;
+  tasks: number;
+  briefings: number;
+  results: number;
+  total: number;
+  /** Zoveel minuten minder met een geheime briefing om de 2 opdrachten (0 als dat al zo staat). */
+  saveWithEvery2: number;
+}
+
+/** Waar de tijd naartoe gaat: dezelfde rekening als programMinutes, maar per onderdeel. */
+export function timeBreakdown(program: readonly ProgramItem[], ctx: PlanContext): TimeBreakdown {
+  const n = ctx.playerCount;
+  const byId = new Map(ctx.tasks.map((t) => [t.id, t]));
+  const items = program.filter((p) => byId.has(p.taskId));
+  const tasks = items.reduce((sum, p) => sum + (byId.get(p.taskId)?.minutes ?? 0), 0);
+  const perBriefing = n * 0.3;
+  const briefings = (perBriefing * items.length) / ctx.settings.briefingEvery;
+  return {
+    intro: 3,
+    dossiers: 2 + n * 1.0,
+    test: 6 + n * 1.2,
+    tasks,
+    briefings,
+    results: 2 * items.length,
+    total: programMinutes(program, ctx),
+    saveWithEvery2: ctx.settings.briefingEvery === 1 ? (perBriefing * items.length) / 2 : 0,
+  };
+}
+
 export function programMinutes(program: readonly ProgramItem[], ctx: PlanContext): number {
   const byId = new Map(ctx.tasks.map((t) => [t.id, t]));
   const tasks = program.reduce((sum, item) => {

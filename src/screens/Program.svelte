@@ -13,6 +13,7 @@
     fillVars,
     instantiate,
     programMinutes,
+    timeBreakdown,
     swapItem,
     type PlanContext,
     type ProgramItem,
@@ -30,6 +31,8 @@
       : null,
   );
   const minutes = $derived(draft && ctx ? programMinutes(draft.program, ctx) : 0);
+  const time = $derived(draft && ctx ? timeBreakdown(draft.program, ctx) : null);
+  const round = (m: number): string => `${Math.round(m)} min`;
   const target = $derived(draft?.settings.durationMinutes ?? 0);
   const possible = $derived(ctx ? eligibleTasks(ctx).length : 0);
 
@@ -128,6 +131,26 @@
         <span>{draft.program.length} opdrachten</span>
         <span class="hint">{possible} mogelijk met jullie plekken en spullen</span>
       </div>
+      {#if time}
+        <details class="time">
+          <summary>⏱️ Waar gaat de tijd naartoe?</summary>
+          <ul>
+            <li><span>🎯 De opdrachten zelf</span><strong>{round(time.tasks)}</strong></li>
+            <li><span>🤫 Geheime briefings (tablet gaat rond, {draft.settings.briefingEvery === 1 ? 'elke opdracht' : 'om de 2'})</span><strong>{round(time.briefings)}</strong></li>
+            <li><span>💎 Resultaat en roddel na elke opdracht</span><strong>{round(time.results)}</strong></li>
+            <li><span>🕵️ Geheime dossiers uitdelen</span><strong>{round(time.dossiers)}</strong></li>
+            <li><span>📝 De Test op het einde</span><strong>{round(time.test)}</strong></li>
+            <li><span>🎬 Intro van {app.settings.hostName}</span><strong>{round(time.intro)}</strong></li>
+          </ul>
+          <p class="hint">Hoe meer spelers, hoe langer het rondgeven van de tablet duurt.</p>
+          {#if time.saveWithEvery2 >= 1}
+            <p class="tip">💡 Met een geheime briefing om de 2 opdrachten spaar je ±{round(time.saveWithEvery2)}: ruimte voor een extra opdracht.</p>
+            <BigButton variant="secondary" onclick={() => app.draft && (app.draft.settings.briefingEvery = 2)}>🤫 Briefing om de 2</BigButton>
+          {:else if draft.settings.briefingEvery === 2}
+            <BigButton variant="ghost" onclick={() => app.draft && (app.draft.settings.briefingEvery = 1)}>Toch een briefing bij elke opdracht</BigButton>
+          {/if}
+        </details>
+      {/if}
     </section>
 
     {#if possible < 10}
@@ -344,6 +367,35 @@
     border-radius: 999px;
     background: var(--bg-deep);
     color: var(--text-soft);
+  }
+
+  .time {
+    flex-basis: 100%;
+    margin-top: 10px;
+  }
+
+  .time summary {
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .time ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .time li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .tip {
+    color: var(--gold);
+    font-weight: 700;
   }
 
   .tag.prep {

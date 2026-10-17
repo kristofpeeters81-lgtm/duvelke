@@ -3,7 +3,7 @@ import { SUPPLY_IDS } from '../data/supplies';
 import { defaultSettings } from '../settings';
 import type { Settings } from '../types';
 import { BUILTIN_TASKS } from './library';
-import { buildProgram, fillVars, MAX_HOST_TASKS, packingList, programMinutes, swapItem, whyNot, type PlanContext } from './program';
+import { buildProgram, fillVars, MAX_HOST_TASKS, packingList, programMinutes, swapItem, timeBreakdown, whyNot, type PlanContext } from './program';
 import { ALL_BUILTIN } from './registry';
 import { QUIZ } from './quiz';
 
@@ -177,5 +177,20 @@ describe('gemarkeerde opdrachten', () => {
       expect(program.filter((p) => flagged.includes(p.taskId))).toEqual([]);
     }
     expect(whyNot(c.tasks[0]!, { ...c, flagged })).toBe('gemarkeerd om na te kijken');
+  });
+});
+
+describe('timeBreakdown', () => {
+  it('telt op tot dezelfde totale tijd, en toont wat een briefing om de 2 spaart', () => {
+    const c = ctx({ durationMinutes: 105 }, 12);
+    const program = buildProgram(c, seeded(7)).slice(0, 5);
+    const t = timeBreakdown(program, c);
+    expect(Math.round(t.intro + t.dossiers + t.test + t.tasks + t.briefings + t.results)).toBe(t.total);
+    expect(t.dossiers).toBe(14);
+    expect(t.briefings).toBeCloseTo(12 * 0.3 * 5);
+    expect(t.saveWithEvery2).toBeCloseTo(t.briefings / 2);
+    const every2 = timeBreakdown(program, { ...c, settings: { ...c.settings, briefingEvery: 2 } });
+    expect(every2.saveWithEvery2).toBe(0);
+    expect(every2.total).toBe(Math.round(t.total - t.saveWithEvery2));
   });
 });
