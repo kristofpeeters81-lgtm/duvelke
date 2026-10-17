@@ -66,7 +66,13 @@
       <HoldToReveal onseen={() => (seen = true)} minVisibleMs={1200} label="Hou ingedrukt voor je geheime tip">
         <article class="tip-card">
           <header><span class="label">GEHEIME TIP</span><span class="who">{player.avatar} {player.name}</span></header>
+          {#if card.next}<p class="when">Nu: {task?.title}</p>{/if}
           <p class="tip">{task ? hostWording(card.tip, task, app.settings.hostName) : card.tip}</p>
+          {#if card.next}
+            {@const nextTask = getTask(card.next.taskId)}
+            <p class="when">Daarna: {card.next.title}</p>
+            <p class="tip">{nextTask ? hostWording(card.next.tip, nextTask, app.settings.hostName) : card.next.tip}</p>
+          {/if}
           {#if card.innocent}
             <p class="extra">🔍 Speurneus-info: <strong>{name(card.innocent)}</strong> is zeker géén {sab}.</p>
           {/if}
@@ -239,5 +245,14 @@
     50% {
       transform: translateY(-8px);
     }
+  }
+
+  .when {
+    margin: 10px 0 2px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
   }
 </style>

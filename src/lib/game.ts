@@ -531,10 +531,18 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
     return;
   }
   const cards = makeBriefing(game.players, task, { speurneusTurn: game.briefingCount % 2 === 0, known: game.known, hostId: game.gameMasterId }, rng);
+  // Om de 2 opdrachten: de volgende opdracht krijgt geen eigen briefing, dus de tip ervoor komt nu al mee.
+  const nextItem = game.settings.briefingEvery === 2 ? game.program[game.taskIndex + 1] : undefined;
+  const nextTask = nextItem ? getTask(nextItem.taskId) : undefined;
+  const nextCards = nextTask ? makeBriefing(game.players, nextTask, { speurneusTurn: false, known: game.known, hostId: game.gameMasterId }, rng) : null;
   const withJokers: BriefingState['cards'] = {};
   for (const [id, card] of Object.entries(cards)) {
-    withJokers[id] = { ...card, jokerInnocent: null };
-    if (game.players.find((p) => p.playerId === id)?.role === 'saboteur') game.sabotageLog = [...game.sabotageLog, { taskUid: current.uid, playerId: id, tip: card.tip }];
+    const next = nextTask && nextCards?.[id] ? { taskId: nextTask.id, title: nextTask.title, tip: nextCards[id].tip } : null;
+    withJokers[id] = { ...card, next, jokerInnocent: null };
+    if (game.players.find((p) => p.playerId === id)?.role === 'saboteur') {
+      game.sabotageLog = [...game.sabotageLog, { taskUid: current.uid, playerId: id, tip: card.tip }];
+      if (next && nextItem) game.sabotageLog = [...game.sabotageLog, { taskUid: nextItem.uid, playerId: id, tip: next.tip }];
+    }
     if (card.innocent) remember(game, id, card.innocent);
   }
   const order = shuffle(game.players.map((p) => p.playerId), rng);
@@ -653,6 +661,10 @@ function normalizeBriefing(raw: unknown, game: Game): BriefingState | null {
       tip: c.tip,
       innocent: typeof c.innocent === 'string' ? c.innocent : null,
       reminder: typeof c.reminder === 'string' ? c.reminder : null,
+      next:
+        isRecord(c.next) && typeof c.next.tip === 'string' && typeof c.next.title === 'string'
+          ? { taskId: typeof c.next.taskId === 'string' ? c.next.taskId : '', title: c.next.title, tip: c.next.tip }
+          : null,
       jokerInnocent: typeof c.jokerInnocent === 'string' ? c.jokerInnocent : null,
     };
   }

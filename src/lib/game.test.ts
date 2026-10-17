@@ -470,3 +470,28 @@ describe('reeks "na elkaar zonder fout"', () => {
     expect(game.current!.cards.best).toBe(3);
   });
 });
+
+describe('briefing om de 2 opdrachten', () => {
+  it('geeft meteen ook de tip voor de volgende opdracht, en dan geen briefing meer', () => {
+    const program: ProgramItem[] = [
+      { uid: 'b1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+      { uid: 'b2', taskId: 'blinde-piloot', location: 'binnen', vars: {}, list: [] },
+    ];
+    const game = createGame(players(5), { ...defaultSettings(), briefingEvery: 2 }, null, null, program, seeded(9));
+    startTasks(game);
+    afterAnnouncement(game);
+    const second = getTask('blinde-piloot')!;
+    for (const p of game.players) {
+      const card = game.current!.briefing!.cards[p.playerId]!;
+      expect(card.next?.title).toBe(second.title);
+      const pool = p.role === 'saboteur' ? second.sabotage : second.detective!;
+      expect(pool).toContain(card.next!.tip);
+    }
+    const sab = game.players.find((p) => p.role === 'saboteur')!.playerId;
+    expect(game.sabotageLog.filter((s) => s.playerId === sab).map((s) => s.taskUid)).toEqual(['b1', 'b2']);
+    skipCurrent(game);
+    afterGossip(game);
+    afterAnnouncement(game);
+    expect(game.current!.step).toBe('uitleg');
+  });
+});

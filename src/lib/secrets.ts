@@ -23,6 +23,8 @@ export interface BriefingCard {
   innocent: string | null;
   /** Herinnering voor de Bemoeial. */
   reminder: string | null;
+  /** Bij een briefing om de 2 opdrachten: ook al de tip voor de volgende opdracht. */
+  next?: { taskId: string; title: string; tip: string } | null;
 }
 
 /** Iemand die zeker géén saboteur is, en die deze speler nog niet kende. */
