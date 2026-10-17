@@ -131,7 +131,7 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Neem uit een kaartspel de hartenkaarten van aas tot {hoogste} en verstop ze in de tuin (enkel als het droog is): onder een blad, achter een bloempot, op de rand van de zandbak...',
     explain:
-      'Oei, een windvlaag heeft de kaarten van Windy door de tuin geblazen! Zoek alle hartenkaarten van aas tot {hoogste} en leg ze op volgorde op een rij. Pas als de rij compleet is, zijn jullie klaar.',
+      'Oei, een windvlaag heeft de kaarten van Windy door de tuin geblazen! Zoek alle hartenkaarten van aas tot {hoogste} en leg ze op volgorde op een rij. Elke kaart die op de juiste plek in de rij ligt als de tijd om is, telt.',
     vars: {
       hoogste: { makkelijk: ['6'], normaal: ['10'], pittig: ['de heer'] },
       aantal: { makkelijk: [6], normaal: [10], pittig: [13] },
@@ -170,7 +170,7 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg een handdoek klaar als verzamelplek.',
     explain:
-      'Zoek dingen die al op de grond liggen en die aanvoelen zoals op de lijst. Leg alles op de handdoek. Niets afbreken of plukken: enkel wat los ligt! Op het einde voelt de spelleider of alles klopt.',
+      'Zoek dingen die al op de grond liggen en die aanvoelen zoals op de lijst. Leg alles op de handdoek. Niets afbreken of plukken: enkel wat los ligt! Op het einde voelt de spelleider of alles klopt. Elk gevoel van de lijst telt één keer.',
     list: {
       title: 'Zoek iets dat voelt...',
       items: {
@@ -242,9 +242,12 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zoek voor elke letter van het woord "{woord}" iets dat met die letter begint. Bij Kenzo zoek je dus iets met een K, een E, een N, een Z en een O. Leg het op een rij of wijs het aan. Enkel wat op de grond ligt, mag je oprapen!',
-    vars: { woord: { makkelijk: ['boom', 'zon', 'bal'], normaal: ['Kenzo', 'struik', 'tuinen'], pittig: ['Duvelke', 'speeltuin', 'glijbaan'] } },
-    scoring: { type: 'gelukt' },
+      'Zoek voor elke letter van het woord "{woord}" iets dat met die letter begint. Bij Kenzo zoek je dus iets met een K, een E, een N, een Z en een O. Leg het op een rij of wijs het aan. Enkel wat op de grond ligt, mag je oprapen! Hoeveel letters vinden jullie voor de tijd om is?',
+    vars: {
+      woord: { makkelijk: ['gras', 'bank', 'mier'], normaal: ['Kenzo', 'Windy', 'bloem'], pittig: ['vlinder', 'schaduw', 'wortels'] },
+      letters: { makkelijk: [4], normaal: [5], pittig: [7] },
+    },
+    scoring: { type: 'aantal', target: '{letters}', unit: 'letters' },
     sabotage: [
       'Breng iets dat net niet met de juiste letter begint en zeg vrolijk dat het klopt.',
       'Zeg dat een letter "bijna onmogelijk" is, zodat de groep hem wil overslaan.',
@@ -272,7 +275,7 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Bij de uitleg hou jij de geheime lijst ingedrukt: lees stiekem het woord, schrijf enkel de cijfercode met stoepkrijt op het terras of een pad, en onthoud het woord.',
     explain:
-      'Windy heeft een geheim woord in cijfers veranderd, en het hulpje schrijft de code met krijt op de grond. Elk getal is een letter: 1 is A, 2 is B, 3 is C, en zo verder. Ontcijfer het woord en fluister het in het oor van het hulpje!',
+      'Windy heeft een geheim woord in cijfers veranderd, en het hulpje schrijft de code met krijt op de grond. Elk getal is een letter: 1 is A, 2 is B, 3 is C, en zo verder. Ontcijfer het woord en fluister het in het oor van het hulpje! Het telt pas als het hele woord juist is.',
     list: {
       title: 'Geheim woord en code',
       items: {
@@ -284,6 +287,10 @@ export const TASKS_TUIN: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het hele woord juist gefluisterd werd voor de tijd om is',
+      bijna: 'er nog maar één letter fout was, of het juiste woord net na de tijd kwam',
+    },
     sabotage: [
       'Tel "per ongeluk" één letter te ver in het alfabet.',
       'Roep heel zeker een woord dat bijna klopt.',
@@ -377,7 +384,7 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Markeer met twee lijnen (takjes, schoenen of jassen) een rivier van een paar stappen breed.',
     explain:
-      'Een boer moet een wolf, een geit en een kool over de rivier brengen. In het bootje past enkel de boer plus één passagier. Maar let op: blijft de wolf alleen met de geit, dan eet hij de geit op. Blijft de geit alleen met de kool, dan eet de geit de kool op! Speel het na en breng iedereen veilig over in hoogstens {overtochten} overtochten (ook terugvaren telt als een overtocht). De rest zijn raadgevers.',
+      'Een boer moet een wolf, een geit en een kool over de rivier brengen. In het bootje past enkel de boer plus één passagier. Maar let op: blijft de wolf alleen met de geit, dan eet hij de geit op. Blijft de geit alleen met de kool, dan eet de geit de kool op! Speel het na en breng iedereen veilig over in hoogstens {overtochten} overtochten (ook terugvaren telt als een overtocht). Wordt er toch iets opgegeten? Dan begint alles opnieuw. De rest zijn raadgevers.',
     vars: { overtochten: { makkelijk: [11], normaal: [9], pittig: [7] } },
     roles: [
       { name: 'Boer', count: 1, hint: 'Jij roeit het bootje: bij elke overtocht ga jij mee.' },
@@ -386,6 +393,10 @@ export const TASKS_TUIN: TaskDef[] = [
       { name: 'Kool', count: 1, hint: 'Jij mag niets zeggen, want je bent een kool.' },
     ],
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de wolf, de geit en de kool veilig aan de overkant zijn in hoogstens {overtochten} overtochten, voor de tijd om is',
+      bijna: 'iedereen veilig overkwam, maar met één of twee overtochten te veel',
+    },
     sabotage: [
       'Stel heel overtuigd een oversteek voor waarbij de geit alleen blijft met de wolf of de kool.',
       'Tel het aantal overtochten "per ongeluk" verkeerd.',
@@ -458,7 +469,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Iedereen neemt het lange touw vast met twee handen en doet de ogen dicht. Maak nu samen met het touw {vorm}, zonder te kijken en zonder los te laten! Denken jullie dat het klaar is? Leg het touw neer en doe de ogen open.',
+      'Iedereen neemt het lange touw vast met twee handen en doet de ogen dicht. Maak nu samen met het touw {vorm}, zonder te kijken en zonder los te laten! Denken jullie dat het klaar is? Leg het touw neer en doe de ogen open. Herkent iedereen meteen de vorm, en heeft niemand losgelaten of gekeken? Dan is het gelukt!',
     vars: {
       vorm: {
         makkelijk: ['een cirkel', 'een vierkant'],
@@ -467,6 +478,10 @@ export const TASKS_TUIN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen met open ogen meteen {vorm} herkent, en niemand losliet of keek',
+      bijna: 'de vorm herkenbaar is, maar één hoek of kant duidelijk fout ligt',
+    },
     sabotage: [
       'Schuif je stukje touw stiekem een beetje de verkeerde kant op.',
       'Zeg dat jouw hoek "zeker al recht" is.',
@@ -493,9 +508,13 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Zet een pion als keerpunt op {afstand} grote stappen van de start.',
     explain:
-      'Leg de frisbee omgekeerd, met {ballen} tennisballen erop. De hele groep draagt de frisbee samen naar de pion en terug, maar iedereen mag hem maar met één vinger aanraken! Valt er een bal? Dan begin je opnieuw aan de start.',
+      'Leg de frisbee omgekeerd, met {ballen} tennisballen erop. De hele groep draagt de frisbee samen naar de pion en terug, maar iedereen mag hem maar met één vinger aanraken! Valt er een bal? Dan begin je opnieuw aan de start. Gelukt als jullie voor de tijd om is terug aan de start staan, met alle ballen nog op de frisbee.',
     vars: { ballen: { makkelijk: [1], normaal: [2], pittig: [3] }, afstand: { makkelijk: [8], normaal: [10], pittig: [12] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de frisbee met alle ballen erop heen en terug is, voor de tijd om is',
+      bijna: 'jullie al voorbij de pion op de terugweg waren toen de tijd om was',
+    },
     sabotage: [
       'Laat je vinger net iets zakken, zodat de frisbee scheef hangt.',
       'Wandel net iets sneller of trager dan de rest.',
@@ -521,9 +540,13 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Zet een pion op {afstand} grote stappen van de start.',
     explain:
-      'Ga in een rij staan en klem een tennisbal tussen jouw buik en de rug van wie voor je staat. Wandel nu als één grote rups rond de pion en terug. Niemand mag de ballen met de handen aanraken, en niemand duwt! Valt er een bal? Dan moet de rups terug naar de start.',
+      'Ga in een rij staan en klem een tennisbal tussen jouw buik en de rug van wie voor je staat. Wandel nu als één grote rups rond de pion en terug. Niemand mag de ballen met de handen aanraken, en niemand duwt! Valt er een bal? Dan moet de rups terug naar de start. Gelukt als de rups voor de tijd om is weer aan de start staat.',
     vars: { afstand: { makkelijk: [5], normaal: [8], pittig: [10] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de rups rond de pion en terug aan de start is zonder vallende bal, voor de tijd om is',
+      bijna: 'de rups al rond de pion en op de terugweg was toen de tijd om was',
+    },
     sabotage: [
       'Wandel net iets te snel voor wie voor je loopt, maar duw nooit.',
       'Laat je buik een beetje inzakken, zodat de bal wiebelt.',
@@ -549,12 +572,16 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Snij karton in stukken zo groot als een schoenendoos (één per speler) en duid een overkant aan op {afstand} grote stappen.',
     explain:
-      'Het gras is lava! Steek de rivier over naar de overkant, {afstand} grote stappen verder, met enkel stukken karton als stapstenen. Jullie krijgen {stenen}. Een stuk karton waar niemand op staat of aan raakt, wordt door de lava opgeslokt: de spelleider neemt het weg. Rustig stappen, niet springen, en iedereen moet de overkant halen!',
+      'Het gras is lava! Steek de rivier over naar de overkant, {afstand} grote stappen verder, met enkel stukken karton als stapstenen. Jullie krijgen {stenen}. Een stuk karton waar niemand op staat of aan raakt, wordt door de lava opgeslokt: de spelleider neemt het weg. Rustig stappen, niet springen! Gelukt als iedereen aan de overkant staat voor de tijd om is, zonder in de lava te stappen.',
     vars: {
       afstand: { makkelijk: [8], normaal: [10], pittig: [12] },
       stenen: { makkelijk: ['evenveel stukken als er spelers zijn'], normaal: ['één stuk minder dan er spelers zijn'], pittig: ['twee stukken minder dan er spelers zijn'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen aan de overkant staat voor de tijd om is, zonder dat iemand in de lava stapte',
+      bijna: 'er op het einde nog één of twee spelers op de stapstenen stonden, of iemand één keer in de lava stapte',
+    },
     sabotage: [
       'Stap net van je karton af als niemand kijkt, zodat het hulpje het mag afpakken.',
       'Laat een stuk karton even los op het moment dat het doorgegeven wordt.',
@@ -589,7 +616,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga op een droge plek op de grond zitten (op het terras, of leg jassen of handdoeken op het gras), met de ruggen tegen elkaar, en haak je armen in die van je buren. Sta nu samen recht zonder je handen op de grond te zetten! Tel rustig: "Eén, twee, drie, hop!" Wie doet mee: {groep}.',
+      'Ga op een droge plek op de grond zitten (op het terras, of leg jassen of handdoeken op het gras), met de ruggen tegen elkaar, en haak je armen in die van je buren. Sta nu samen recht zonder je handen op de grond te zetten! Tel rustig: "Eén, twee, drie, hop!" Wie doet mee: {groep}. Staat elk groepje recht zonder handen op de grond voor de tijd om is? Dan is het gelukt!',
     vars: {
       groep: {
         makkelijk: ['per twee, en elk duo moet het lukken (oneven aantal? dan is er één groepje van drie)'],
@@ -598,6 +625,10 @@ export const TASKS_TUIN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'elk groepje helemaal rechtstond zonder handen op de grond, voor de tijd om is',
+      bijna: 'op één groepje na iedereen rechtkwam, of iemand heel even een hand op de grond zette',
+    },
     sabotage: [
       'Zet je voeten net iets te ver naar voren.',
       'Roep "hop!" net een tel te vroeg.',
@@ -624,7 +655,7 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Zet twee emmers {afstand} grote stappen uit elkaar en leg {aantal} tennisballen in de eerste emmer.',
     explain:
-      'Breng alle {aantal} tennisballen van de ene emmer naar de andere, {afstand} grote stappen verder. Ga in een rij staan, van de eerste emmer richting de tweede. Maar: met een bal in je hand mag je niet stappen! Geef hem door aan je buur. Wie niets meer door te geven heeft, loopt naar het andere einde van de rij, het dichtst bij de tweede emmer, en sluit daar weer aan. Stapt iemand toch met een bal? Dan gaat die bal terug naar de eerste emmer.',
+      'Breng alle {aantal} tennisballen van de ene emmer naar de andere, {afstand} grote stappen verder. Ga in een rij staan, van de eerste emmer richting de tweede. Maar: met een bal in je hand mag je niet stappen! Geef hem door aan je buur. Wie niets meer door te geven heeft, loopt naar het andere einde van de rij, het dichtst bij de tweede emmer, en sluit daar weer aan. Stapt iemand toch met een bal? Dan gaat die bal terug naar de eerste emmer. Hoeveel ballen liggen er in de tweede emmer als de tijd om is?',
     vars: { aantal: { makkelijk: [5], normaal: [8], pittig: [12] }, afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'aantal', target: '{aantal}', unit: 'ballen' },
     sabotage: [
@@ -654,9 +685,13 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Span met wol een spinnenweb tussen twee bomen of palen, met één gat per speler plus {extra} extra gaten, allemaal tussen kniehoogte en schouderhoogte. Knoop losjes, zodat de wol meteen lost als iemand blijft haken.',
     explain:
-      'Een reuzenspin heeft de weg versperd! Iedereen moet door het web naar de andere kant, zonder de draden te raken. Elk gat mag maar één keer gebruikt worden en niemand wordt opgetild. Raakt iemand een draad? Dan moet die terug en opnieuw proberen.',
+      'Een reuzenspin heeft de weg versperd! Iedereen moet door het web naar de andere kant, zonder de draden te raken. Elk gat mag maar één keer gebruikt worden en niemand wordt opgetild. Raakt iemand een draad? Dan moet die terug en opnieuw proberen. Gelukt als iedereen aan de andere kant staat voor de tijd om is.',
     vars: { extra: { makkelijk: [3], normaal: [1], pittig: [0] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen door het web aan de andere kant staat voor de tijd om is',
+      bijna: 'er op het einde nog maar één speler aan de verkeerde kant stond',
+    },
     sabotage: [
       'Raak "per ongeluk" een draad met je mouw.',
       'Kies een gat dat eigenlijk perfect was voor iemand anders.',
@@ -682,9 +717,13 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Iedereen neemt het lange touw vast met twee handen, verspreid over het touw. Leg nu samen {knopen} in het touw, zonder dat iemand loslaat of zijn handen over het touw laat schuiven! Jullie mogen wel stappen, draaien en onder of over het touw gaan.',
+      'Iedereen neemt het lange touw vast met twee handen, verspreid over het touw. Leg nu samen {knopen} in het touw, zonder dat iemand loslaat of zijn handen over het touw laat schuiven! Jullie mogen wel stappen, draaien en onder of over het touw gaan. Zitten de knopen er echt in voor de tijd om is, zonder dat iemand losliet waar dat niet mocht? Dan is het gelukt!',
     vars: { knopen: { makkelijk: ['één knoop (de twee spelers aan de uiteinden mogen één keer kort loslaten)'], normaal: ['één knoop'], pittig: ['twee knopen'] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle knopen echt in het touw zitten voor de tijd om is, zonder dat iemand losliet waar dat niet mocht of zijn handen verschoof',
+      bijna: 'de knoop er zit maar iemand één keer te veel kort losliet, of er bij twee knopen maar één lukte',
+    },
     sabotage: [
       'Schuif je handen stiekem een klein beetje over het touw.',
       'Stel voor om onder het touw door te gaan op een plek waar dat niet helpt.',
@@ -746,9 +785,9 @@ export const TASKS_TUIN: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Het hulpje loopt één keer een geheim parcours voor, met {stappen} stappen: bijvoorbeeld "tik de boom aan, hink naar de bank, draai een rondje". Kijk goed! Daarna doet de hele groep het samen na, in precies dezelfde volgorde. Jullie mogen elkaar helpen onthouden.',
+      'Het hulpje loopt één keer een geheim parcours voor, met {stappen} stappen: bijvoorbeeld "tik de boom aan, hink naar de bank, draai een rondje". Kijk goed! Daarna doet de hele groep het samen na, in precies dezelfde volgorde. Jullie mogen elkaar helpen onthouden. Het hulpje telt hoeveel stappen jullie in de juiste volgorde doen, tot aan de eerste fout.',
     vars: { stappen: { makkelijk: [4], normaal: [6], pittig: [8] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{stappen}', unit: 'juiste stappen' },
     sabotage: [
       'Doe één stap in de verkeerde volgorde en kijk er heel zeker bij.',
       'Voeg een extra stap toe die er niet bij was.',
@@ -849,6 +888,10 @@ export const TASKS_TUIN: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'jullie {doel} woorden na elkaar deden zonder dat iemand zich vergiste',
+      bijna: 'jullie net niet tot {doel} na elkaar kwamen, met hoogstens twee woorden te weinig',
+    },
     sabotage: [
       'Doe één keer met veel overtuiging de beweging van een ander woord.',
       'Stel een beweging voor die heel erg lijkt op een andere.',
@@ -905,13 +948,13 @@ export const TASKS_TUIN: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zet {pionnen} pionnen als kegels op {afstand} grote stappen. Iedereen rolt om de beurt de bal, maar achterstevoren: met je rug naar de kegels, tussen je benen door! Omgevallen kegels blijven liggen. Gooien jullie samen alles om in hoogstens {worpen} worpen?',
+      'Zet {pionnen} pionnen als kegels op {afstand} grote stappen. Iedereen rolt om de beurt de bal, maar achterstevoren: met je rug naar de kegels, tussen je benen door! Omgevallen kegels blijven liggen. Hoeveel kegels liggen er om na hoogstens {worpen} worpen?',
     vars: {
       pionnen: { makkelijk: [3], normaal: [5], pittig: [6] },
       afstand: { makkelijk: [4], normaal: [5], pittig: [6] },
       worpen: { makkelijk: [10], normaal: [8], pittig: [6] },
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{pionnen}', unit: 'omgevallen kegels' },
     sabotage: [
       'Rol de bal net iets te hard, zodat hij naast de kegels vliegt.',
       'Geef de volgende het advies om meer naar links te mikken als het naar rechts moet.',
@@ -945,6 +988,10 @@ export const TASKS_TUIN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen helemaal over het touw raakte met de knuffel nog op het hoofd, voor de tijd om is',
+      bijna: 'op één speler na iedereen overkwam toen de tijd om was',
+    },
     sabotage: [
       'Leg het touw "om te helpen" nog wat bochtiger.',
       'Zeg "voorzichtig!" net op het moment dat iemand in evenwicht is.',
@@ -969,9 +1016,9 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Zet {poortjes} poortjes van telkens twee pionnen, een paar grote stappen uit elkaar. Leg bij elk poortje zijn nummer in steentjes of takjes: één bij het eerste poortje, twee bij het tweede, enzovoort.',
     explain:
-      'De hele groep speelt samen één golfbal! Om de beurt trap je de bal één keer, zachtjes. De bal moet door alle {poortjes} poortjes, in de juiste volgorde: de steentjes of takjes bij elk poortje tonen zijn nummer. Lukt het met hoogstens {trappen} trappen?',
+      'De hele groep speelt samen één golfbal! Om de beurt trap je de bal één keer, zachtjes. De bal moet door alle {poortjes} poortjes, in de juiste volgorde: de steentjes of takjes bij elk poortje tonen zijn nummer. Door hoeveel poortjes gaat de bal, in de juiste volgorde, met hoogstens {trappen} trappen?',
     vars: { poortjes: { makkelijk: [3], normaal: [4], pittig: [5] }, trappen: { makkelijk: [12], normaal: [14], pittig: [15] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{poortjes}', unit: 'poortjes' },
     sabotage: [
       'Trap net iets te hard, zodat de bal voorbij het poortje rolt.',
       'Tel de trappen luidop verkeerd.',
@@ -995,9 +1042,9 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Bouw samen een toren van {stenen} losse steentjes die op de grond liggen (geen steentjes? Neem stukjes schors of dikke takjes). De toren moet 10 tellen blijven staan zonder dat iemand hem aanraakt. Om de beurt legt iemand er één op, en daarna leggen jullie alles netjes terug!',
+      'Bouw samen een toren van {stenen} losse steentjes die op de grond liggen (geen steentjes? Neem stukjes schors of dikke takjes). De toren moet 10 tellen blijven staan zonder dat iemand hem aanraakt. Om de beurt legt iemand er één op. Valt de toren? Dan mogen jullie opnieuw beginnen. Hoeveel steentjes hoog is de hoogste toren die 10 tellen blijft staan? Daarna leggen jullie alles netjes terug!',
     vars: { stenen: { makkelijk: [4], normaal: [6], pittig: [8] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{stenen}', unit: 'steentjes hoog' },
     sabotage: [
       'Kies een ronde, wiebelige steen voor jouw beurt.',
       'Leg jouw steentje niet in het midden, maar een beetje op de rand.',
@@ -1053,6 +1100,10 @@ export const TASKS_TUIN: TaskDef[] = [
       'Leg een droog blaadje van de grond op het terras of een pad, op een plek uit de wind. Iedereen krijgt een eigen rietje. Om de beurt blaas je drie keer door je rietje tegen het blaadje, zonder het aan te raken, en dan is de volgende. Komt het blaadje over de finish, {afstand} grote stappen verder, voor de tijd om is?',
     vars: { afstand: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het blaadje helemaal over de finish is voor de tijd om is, zonder dat iemand het aanraakte',
+      bijna: 'het blaadje op hoogstens één grote stap van de finish lag toen de tijd om was',
+    },
     sabotage: [
       'Blaas net schuin, zodat het blaadje van het pad af waait.',
       'Neem je tijd tussen je drie keer blazen.',
@@ -1105,7 +1156,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen op de grond een verzonnen dier met enkel dingen die al op de grond liggen: takjes, bladeren, steentjes, dennenappels. Het dier moet {kenmerken} hebben. Daarna geven jullie het een naam en een geluid, en vertellen jullie aan Windy wat het graag eet.',
+      'Maak samen op de grond een verzonnen dier met enkel dingen die al op de grond liggen: takjes, bladeren, steentjes, dennenappels. Het dier moet {kenmerken} hebben. Daarna geven jullie het een naam en een geluid, en vertellen jullie aan Windy wat het graag eet. Is alles klaar voor de tijd om is? Dan is het gelukt!',
     vars: {
       kenmerken: {
         makkelijk: ['vier poten en een staart'],
@@ -1114,6 +1165,10 @@ export const TASKS_TUIN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het dier {kenmerken} heeft en ook een naam, een geluid en lievelingseten kreeg, voor de tijd om is',
+      bijna: 'er nog één kenmerk ontbrak, of de naam, het geluid of het eten nog niet verteld was',
+    },
     sabotage: [
       'Vergeet stiekem één van de verplichte kenmerken.',
       'Stel een naam voor die niemand kan uitspreken.',
@@ -1138,12 +1193,16 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak muziek met de tuin: trommel zachtjes op een omgekeerde emmer, tik twee steentjes tegen elkaar, ritsel met droge bladeren. Verzin samen een lied van {regels} zinnen over {onderwerp} en speel het voor de spelleider. Iedereen speelt mee op een instrument!',
+      'Maak muziek met de tuin: trommel zachtjes op een omgekeerde emmer, tik twee steentjes tegen elkaar, ritsel met droge bladeren. Verzin samen een lied van {regels} zinnen over {onderwerp} en speel het voor de spelleider. Iedereen speelt mee op een instrument! Spelen jullie het hele lied voor de tijd om is, met iedereen erbij? Dan is het gelukt!',
     vars: {
       regels: { makkelijk: [2], normaal: [4], pittig: [6] },
       onderwerp: { normaal: ['’t Duvelke dat zich verstopt', 'Windy haar verdwenen pruik', 'onzen Kenzo in de speeltuin', 'de jarige', 'een egel die verdwaald is'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'jullie een lied van {regels} zinnen helemaal voorspeelden en iedereen meespeelde, voor de tijd om is',
+      bijna: 'er nog één zin ontbrak, of één iemand niet meespeelde',
+    },
     sabotage: [
       'Speel één of twee keer net uit de maat.',
       'Vergeet je zin als het jouw beurt is.',
@@ -1168,9 +1227,13 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ontwerp samen met stoepkrijt op het terras of een pad een hinkel- en springparcours met {stations} stations: een spiraal, zigzaglijnen, hinkelvakjes, een plek om een rondje te draaien... Schrijf of teken bij elk station wat je moet doen. Als het klaar is, moet iedereen het parcours één keer foutloos afleggen!',
+      'Ontwerp samen met stoepkrijt op het terras of een pad een hinkel- en springparcours met {stations} stations: een spiraal, zigzaglijnen, hinkelvakjes, een plek om een rondje te draaien... Schrijf of teken bij elk station wat je moet doen. Als het klaar is, moet iedereen het parcours één keer foutloos afleggen! Een fout? Dan begin je opnieuw. Gelukt als iedereen foutloos aan het einde komt voor de tijd om is.',
     vars: { stations: { makkelijk: [4], normaal: [6], pittig: [8] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het parcours met {stations} stations klaar is en iedereen het foutloos aflegde, voor de tijd om is',
+      bijna: 'op één speler na iedereen het foutloos aflegde, of er één station ontbrak',
+    },
     sabotage: [
       'Teken een station dat net iets te moeilijk is.',
       'Maak de uitleg bij jouw station onduidelijk.',
@@ -1195,9 +1258,13 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Onzen Kenzo heeft een knuffel die een nest nodig heeft! Bouw samen een nest met enkel wat al op de grond ligt: takjes, bladeren, gemaaid gras. Het nest moet minstens zo groot zijn als twee handen. Test: de knuffel moet erin blijven liggen terwijl de spelleider tot {tellen} telt en zachtjes op het nest blaast.',
+      'Onzen Kenzo heeft een knuffel die een nest nodig heeft! Bouw samen een nest met enkel wat al op de grond ligt: takjes, bladeren, gemaaid gras. Het nest moet minstens zo groot zijn als twee handen. Test: de knuffel moet erin blijven liggen terwijl de spelleider tot {tellen} telt en zachtjes op het nest blaast. Blijft hij liggen? Dan is het gelukt!',
     vars: { tellen: { makkelijk: [5], normaal: [10], pittig: [15] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het nest minstens twee handen groot is en de knuffel erin blijft liggen tot het einde van het tellen en blazen',
+      bijna: 'de knuffel er pas op het allerlaatste moment uit rolde, of het nest net iets te klein is',
+    },
     sabotage: [
       'Leg een takje zo dat het nest scheef wordt.',
       'Stel voor om enkel grote, stijve takken te gebruiken.',
@@ -1470,10 +1537,14 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Zet {pionnen} pionnen verspreid op het gras, ver weg van trappen, paaltjes en speeltoestellen. De volwassene wandelt mee naast de trein.',
     explain:
-      'Maak een trein: iedereen legt de handen op de schouders van wie voor hem staat en doet de ogen dicht (of een blinddoek om), behalve de Machinist achteraan. De Machinist mag niet praten en stuurt met zachte tikjes, die van achter naar voor worden doorgegeven: een tikje op de linkerschouder is links, op de rechterschouder is rechts, op beide schouders is stop. Rij heel traag rond {pionnen} pionnen en terug naar het station!',
+      'Maak een trein: iedereen legt de handen op de schouders van wie voor hem staat en doet de ogen dicht (of een blinddoek om), behalve de Machinist achteraan. De Machinist mag niet praten en stuurt met zachte tikjes, die van achter naar voor worden doorgegeven: een tikje op de linkerschouder is links, op de rechterschouder is rechts, op beide schouders is stop. Rij heel traag rond {pionnen} pionnen en terug naar het station! Gelukt als de trein voor de tijd om is terug in het station staat.',
     vars: { pionnen: { makkelijk: [2], normaal: [3], pittig: [4] } },
     roles: [{ name: 'Machinist', count: 1, hint: 'Jij staat achteraan en mag als enige kijken. Niet praten, enkel zachte tikjes!' }],
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de trein rond alle {pionnen} pionnen en terug in het station is voor de tijd om is, zonder dat de Machinist praatte',
+      bijna: 'de trein rond alle pionnen was maar het station net niet haalde, of één pion oversloeg',
+    },
     sabotage: [
       'Geef een tikje "per ongeluk" op de verkeerde schouder door.',
       'Geef een tikje net iets te laat door.',
@@ -1498,7 +1569,7 @@ export const TASKS_TUIN: TaskDef[] = [
     minutes: 8,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Seiner leest stiekem een geheim woord op de tablet en gaat {afstand} grote stappen verder staan. Zonder geluid vormt de Seiner met armen, benen en lijf de letters van het woord, één voor één. De groep roept elke letter die ze herkennen. Raden jullie het woord? Dan is iemand anders Seiner voor het volgende woord.',
+      'De Seiner leest stiekem een geheim woord op de tablet en gaat {afstand} grote stappen verder staan. Zonder geluid vormt de Seiner met armen, benen en lijf de letters van het woord, één voor één. De groep roept elke letter die ze herkennen. Raden jullie het woord? Dan is iemand anders Seiner voor het volgende woord. Hoeveel woorden raden jullie?',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     roles: [{ name: 'Seiner', count: 1, hint: 'Lees het eerste woord stiekem en maak de letters met je lijf. Geen geluid!' }],
     list: {
@@ -1538,7 +1609,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Boer krijgt een blinddoek. Alle anderen spreken fluisterend af wie welk boerderijdier is, elk een ander dier, zonder dat de Boer het hoort. Daarna gaan ze verspreid op het gras staan, stil op hun plek. Ze maken enkel hun dierengeluid, geen woorden! De Boer wandelt heel traag op het geluid af, neemt elk dier voorzichtig bij de hand en brengt het naar de stal (de spelleider), {volgorde}.',
+      'De Boer krijgt een blinddoek. Alle anderen spreken fluisterend af wie welk boerderijdier is, elk een ander dier, zonder dat de Boer het hoort. Daarna gaan ze verspreid op het gras staan, stil op hun plek. Ze maken enkel hun dierengeluid, geen woorden! De Boer wandelt heel traag op het geluid af, neemt elk dier voorzichtig bij de hand en brengt het naar de stal (de spelleider), {volgorde}. Staan alle dieren voor de tijd om is in de stal? Dan is het gelukt!',
     vars: {
       volgorde: {
         makkelijk: ['in eender welke volgorde'],
@@ -1548,6 +1619,10 @@ export const TASKS_TUIN: TaskDef[] = [
     },
     roles: [{ name: 'Boer', count: 1, hint: 'Doe de blinddoek om en luister goed. Wandel heel traag!' }],
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle dieren in de stal staan voor de tijd om is, {volgorde}',
+      bijna: 'er nog maar één dier buiten de stal stond, of er twee dieren van plaats gewisseld waren',
+    },
     sabotage: [
       'Maak een geluid dat op twee dieren tegelijk lijkt.',
       'Wees even stil als de Boer dichtbij komt.',
@@ -1572,7 +1647,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Leg het lange touw recht op het gras: dat is een smalle brug boven een krokodillenrivier. Iedereen gaat op het touw staan. Ga nu op volgorde staan {volgorde}, zonder te praten en zonder naast het touw te stappen! Help elkaar voorzichtig, niemand duwt. Pas op: af en toe roept Windy "Hap!". Dan hapt de krokodil en staat iedereen meteen stokstil, tot het hulpje tot drie geteld heeft. Beweegt iemand toch, of stapt iemand naast het touw? Dan wijst het hulpje aan wie het was, en staat de hele groep 10 tellen stil.',
+      'Leg het lange touw recht op het gras: dat is een smalle brug boven een krokodillenrivier. Iedereen gaat op het touw staan. Ga nu op volgorde staan {volgorde}, zonder te praten en zonder naast het touw te stappen! Help elkaar voorzichtig, niemand duwt. Pas op: af en toe roept Windy "Hap!". Dan hapt de krokodil en staat iedereen meteen stokstil, tot het hulpje tot drie geteld heeft. Beweegt iemand toch, of stapt iemand naast het touw? Dan wijst het hulpje aan wie het was, en staat de hele groep 10 tellen stil. Staat iedereen voor de tijd om is in de juiste volgorde op het touw? Dan is het gelukt!',
     vars: {
       volgorde: {
         makkelijk: ['van klein naar groot'],
@@ -1588,6 +1663,10 @@ export const TASKS_TUIN: TaskDef[] = [
       read: 'willekeurig',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen in de juiste volgorde op het touw staat voor de tijd om is, zonder te praten',
+      bijna: 'er nog maar twee spelers van plaats moesten wisselen toen de tijd om was',
+    },
     sabotage: [
       'Geef "per ongeluk" een verkeerd teken: zak een beetje door je knieën als jullie op grootte staan, of toon met je vingers een verkeerde maand of letter.',
       'Ga op een plek staan waar je niet hoort en blijf daar tevreden staan.',
@@ -1624,10 +1703,14 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg een tennisbal op de grond en zet een emmer {afstand} grote stappen verder.',
     explain:
-      'De Robot doet alleen precies wat hij hoort, en niets meer: "twee stappen vooruit", "draai een kwartje naar links", "buk", "grijp". De groep moet de Robot de tennisbal laten oprapen en in de emmer laten leggen. Jullie mogen samen hoogstens {commandos} commando’s geven!',
+      'De Robot doet alleen precies wat hij hoort, en niets meer: "twee stappen vooruit", "draai een kwartje naar links", "buk", "grijp". De groep moet de Robot de tennisbal laten oprapen en in de emmer laten leggen. Jullie mogen samen hoogstens {commandos} commando’s geven! Ligt de bal in de emmer voor de tijd om is? Dan is het gelukt!',
     vars: { afstand: { makkelijk: [5], normaal: [8], pittig: [10] }, commandos: { makkelijk: [25], normaal: [20], pittig: [15] } },
     roles: [{ name: 'Robot', count: 1, hint: 'Doe exact wat er gezegd wordt, heel letterlijk. Bliep bliep!' }],
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de bal in de emmer ligt met hoogstens {commandos} commando’s, voor de tijd om is',
+      bijna: 'de Robot de bal al vasthad toen de commando’s op waren, of het lukte met hoogstens drie commando’s te veel',
+    },
     sabotage: [
       'Ben jij de Robot? Doe een commando net iets té letterlijk. Anders: geef een commando dat net niet genoeg is, zoals "één stap" als het er twee moeten zijn.',
       'Roep een commando tegelijk met iemand anders, zodat er één verloren gaat. Ben jij de Robot? Doe dan één keer alsof je een commando niet verstond, en blijf gewoon staan.',
@@ -1743,6 +1826,10 @@ export const TASKS_TUIN: TaskDef[] = [
       streak: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de teller op het scherm {doel} op een rij haalde',
+      bijna: 'de teller het doel net niet haalde, met hoogstens twee te weinig op een rij',
+    },
     sabotage: [
       'Raak één keer net hetzelfde ding aan als iemand anders.',
       'Twijfel lang, tot de tijd bijna om is.',
@@ -1775,9 +1862,13 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg een handdoek als picknickkleed neer met {aantal} lege bekertjes en een paar knuffels erop. Duid een schuilplaats aan (een boom, het tuinhuis) op {afstand} grote stappen.',
     explain:
-      'Windy ziet een donkere wolk aankomen! Breng de hele picknick (de handdoek, de {aantal} bekertjes en de knuffels) naar de schuilplaats, {afstand} grote stappen verder. Maar elk ding moet door twee spelers tegelijk gedragen worden, en de bekertjes moeten rechtop blijven. Snel, voor het "onweer" losbarst!',
+      'Windy ziet een donkere wolk aankomen! Breng de hele picknick (de handdoek, de {aantal} bekertjes en de knuffels) naar de schuilplaats, {afstand} grote stappen verder. Maar elk ding moet door twee spelers tegelijk gedragen worden, en de bekertjes moeten rechtop blijven. Snel, voor het "onweer" losbarst! Gelukt als alles voor de tijd om is in de schuilplaats staat, met de bekertjes rechtop.',
     vars: { aantal: { makkelijk: [4], normaal: [6], pittig: [8] }, afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de handdoek, alle bekertjes en alle knuffels in de schuilplaats zijn voor de tijd om is, met de bekertjes rechtop',
+      bijna: 'er nog maar één ding niet in de schuilplaats was, of er één bekertje omviel',
+    },
     sabotage: [
       'Laat een bekertje "per ongeluk" omvallen bij het oppakken.',
       'Laat jouw kant van iets net wat lager hangen, zodat de bekertjes scheef staan.',
@@ -1838,6 +1929,10 @@ export const TASKS_TUIN: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'jullie {doel} keer na elkaar op tijd in de juiste formatie stonden',
+      bijna: 'jullie net niet tot {doel} na elkaar kwamen, met hoogstens twee formaties te weinig',
+    },
     sabotage: [
       'Tel luidop verkeerd mee hoe vaak Windy "toet" zegt.',
       'Ga op de verkeerde plek in de rij staan.',
@@ -1873,12 +1968,16 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Teken met stoepkrijt een spoor van {pijlen} pijlen langs paden of het terras. Schrijf bij sommige pijlen een letter, zodat ze samen het woord {woord} vormen. Teken ook 3 valse pijlen met een kruisje erin.',
     explain:
-      'Volg het krijtspoor! Pas op: pijlen met een kruisje erin zijn nep en sturen jullie de verkeerde kant op. Bij sommige pijlen staat een letter. Onthoud ze allemaal en vorm er op het einde een woord mee. Blijf altijd in de buurt van de volwassene.',
+      'Volg het krijtspoor! Pas op: pijlen met een kruisje erin zijn nep en sturen jullie de verkeerde kant op. Bij sommige pijlen staat een letter. Onthoud ze allemaal en vorm er op het einde een woord mee. Gelukt als jullie het juiste woord vormen voor de tijd om is. Blijf altijd in de buurt van de volwassene.',
     vars: {
       pijlen: { makkelijk: [6], normaal: [10], pittig: [14] },
       woord: { makkelijk: ['BAL', 'ZON'], normaal: ['SCHAT', 'WINDY'], pittig: ['DUVELKE', 'GEHEIMPJE'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'jullie aan het einde van het spoor het juiste woord vormen, voor de tijd om is',
+      bijna: 'jullie het einde haalden, maar er één letter fout of vergeten was in het woord',
+    },
     sabotage: [
       'Wijs enthousiast een valse pijl aan.',
       'Onthoud een letter "per ongeluk" fout en zeg die heel zeker.',
@@ -1949,9 +2048,13 @@ export const TASKS_TUIN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verstop een knuffel (de schat). Schrijf vanaf een startpunt een route van {stappen} kompasopdrachten op papier, bijvoorbeeld "5 grote stappen naar het noorden, 3 naar het oosten". Tel zelf met kinderstappen.',
     explain:
-      'Met het kompas en het routepapier van het hulpje volgen jullie de geheime route naar de schat. Hou het kompas plat en draai tot de naald naar de letter N wijst. Tel de stappen samen en luidop! Vinden jullie de verstopte schat? Blijf in de buurt van de volwassene.',
+      'Met het kompas en het routepapier van het hulpje volgen jullie de geheime route naar de schat. Hou het kompas plat en draai tot de naald naar de letter N wijst. Tel de stappen samen en luidop! Vinden jullie de verstopte schat voor de tijd om is? Blijf in de buurt van de volwassene.',
     vars: { stappen: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'jullie de schat vonden voor de tijd om is',
+      bijna: 'jullie op hoogstens drie grote stappen van de schat stonden toen de tijd om was',
+    },
     sabotage: [
       'Zet net iets kleinere of grotere stappen dan de anderen.',
       'Hou het kompas scheef als jij het mag vasthouden.',
@@ -2074,6 +2177,10 @@ export const TASKS_TUIN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen op de foto meteen {figuur} herkent, voor de tijd om is',
+      bijna: 'je de figuur herkent, maar er één duidelijk stuk ontbreekt of los hangt',
+    },
     sabotage: [
       'Ga net iets te ver weg staan, zodat jouw schaduw loskomt van de rest.',
       'Beweeg je armen op het moment van de foto.',
@@ -2098,7 +2205,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De speeltuin is een filmstudio! Maak een spannend filmaffiche bij de titels van de lijst: iedereen speelt een rol, met de schommel, glijbaan, bank of een boom als decor. Niet op hoge dingen klimmen! Na 10 tellen stilstaan maakt de spelleider de foto.',
+      'De speeltuin is een filmstudio! Maak een spannend filmaffiche bij de titels van de lijst: iedereen speelt een rol, met de schommel, glijbaan, bank of een boom als decor. Niet op hoge dingen klimmen! Na 10 tellen stilstaan maakt de spelleider de foto. Elk affiche waarop iedereen in zijn rol staat, telt.',
     list: {
       title: 'Filmtitels',
       items: {
@@ -2210,6 +2317,10 @@ export const TASKS_TUIN: TaskDef[] = [
       streak: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de teller op het scherm {doel} op een rij haalde',
+      bijna: 'de teller het doel net niet haalde, met hoogstens twee te weinig op een rij',
+    },
     sabotage: [
       'Beweeg een klein beetje bij een "’t Duvelke zegt"-opdracht, zodat je buur ook begint.',
       'Wacht net iets te lang bij een echte "Windy zegt".',
@@ -2262,6 +2373,10 @@ export const TASKS_TUIN: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen {rondes} heen en terug liep als zijn dier, voor de tijd om is',
+      bijna: 'op één loper na iedereen klaar was toen de tijd om was',
+    },
     sabotage: [
       'Doe je dier extra traag, "omdat het zo hoort".',
       'Tik de volgende maar heel licht aan, zodat die twijfelt of hij mag vertrekken.',
@@ -2316,6 +2431,10 @@ export const TASKS_TUIN: TaskDef[] = [
       'Bouw samen een parcours, nog voor de timer start: hoepels om in te springen, pionnen om rond te slalommen en een springtouw op de grond om over te balanceren. Dan komt de twist: je doet het parcours per twee, hand in hand, en jullie mogen elkaar nooit loslaten! Oneven aantal? Dan loopt er een drieling. Halen alle tweelingen de finish {extra} voor de tijd om is?',
     vars: { extra: { makkelijk: ['één keer'], normaal: ['één keer, zonder een pion om te stoten,'], pittig: ['één keer, zonder een pion om te stoten en achterwaarts over het touw,'] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle tweelingen de finish haalden zonder los te laten, voor de tijd om is',
+      bijna: 'op één tweeling na iedereen de finish haalde, of één tweeling één keer heel kort losliet',
+    },
     sabotage: [
       'Spring net iets vroeger dan je tweelingbroer of -zus.',
       'Laat heel even los in een bocht en doe alsof er niets gebeurde.',
@@ -2341,7 +2460,7 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Gooi twee dobbelstenen. De eerste zegt wat jullie doen (een één is de eerste beweging van de lijst, een twee de tweede, enzovoort), de tweede zegt hoeveel keer. Iedereen doet het tegelijk en jullie tellen samen luidop. Telt iemand fout? Dan doen jullie die worp opnieuw. Halen jullie {worpen} worpen voor de tijd om is?',
+      'Gooi twee dobbelstenen. De eerste zegt wat jullie doen (een één is de eerste beweging van de lijst, een twee de tweede, enzovoort), de tweede zegt hoeveel keer. Iedereen doet het tegelijk en jullie tellen samen luidop. Telt iemand fout? Dan doen jullie die worp opnieuw. Hoeveel worpen doen jullie helemaal goed voor de tijd om is? Doel: {worpen}.',
     vars: { worpen: { makkelijk: [5], normaal: [7], pittig: [10] } },
     list: {
       title: 'Bewegingen (1 tot 6)',
@@ -2351,7 +2470,7 @@ export const TASKS_TUIN: TaskDef[] = [
       pick: 6,
       secret: false,
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{worpen}', unit: 'goede worpen' },
     sabotage: [
       'Tel luidop net een getal te snel.',
       'Doe een beweging die net niet klopt, zodat anderen gaan twijfelen.',
@@ -2386,6 +2505,10 @@ export const TASKS_TUIN: TaskDef[] = [
       read: 'willekeurig',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen bij elk haaienalarm op tijd met een voet in een hoepel stond, tot de tijd om was',
+      bijna: 'er maar één keer iemand te laat was of naast de hoepels stond',
+    },
     sabotage: [
       'Ga midden in een hoepel staan, zodat er minder plaats is voor de rest.',
       'Kom net na de vijf tellen aan.',
@@ -2418,9 +2541,13 @@ export const TASKS_TUIN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Het hulpje staat met de rug naar de groep, op {afstand} grote stappen, met een "schat" ernaast (een schoen, een pet of een knuffel). De groep moet de schat stilletjes stelen en terugbrengen naar de start. Hoort het hulpje iemand, dan wijst het naar die speler: terug naar de start! Het hulpje mag niet kijken, enkel luisteren. Niet rennen!',
+      'Het hulpje staat met de rug naar de groep, op {afstand} grote stappen, met een "schat" ernaast (een schoen, een pet of een knuffel). De groep moet de schat stilletjes stelen en terugbrengen naar de start, voor de tijd om is. Hoort het hulpje iemand, dan wijst het naar die speler: terug naar de start! Het hulpje mag niet kijken, enkel luisteren. Niet rennen!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de schat terug aan de start is voor de tijd om is',
+      bijna: 'iemand de schat al vasthad, maar de start net niet meer haalde voor de tijd om was',
+    },
     sabotage: [
       'Stap "per ongeluk" op een krakend takje of droog blad.',
       'Fluister net iets te luid een tip.',

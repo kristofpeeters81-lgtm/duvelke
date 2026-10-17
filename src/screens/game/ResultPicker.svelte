@@ -10,9 +10,13 @@
     /** Voorgestelde telling (bv. wat Windy bijhield tijdens het voorlezen). */
     initial?: number | null;
     onpick: (outcome: 'gelukt' | 'bijna' | 'mislukt' | 'score', gems: number, score: number | null) => void;
+    /** Wanneer is het gelukt of bijna (met de variabelen al ingevuld). */
+    judge?: { gelukt: string; bijna: string } | null;
+    /** Bij "na elkaar zonder fout": de beste reeks en het doel, als hulp bij het beoordelen. */
+    streak?: { best: number; goal: number | null } | null;
   }
 
-  let { task, target, initial = null, onpick }: Props = $props();
+  let { task, target, initial = null, onpick, judge = null, streak = null }: Props = $props();
 
   let count = $state(untrack(() => initial ?? 0));
   const unit = $derived(task.scoring.type === 'aantal' ? task.scoring.unit : '');
@@ -30,15 +34,16 @@
     <p class="preview">💎 {gemsForCount(task, count, target)} van {maxGems(task)} edelstenen</p>
     <BigButton variant="gold" size="large" full onclick={() => onpick('score', gemsForCount(task, count, target), count)}>Bevestigen ▶</BigButton>
   {:else}
+    {#if streak}<p class="hint center">🔥 Beste reeks: <strong>{streak.best}</strong>{streak.goal ? ` (doel: ${streak.goal})` : ''}</p>{/if}
     <div class="choices">
       <button type="button" class="choice ok" onclick={() => onpick('gelukt', gemsForOutcome(task, 'gelukt'), null)}>
-        <span class="em">🎉</span><span>Gelukt!</span><span class="g">💎 {gemsForOutcome(task, 'gelukt')}</span>
+        <span class="em">🎉</span><span class="lbl">Gelukt!{#if judge}<small>als {judge.gelukt}</small>{/if}</span><span class="g">💎 {gemsForOutcome(task, 'gelukt')}</span>
       </button>
       <button type="button" class="choice half" onclick={() => onpick('bijna', gemsForOutcome(task, 'bijna'), null)}>
-        <span class="em">😅</span><span>Bijna</span><span class="g">💎 {gemsForOutcome(task, 'bijna')}</span>
+        <span class="em">😅</span><span class="lbl">Bijna{#if judge}<small>als {judge.bijna}</small>{/if}</span><span class="g">💎 {gemsForOutcome(task, 'bijna')}</span>
       </button>
       <button type="button" class="choice no" onclick={() => onpick('mislukt', 0, null)}>
-        <span class="em">😬</span><span>Mislukt</span><span class="g">💎 0</span>
+        <span class="em">😬</span><span class="lbl">Mislukt{#if judge}<small>Al de rest</small>{/if}</span><span class="g">💎 0</span>
       </button>
     </div>
   {/if}
@@ -145,5 +150,20 @@
 
   .no {
     background: linear-gradient(180deg, #ff7b8a, #c9303f);
+  }
+
+  .lbl {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex: 1;
+  }
+
+  .lbl small {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0.85;
+    line-height: 1.25;
   }
 </style>

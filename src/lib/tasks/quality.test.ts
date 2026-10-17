@@ -68,6 +68,15 @@ describe('opdrachten: kwaliteit', () => {
     for (const tip of [...t.host.sabotage, t.host.detective]) expect(tip).not.toMatch(/spelleider|saboteur|Duvelke/i);
   });
 
+  it.each(cases)('%s: duidelijk wanneer het gelukt is', (_id, t) => {
+    // Gelukt/bijna/mislukt: het hulpje moet niets verzinnen. Een teller: de eenheid moet er zijn.
+    if (t.scoring.type === 'gelukt') {
+      expect(t.judge?.gelukt.length ?? 0, 'judge.gelukt').toBeGreaterThan(8);
+      expect(t.judge?.bijna.length ?? 0, 'judge.bijna').toBeGreaterThan(8);
+    }
+    if (t.scoring.type === 'aantal') expect(t.scoring.unit.trim()).not.toBe('');
+  });
+
   it.each(cases)('%s: geen nacht, slapen of Halloween', (_id, t) => {
     expect([t.title, t.explain, t.prep ?? ''].join(' ')).not.toMatch(/\b(nacht|halloween|pyjama|slaapzak|bedtijd)\b/i);
   });

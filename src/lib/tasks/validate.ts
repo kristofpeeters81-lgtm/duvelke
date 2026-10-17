@@ -196,6 +196,11 @@ export function validateTask(
   if (Object.keys(vars).length > 0) task.vars = vars;
   if (roles.length > 0) task.roles = roles;
   if (list) task.list = list;
+  if (isRecord(raw.judge) && scoring.type === 'gelukt') {
+    const gelukt = str(raw.judge.gelukt, 200);
+    const bijna = str(raw.judge.bijna, 200);
+    if (gelukt && bijna) task.judge = { gelukt, bijna };
+  }
   const photo = str(raw.photo, 120);
   if (photo) task.photo = photo;
   if (raw.dilemma === true) task.dilemma = true;

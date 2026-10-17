@@ -9,7 +9,7 @@ import type { Game, GamePlayer } from '../game';
 import { quizOrder, targetFor, treasure } from '../gameplay';
 import { LOCATIONS } from '../data/locations';
 import { CATEGORY_LABELS } from '../tasks/labels';
-import { fillVars } from '../tasks/program';
+import { explainWithGoal, fillVars } from '../tasks/program';
 import { QUIZ } from '../tasks/quiz';
 import { getTask } from '../tasks/registry';
 import { hostWording, windyReadsList } from '../tasks/wording';
@@ -61,6 +61,8 @@ export type TvState =
       quiz: TvQuiz | null;
       stopwatch: { running: boolean; elapsed: number | null; target: number | null } | null;
       waiting: string | null;
+      /** Op het resultaatscherm: wanneer is het gelukt of bijna (enkel bij gelukt/bijna/mislukt). */
+      judge: { gelukt: string; bijna: string } | null;
     }
   | { kind: 'schat'; gain: number; happy: boolean }
   | { kind: 'eindschat'; pct: number; groupWins: boolean; saboteurName: string }
@@ -145,7 +147,8 @@ function taskState(game: Game, ui: TvUi): TvState {
         else if (list.read === 'willekeurig') note = `🔊 ${host} roept af en toe iets: luister goed!`;
         else if (list.streak) {
           const goal = Number(item.vars.doel) || null;
-          note = `🔥 ${current.cards.guessed} op een rij${goal ? ` (doel: ${goal})` : ''}${goal && current.cards.guessed >= goal ? ' 🎉' : ''}`;
+          const best = current.cards.best ?? 0;
+          note = `🔥 ${current.cards.guessed} op een rij${goal ? ` (doel: ${goal})` : ''}${best > current.cards.guessed ? ` · beste reeks: ${best}` : ''}${goal && best >= goal ? ' 🎉' : ''}`;
         }
         else if (list.read || windyReadsList(task)) note = `🔊 ${host} leest voor: ${Math.min(current.cards.index + 1, item.list.length)} van ${item.list.length}`;
         else {
@@ -181,7 +184,7 @@ function taskState(game: Game, ui: TvUi): TvState {
         total,
         emoji: task.emoji,
         title: task.title,
-        explain: w(fillVars(task.explain, item.vars)),
+        explain: w(explainWithGoal(task, item)),
         roles: (task.roles ?? []).map((r) => ({ name: r.name, players: (current.roles[r.name] ?? []).map(name) })),
         list: open && list ? { title: w(list.title), items: item.list.map(w) } : null,
         note,
@@ -189,6 +192,7 @@ function taskState(game: Game, ui: TvUi): TvState {
         quiz,
         stopwatch: sw,
         waiting: current.step === 'resultaat' ? 'Hoe ging het? Het hulpje duidt het resultaat aan.' : null,
+        judge: current.step === 'resultaat' && task.scoring.type === 'gelukt' && task.judge ? { gelukt: w(fillVars(task.judge.gelukt, item.vars)), bijna: w(fillVars(task.judge.bijna, item.vars)) } : null,
       };
     }
     case 'schat':

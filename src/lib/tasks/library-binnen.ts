@@ -29,6 +29,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       woord: { makkelijk: ['TAART', 'FEEST', 'SNOEP'], normaal: ['SCHATKIST', 'DUVELKE', 'KAARSJES'], pittig: ['VERJAARDAG', 'SPEURNEUZEN', 'GEHEIMAGENT'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het juiste geheime woord gezegd werd voor de tijd om was',
+      bijna: 'er nog maar één letter ontbrak, of het juiste woord net na de tijd gezegd werd',
+    },
     sabotage: [
       'Zie je een post-it? Laat hem één keer stilletjes hangen en zoek gewoon verder.',
       'Stel heel overtuigd een verkeerd woord voor met dezelfde letters.',
@@ -65,13 +69,17 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verstop een paar verpakte snoepjes en teken een simpele plattegrond van de kamer ({tekenen}) met een kruisje op de plek van de schat. Geef de kaart {kaart} aan de groep.',
     explain:
-      'Windy heeft een schat verstopt en er zelf een kaart van getekend. Maar Windy kan echt niet tekenen... Zoek met de kaart de schat, en je mag maar {kansen} plekken bekijken! Elke kast, lade of kussen die je openmaakt of optilt, telt als één plek.',
+      'Windy heeft een schat verstopt en er zelf een kaart van getekend. Maar Windy kan echt niet tekenen... Zoek met de kaart de schat, en je mag maar {kansen} plekken bekijken! Elke kast, lade of kussen die je openmaakt of optilt, telt als één plek. Vinden jullie de schat binnen {kansen} plekken en voor de tijd om is? Dan is het gelukt.',
     vars: {
       tekenen: { makkelijk: ['tafel, zetel, kast, deur, ramen'], normaal: ['tafel, zetel, kast, deur, ramen'], pittig: ['tafel, zetel, kast en ramen, maar teken de deur er niet op'] },
       kaart: { makkelijk: ['rechtop'], normaal: ['ondersteboven'], pittig: ['ondersteboven'] },
       kansen: { makkelijk: [5], normaal: [3], pittig: [3] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de schat gevonden werd binnen {kansen} plekken en voor de tijd om was',
+      bijna: 'de schat pas op één plek te veel of net na de tijd gevonden werd',
+    },
     sabotage: [
       'Hou de kaart één keer "per ongeluk" verkeerd gedraaid als jij hem vasthebt.',
       'Stel twijfelend een plek voor die net naast het kruisje ligt.',
@@ -181,6 +189,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'In de kamer liggen {aantal} speelkaarten verstopt. Elke kaart is evenveel waard als het getal erop, en de aas is 1. Zoek ze allemaal en tel alles samen op: de som is de code van Windy’s kluis. Juiste code voor de tijd om is? Dan springt de kluis open!',
     vars: { aantal: { makkelijk: [5], normaal: [7], pittig: [10] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de juiste kluiscode gezegd werd voor de tijd om was',
+      bijna: 'alle kaarten gevonden waren, maar de som er hoogstens twee naast zat of net te laat kwam',
+    },
     sabotage: [
       'Zie je een kaart? Laat hem één keer liggen en zoek gewoon verder.',
       'Tel luidop mee en maak één klein rekenfoutje.',
@@ -345,7 +357,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Bij de uitleg hou jij de geheime lijst ingedrukt en schrijf je de getallen van het bericht over op een blad. Schrijf het antwoord er niet bij!',
     explain:
-      'Een geheim bericht van ’t Duvelke is onderschept! Elke letter is vervangen door een getal volgens deze code: {code}. Schrijf eerst samen het alfabet met de getallen op, en ontcijfer dan het bericht. Lees het voor aan het hulpje voor de tijd om is.',
+      'Een geheim bericht van ’t Duvelke is onderschept! Elke letter is vervangen door een getal volgens deze code: {code}. Schrijf eerst samen het alfabet met de getallen op, en ontcijfer dan het bericht. Lees het voor aan het hulpje voor de tijd om is. Klopt elk woord? Dan is het gelukt.',
     vars: {
       code: {
         makkelijk: ['A is 1, B is 2, C is 3, en zo verder tot Z is 26'],
@@ -374,6 +386,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het hele bericht juist voorgelezen werd voor de tijd om was',
+      bijna: 'er nog hoogstens twee letters fout waren, of het juiste bericht net na de tijd kwam',
+    },
     sabotage: [
       'Schrijf het alfabet op en sla stiekem één letter over, zodat alles verschuift.',
       'Lees een getal verkeerd voor ("was dat een 15 of een 16?").',
@@ -474,7 +490,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Een mogelijke oplossing (niet verklappen!): {oplossing}.',
     explain:
-      'Neem de kaarten van aas tot en met {hoogste} uit het spel: de aas telt als 1. Leg ze in een rij, zodat twee kaarten naast elkaar nooit opeenvolgende getallen zijn: een 3 mag dus niet naast een 2 of een 4 liggen. {extra} Lukt het voor de tijd om is?',
+      'Neem de kaarten van aas tot en met {hoogste} uit het spel: de aas telt als 1. Leg ze in een rij, zodat twee kaarten naast elkaar nooit opeenvolgende getallen zijn: een 3 mag dus niet naast een 2 of een 4 liggen. {extra} Liggen alle kaarten zo, zonder één fout buurpaar, voor de tijd om is? Dan is het gelukt.',
     vars: {
       hoogste: { makkelijk: [4], normaal: [5], pittig: [7] },
       extra: {
@@ -485,6 +501,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       oplossing: { makkelijk: ['2-4-1-3'], normaal: ['3-1-4-2-5'], pittig: ['1-3-5-7-2-4-6 in een cirkel'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle kaarten liggen, geen twee buren opeenvolgend zijn en de extra regel klopt, voor de tijd om was',
+      bijna: 'er nog maar één paar buren fout lag toen de tijd om was',
+    },
     sabotage: [
       'Leg één kaart net verkeerd en zeg "ik denk dat het klopt".',
       'Zeg dat het misschien onmogelijk is, zodat de anderen gaan twijfelen.',
@@ -651,6 +671,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Bouw samen een toren van lege wc-rollen en stukken karton, zo hoog als {hoogte}. Helemaal bovenaan zet je een knuffel, en die moet er 10 tellen blijven staan. Plakband is verboden: de toren moet blijven staan door slim te bouwen!',
     vars: { hoogte: { makkelijk: ['je knie'], normaal: ['de tafel'], pittig: ['je schouder'] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de toren zonder plakband zo hoog als {hoogte} was en de knuffel er 10 tellen bovenop bleef staan',
+      bijna: 'de toren net niet hoog genoeg was, of de knuffel net voor de 10 tellen viel',
+    },
     sabotage: [
       'Leg jouw stuk karton net niet in het midden.',
       'Stel voor om de rollen plat te leggen, "want dat is steviger".',
@@ -676,11 +700,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Iedereen neemt het lange touw vast met twee handen en doet de ogen dicht. Maak samen, zonder te kijken, een {vorm} met het touw. Praten mag! Denken jullie dat het klaar is? Leg het touw voorzichtig op de grond en kijk. Lijkt het goed? Dan is het gelukt.',
+      'Iedereen neemt het lange touw vast met twee handen en doet de ogen dicht. Maak samen, zonder te kijken, een {vorm} met het touw. Praten mag! Denken jullie dat het klaar is? Leg het touw voorzichtig op de grond en kijk. Herkent het hulpje meteen een {vorm}, met het juiste aantal hoeken? Dan is het gelukt.',
     vars: {
       vorm: { makkelijk: ['vierkant', 'driehoek'], normaal: ['vijfhoek', 'hart', 'ruit'], pittig: ['ster', 'zeshoek', 'letter W'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'je op de grond meteen een {vorm} herkent, met het juiste aantal hoeken',
+      bijna: 'je de {vorm} wel herkent, maar één hoek of kant duidelijk mislukt is',
+    },
     sabotage: [
       'Schuifel een klein stukje de verkeerde kant op als niemand het merkt.',
       'Zeg "bij mij is het een perfecte hoek" als dat niet zo is.',
@@ -706,11 +734,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Rol een paar kranten stevig op tot een lange, lichte staaf (ongeveer zo lang als twee kinderen naast elkaar) en plak ze vast.',
     explain:
-      'Ga in twee rijen tegenover elkaar staan en steek je wijsvingers uit. Het hulpje legt de krantenstaaf op alle vingers. Breng de staaf samen tot op de grond: elke vinger moet de staaf altijd blijven raken en niemand mag hem vastpakken. {regel} Klinkt makkelijk... maar de staaf wil altijd omhoog!',
+      'Ga in twee rijen tegenover elkaar staan en steek je wijsvingers uit. Het hulpje legt de krantenstaaf op alle vingers. Breng de staaf samen tot op de grond: elke vinger moet de staaf altijd blijven raken en niemand mag hem vastpakken. {regel} Klinkt makkelijk... maar de staaf wil altijd omhoog! Ligt de staaf op de grond zonder dat er een vinger losliet? Dan is het gelukt.',
     vars: {
       regel: { makkelijk: ['Praten mag.'], normaal: ['Praten mag.'], pittig: ['Praten mag niet!'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de staaf op de grond lag zonder dat er een vinger losliet of hem vastpakte',
+      bijna: 'de staaf al onder kniehoogte was, maar er toen toch één vinger losliet',
+    },
     sabotage: [
       'Hou je vinger een heel klein beetje hoger dan de anderen.',
       'Laat je vinger één keer heel even los van de staaf, alsof het per ongeluk is.',
@@ -746,6 +778,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen op de juiste plek in de rij staat en niemand praatte of iets opschreef',
+      bijna: 'er maar twee spelers van plaats moeten wisselen om de rij juist te krijgen',
+    },
     sabotage: [
       'Toon één keer met je vingers een getal dat net één te veel of te weinig is.',
       'Ga heel zelfzeker op een verkeerde plek staan.',
@@ -802,6 +838,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Verdeel de puzzelstukjes eerlijk: iedereen krijgt een stapeltje. Je mag enkel stukjes van je eigen stapel aanraken en je mag niet praten. Heb je een stukje van iemand anders nodig? Vraag het met gebaren. Is de puzzel af voor de tijd om is?',
     vars: { tijd: { makkelijk: [480], normaal: [360], pittig: [240] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de puzzel helemaal af was voor de tijd om was, zonder praten',
+      bijna: 'er nog hoogstens drie stukjes ontbraken toen de tijd om was',
+    },
     sabotage: [
       'Hou een stukje dat past lang op je schoot en doe alsof je het niet ziet.',
       'Wijs naar een verkeerde plek voor iemands stukje.',
@@ -914,7 +954,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De spelleider legt {aantal} speelkaarten één voor één open in een rij en draait ze na 20 seconden allemaal om. Welke kaart lag waar? Zeg ze samen op in de juiste volgorde, met kleur én getal (bijvoorbeeld "harten 7"). We spelen 3 rondes.',
+      'De spelleider legt {aantal} speelkaarten één voor één open in een rij en draait ze na 20 seconden allemaal om. Welke kaart lag waar? Zeg ze samen op in de juiste volgorde, met kleur én getal (bijvoorbeeld "harten 7"). We spelen 3 rondes. Hoeveel rondes zeggen jullie helemaal juist op?',
     vars: { aantal: { makkelijk: [4], normaal: [6], pittig: [8] } },
     scoring: { type: 'aantal', target: 3, unit: 'juiste rondes' },
     sabotage: [
@@ -1016,6 +1056,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle vormen erop staan, op de juiste plaats en met de juiste aantallen',
+      bijna: 'er maar één ding fout is: één vorm vergeten, op de verkeerde plaats of een verkeerd aantal',
+    },
     sabotage: [
       'Teken jouw stukje net op de verkeerde plaats.',
       'Zeg heel zeker een verkeerd aantal: "er waren zeker vijf sterren".',
@@ -1049,9 +1093,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg {aantal} kleine, onbreekbare voorwerpen uit huis (sleutel, lepel, pen, sok, gom...) in een raster op tafel of op de grond.',
     explain:
-      'Kijk goed waar elk voorwerp ligt, terwijl het hulpje stil tot zestig telt. Dan draaien jullie je om en legt de spelleider alles op één hoop. Leg alles samen terug op precies dezelfde plek voor de tijd om is! Klopt alles? Dan is het gelukt.',
+      'Kijk goed waar elk voorwerp ligt, terwijl het hulpje stil tot zestig telt. Dan draaien jullie je om en legt de spelleider alles op één hoop. Leg alles samen terug op precies dezelfde plek voor de tijd om is! Hoeveel van de {aantal} voorwerpen liggen er op precies de juiste plek als de tijd om is?',
     vars: { aantal: { makkelijk: [6], normaal: [9], pittig: [12] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'voorwerpen op de juiste plek' },
     sabotage: [
       'Leg een voorwerp heel zelfzeker op de verkeerde plek.',
       'Wissel twee voorwerpen van plaats als het bijna klaar is en niemand kijkt.',
@@ -1084,11 +1128,11 @@ export const TASKS_BINNEN: TaskDef[] = [
     minPlayers: 3,
     minutes: 9,
     difficulties: [...ALLE_NIVEAUS],
-    prep: 'Knip wc-rollen in de lengte doormidden en zet elke helft met de bolle kant naar boven op de vloer: zo krijg je een tunneltje waar een knikker door kan. Zet er zo {poortjes} als genummerde poortjes over de vloer. Leg op het einde een hele wc-rol plat als "hole".',
+    prep: 'Knip wc-rollen in de lengte doormidden en zet elke helft met de bolle kant naar boven op de vloer: zo krijg je een tunneltje waar een knikker door kan. Zet er in totaal {poortjes} als genummerde poortjes over de vloer. Het laatste poortje is de "hole": een hele wc-rol, plat gelegd.',
     explain:
-      'Tik de knikker met één vinger door alle {poortjes} poortjes, in de juiste volgorde, tot in de hole. Iedereen tikt om de beurt, telkens vanaf waar de knikker stil ligt. Jullie hebben samen maar {slagen} slagen!',
+      'Tik de knikker met één vinger door alle {poortjes} poortjes, in de juiste volgorde: het laatste poortje is de hole. Iedereen tikt om de beurt, telkens vanaf waar de knikker stil ligt. Jullie hebben samen maar {slagen} slagen! Hoeveel poortjes halen jullie, op volgorde, voor de slagen op zijn?',
     vars: { poortjes: { makkelijk: [4], normaal: [6], pittig: [8] }, slagen: { makkelijk: [15], normaal: [18], pittig: [20] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{poortjes}', unit: 'poortjes' },
     sabotage: [
       'Tik net iets te hard, zodat de knikker ver doorrolt.',
       'Geef richtingadvies dat net een beetje scheef is.',
@@ -1141,9 +1185,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Bouw samen een kaartenhuis met minstens {kaarten} kaarten, die schuin tegen elkaar leunen of als dak bovenop liggen. Plooien of scheuren mag niet! Staat het huis 5 tellen recht als de tijd om is? Dan is het gelukt.',
+      'Bouw samen een kaartenhuis met {kaarten} kaarten, die schuin tegen elkaar leunen of als dak bovenop liggen. Plooien of scheuren mag niet! Als de tijd om is, blijven jullie handen weg en telt het hulpje 5 tellen. Hoeveel kaarten staan er dan nog in het huis?',
     vars: { kaarten: { makkelijk: [6], normaal: [10], pittig: [15] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{kaarten}', unit: 'kaarten' },
     sabotage: [
       'Stel voor om met de moeilijkste verdieping te beginnen, "dan is dat al gedaan".',
       'Stel voor om er nog "eentje extra" bovenop te zetten als het net staat.',
@@ -1170,9 +1214,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg minstens {aantal} wasknijpers klaar bij een tafel.',
     explain:
-      'Maak samen één lange ketting van wasknijpers die in elkaar geknepen zijn, hangend aan de rand van de tafel. Iedereen mag maar één hand gebruiken! Hangt de ketting van {aantal} wasknijpers 5 tellen lang zonder te breken? Dan is het gelukt.',
+      'Maak samen één lange ketting van wasknijpers die in elkaar geknepen zijn, hangend aan de rand van de tafel. Iedereen mag maar één hand gebruiken! Probeer een ketting van {aantal} wasknijpers te maken. Als de tijd om is, laten jullie los en telt het hulpje 5 tellen. Hoeveel wasknijpers hangen er dan nog aan de ketting?',
     vars: { aantal: { makkelijk: [8], normaal: [12], pittig: [16] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'wasknijpers' },
     sabotage: [
       'Knijp jouw wasknijper maar half vast.',
       'Hang hem net scheef, zodat de ketting begint te draaien.',
@@ -1225,9 +1269,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zet {kegels} lege wc-rollen rechtop als bowlingkegels, vijf grote stappen ver. Rol de tennisbal om de beurt over de grond: niet gooien! Omgevallen kegels blijven liggen. Krijgen jullie ze allemaal om met samen maar {worpen} worpen?',
+      'Zet {kegels} lege wc-rollen rechtop als bowlingkegels, vijf grote stappen ver. Rol de tennisbal om de beurt over de grond: niet gooien! Omgevallen kegels blijven liggen. Hoeveel van de {kegels} kegels krijgen jullie om met samen maar {worpen} worpen?',
     vars: { kegels: { makkelijk: [6], normaal: [10], pittig: [10] }, worpen: { makkelijk: [8], normaal: [8], pittig: [5] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{kegels}', unit: 'kegels' },
     sabotage: [
       'Rol net naast de kegels, maar doe alsof je heel goed mikt.',
       'Rol heel zachtjes, zodat de bal net niet aankomt.',
@@ -1257,6 +1301,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Zet twee stoelen {afstand} uit elkaar. Bouw samen een brug van rietjes en plakband tussen de twee stoelen. De brug mag enkel op de stoelen steunen. Kan jullie brug een knuffel dragen, 10 tellen lang? Dan is het gelukt!',
     vars: { afstand: { makkelijk: ['een halve grote stap'], normaal: ['een grote stap'], pittig: ['anderhalve grote stap'] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de brug enkel op de stoelen steunde en de knuffel er 10 tellen op bleef liggen',
+      bijna: 'de brug de knuffel even droeg, maar net voor de 10 tellen doorzakte of de knuffel viel',
+    },
     sabotage: [
       'Plak jouw stukje net iets te los.',
       'Stel voor om geen steunen te maken, "want dat is lelijk".',
@@ -1284,13 +1332,13 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy zoekt een nieuwe outfit voor haar tv-show! Maak voor het Model een outfit van krantenpapier en plakband, met als thema "{thema}". Er moeten minstens {stukken} kledingstukken zijn (hoed, cape, rok...). Plak enkel op kleren of krant, nooit op huid of haar. Daarna loopt het Model over de catwalk en stellen jullie de outfit voor. Passen alle kledingstukken bij het thema en valt er niets af op de catwalk? Dan is het gelukt.',
+      'Windy zoekt een nieuwe outfit voor haar tv-show! Maak voor het Model een outfit van krantenpapier en plakband, met als thema "{thema}". Er moeten minstens {stukken} kledingstukken zijn (hoed, cape, rok...). Plak enkel op kleren of krant, nooit op huid of haar. Daarna loopt het Model over de catwalk en stellen jullie de outfit voor. Hoeveel kledingstukken passen bij het thema en blijven zitten tot het einde van de catwalk?',
     vars: {
       thema: { normaal: ['ruimtevaarder', 'koning of koningin', 'superheld', 'piraat', 'Windy zelf'] },
       stukken: { makkelijk: [3], normaal: [4], pittig: [6] },
     },
     roles: [{ name: 'Model', count: 1, hint: 'Jij bent het model: sta stil en poseer!' }],
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{stukken}', unit: 'kledingstukken' },
     sabotage: [
       'Ben jij het Model? Draai en wiebel net iets te veel als er geplakt wordt. Anders: plak jouw kledingstuk net te los, zodat het tijdens de catwalk kan afvallen.',
       'Twijfel heel lang over welke krantenpagina het mooist is.',
@@ -1316,7 +1364,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen een reclamespot van ongeveer 30 seconden voor een raar product. Iedereen moet iets zeggen of doen, en er moet een slogan in zitten die rijmt! Na de voorbereidingstijd voeren jullie de spot op. Zou de spelleider het product kopen? Dan is het gelukt.',
+      'Maak samen een reclamespot van ongeveer 30 seconden voor een raar product. Iedereen moet iets zeggen of doen, en er moet een slogan in zitten die rijmt! Na de voorbereidingstijd voeren jullie de spot op. Doet iedereen mee en rijmt de slogan? Dan is het gelukt, en koopt het hulpje meteen het product.',
     list: {
       title: 'Het product',
       items: {
@@ -1335,6 +1383,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       secret: false,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen iets zei of deed, het over het product ging en er een slogan in zat die rijmt',
+      bijna: 'er één ding ontbrak: iemand deed niet mee, of de slogan rijmde net niet',
+    },
     sabotage: [
       'Stel een slogan voor die bijna rijmt, maar net niet.',
       'Vergeet je tekst tijdens het optreden.',
@@ -1408,11 +1460,15 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Hang een oud laken over twee stoelen of over de rugleuning van de zetel, zodat de spelers erachter kunnen zitten.',
     explain:
-      'Maak samen een poppenkastvoorstelling met knuffels, achter het laken. Het verhaal gaat over: "{verhaal}". Elke knuffel zegt minstens één zin en er moet een grappig einde zijn. Na de oefentijd spelen jullie het voor de spelleider.',
+      'Maak samen een poppenkastvoorstelling met knuffels, achter het laken. Het verhaal gaat over: "{verhaal}". Elke knuffel zegt minstens één zin en er moet een grappig einde zijn. Na de oefentijd spelen jullie het voor de spelleider. Zegt elke knuffel iets en is er een einde? Dan is het gelukt.',
     vars: {
       verhaal: { normaal: ['’t Duvelke steelt Windy’s pruik', 'de knuffels gaan op reis naar de maan', 'Kenzo is al zijn sokken kwijt', 'een draak die bang is van muizen', 'de schat van de piraat is verdwenen'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'elke knuffel minstens één zin zei, het verhaal over het thema ging en er een duidelijk einde was',
+      bijna: 'er één ding ontbrak: een knuffel zonder zin, of geen echt einde',
+    },
     sabotage: [
       'Laat jouw knuffel één keer iets zeggen dat net niet in het verhaal past.',
       'Vergeet wanneer het jouw beurt is.',
@@ -1443,6 +1499,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       moeten: { makkelijk: ['een hoed'], normaal: ['een hoed en een staart'], pittig: ['een hoed, een staart en een handtas'] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle stukken op elkaar aansluiten en het monster dit heeft: {moeten}',
+      bijna: 'er maar één ding fout is: één stuk sluit niet aan, of één verplicht ding ontbreekt',
+    },
     sabotage: [
       'Laat de lijntjes van de nek een beetje te ver uit elkaar lopen.',
       'Vergeet het verplichte ding dat jij moest tekenen.',
@@ -2033,6 +2093,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       streak: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de teller {doel} vragen op een rij haalde voor de tijd om was',
+      bijna: 'het doel op hoogstens drie vragen na gehaald werd',
+    },
     sabotage: [
       'Zeg zelf één keer "per ongeluk" ja, maar niet meteen.',
       'Knik stiekem als iemand anders antwoordt, zodat die ook begint te knikken.',
@@ -2089,6 +2153,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de groep de hele opdracht precies uitvoerde voor de tijd om was, zonder dat de Boodschapper praatte',
+      bijna: 'er nog maar één stukje van de opdracht fout was of ontbrak',
+    },
     sabotage: [
       'Ben jij Boodschapper? Maak één gebaar net verkeerd. Anders: doe snel iets anders en roep "dat bedoelt de Boodschapper zeker!".',
       'Ben jij Boodschapper? Knik één keer tevreden als de groep iets net verkeerd doet. Anders: begrijp één gebaar expres verkeerd, maar heel enthousiast.',
@@ -2124,6 +2192,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'elke familie compleet samen stond, zonder iemand van een ander dier erbij',
+      bijna: 'er nog maar één speler alleen of bij de verkeerde familie stond',
+    },
     sabotage: [
       'Maak af en toe het geluid van een ander dier.',
       'Maak jouw geluid heel zacht.',
@@ -2158,7 +2230,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: '{tijd}',
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Schud het kaartspel goed (zonder jokers).',
-    explain: 'Oei, Kenzo heeft Windy’s kaartspel helemaal door elkaar gegooid! Sorteer {opdracht}, voor de tijd om is.',
+    explain: 'Oei, Kenzo heeft Windy’s kaartspel helemaal door elkaar gegooid! Sorteer {opdracht}, voor de tijd om is. Ligt elke kaart juist? Dan is het gelukt.',
     vars: {
       opdracht: {
         makkelijk: ['alle kaarten in vier stapels: harten, ruiten, klaveren en schoppen'],
@@ -2168,6 +2240,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       tijd: { makkelijk: [90], normaal: [150], pittig: [180] },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'elke kaart volgens de opdracht juist lag toen de tijd om was',
+      bijna: 'er hoogstens drie kaarten verkeerd lagen of nog niet gesorteerd waren',
+    },
     sabotage: [
       'Leg een kaart stiekem op de verkeerde stapel.',
       'Hou een paar kaarten "per ongeluk" in je hand.',
@@ -2219,9 +2295,9 @@ export const TASKS_BINNEN: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg {aantal} dobbelstenen klaar.',
     explain:
-      'Leg {aantal} dobbelstenen in het midden. Om de beurt gooit iemand alle dobbelstenen die nog geen zes zijn. Zessen leg je apart. Na elke worp geef je door. Liggen alle dobbelstenen op zes voor de tijd om is?',
+      'Leg {aantal} dobbelstenen in het midden. Om de beurt gooit iemand alle dobbelstenen die nog geen zes zijn. Zessen leg je apart. Na elke worp geef je door. Hoeveel van de {aantal} dobbelstenen liggen er op zes als de tijd om is?',
     vars: { aantal: { makkelijk: [3], normaal: [5], pittig: [6] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'zessen' },
     sabotage: [
       'Schud extra lang voor je gooit.',
       'Leg een zes "per ongeluk" terug bij de dobbelstenen die nog moeten, als niemand kijkt.',
@@ -2327,6 +2403,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'De kookwekker tikt, maar niemand weet hoelang nog! Geef hem door in de kring. Wie de wekker krijgt, zegt het volgende getal van de tafel van {tafel} en geeft door. Fout? Dan begin je opnieuw bij {tafel}. Halen jullie {doel} voor de wekker afgaat?',
     vars: { tafel: { makkelijk: [2], normaal: [3], pittig: [7] }, doel: { makkelijk: [40], normaal: [60], pittig: [70] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iemand {doel} zei voor de wekker afging',
+      bijna: 'jullie nog maar één of twee getallen van {doel} verwijderd waren toen de wekker afging',
+    },
     sabotage: [
       'Zeg af en toe een fout getal, maar niet te vaak.',
       'Hou de wekker net iets langer vast voor je doorgeeft.',
@@ -2400,6 +2480,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Windy heeft een spoor van geheime briefjes uitgezet. Elk briefje bevat een raadsel dat naar de plek van het volgende briefje wijst. Lees, denk en zoek samen! Vinden jullie de verrassing aan het einde voor de tijd om is?',
     vars: { aantal: { makkelijk: [4], normaal: [6], pittig: [8] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de verrassing bij het laatste briefje gevonden werd voor de tijd om was',
+      bijna: 'jullie het laatste briefje al hadden, maar de verrassing nog niet vonden toen de tijd om was',
+    },
     sabotage: [
       'Lees een briefje heel traag of een beetje verkeerd voor.',
       'Stel een verkeerde plek voor en loop er zelf al naartoe.',
@@ -2436,6 +2520,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Ergens in deze kamer tikt een verstopte kookwekker. Vind hem voor hij afgaat! Tip: wees muisstil en luister goed. Wie iets hoort, wijst alleen maar, want lawaai maakt het moeilijker.',
     vars: { tijd: { makkelijk: [4], normaal: [3], pittig: [2] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iemand de wekker vond en vastnam voor hij afging',
+      bijna: 'jullie al naar de juiste plek wezen of er vlak bij zochten toen hij afging',
+    },
     sabotage: [
       'Schuifel één keer met je voeten of schraap je keel als het tikken net te horen is.',
       'Wijs heel zeker naar de verkeerde hoek.',
@@ -2620,7 +2708,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy leest voor welk beroemd schilderij jullie moeten nabootsen. Het hulpje toont het op een gsm, als dat kan. Maak het samen zo goed mogelijk na, met verkleedkleren, handdoeken of dekens. Iedereen moet erin! Zodra jullie klaar zijn, staan jullie 5 tellen stokstijf stil voor de foto. Lijkt het? Dan hangt het straks in het museum.',
+      'Windy leest voor welk beroemd schilderij jullie moeten nabootsen. Het hulpje toont het op een gsm, als dat kan. Maak het samen zo goed mogelijk na, met verkleedkleren, handdoeken of dekens. Iedereen moet erin! Zodra jullie klaar zijn, staan jullie 5 tellen stokstijf stil voor de foto. Herken je het schilderij, staat iedereen erin en beweegt niemand? Dan is het gelukt, en hangt het straks in het museum.',
     list: {
       title: 'Schilderijen (Windy leest het voor)',
       items: {
@@ -2638,6 +2726,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'je het schilderij meteen herkent, iedereen erin staat en niemand bewoog tijdens de 5 tellen',
+      bijna: 'je het schilderij herkent, maar er iemand bewoog of iemand niet meedeed',
+    },
     sabotage: [
       'Blijf net niet stilstaan tijdens de foto.',
       'Kies verkleedkleren die net niet passen.',
@@ -2663,7 +2755,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak truc-foto’s! Door slim te staan (sommigen dicht bij de camera, anderen ver weg) lijkt iemand een reus of een kaboutertje. Jullie moeten deze foto’s maken: {fotos}. Het hulpje houdt de camera vast, maar jullie bepalen waar het moet staan. Zoek een lange gang, een grote kamer of een plekje in de tuin.',
+      'Maak truc-foto’s! Door slim te staan (sommigen dicht bij de camera, anderen ver weg) lijkt iemand een reus of een kaboutertje. Jullie moeten deze foto’s maken: {fotos}. Het hulpje houdt de camera vast, maar jullie bepalen waar het moet staan. Zoek een lange gang, een grote kamer of een plekje in de tuin. Lukt elke truc echt op de foto? Dan is het gelukt.',
     vars: {
       fotos: {
         makkelijk: ['iemand lijkt op de hand van een ander te staan'],
@@ -2672,6 +2764,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'elke gevraagde truc op de foto echt lukt',
+      bijna: 'er maar één truc net niet klopt, bijvoorbeeld een hand die net naast iemands voeten zit',
+    },
     sabotage: [
       'Ga net op de verkeerde afstand staan.',
       'Beweeg je hand net weg als de foto genomen wordt.',
@@ -2699,6 +2795,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Verstop jullie allemaal in de kamer, achter kussens, onder handdoeken of dekens, of achter de zetel. Maar let op: op de foto moet van iedereen nog net één {deel} te zien zijn, en niets meer! Kruip niet in kasten of onder zware dingen. De spelleider maakt vanuit de deur één foto en controleert. Klopt het voor iedereen? Dan is het gelukt.',
     vars: { deel: { makkelijk: ['hand of voet'], normaal: ['hand of voet'], pittig: ['vinger'] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'van iedereen op de foto precies één {deel} te zien is, en niets meer',
+      bijna: 'het voor iedereen klopt, op één speler na',
+    },
     sabotage: [
       'Laat stiekem een beetje te veel van jezelf zien.',
       'Verstop je zo goed dat er niets meer van je te zien is.',
@@ -2723,7 +2823,7 @@ export const TASKS_BINNEN: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak op de grond samen een reuzengezicht met voorwerpen uit huis: sokken, lepels, schoenen, kussens... Het gezicht moet {emotie} kijken en minstens dit hebben: {onderdelen}. Iedereen legt minstens één voorwerp. Na de foto leggen jullie alles netjes terug!',
+      'Maak op de grond samen een reuzengezicht met voorwerpen uit huis: sokken, lepels, schoenen, kussens... Het gezicht moet {emotie} kijken en minstens dit hebben: {onderdelen}. Iedereen legt minstens één voorwerp. Staat alles erop en zie je meteen hoe het gezicht kijkt? Dan is het gelukt. Na de foto leggen jullie alles netjes terug!',
     vars: {
       emotie: { normaal: ['heel blij', 'boos', 'verbaasd', 'verliefd', 'bang'] },
       onderdelen: {
@@ -2733,6 +2833,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'alle verplichte onderdelen erop liggen, iedereen iets legde en je meteen ziet dat het gezicht {emotie} kijkt',
+      bijna: 'er maar één onderdeel ontbreekt, of de emotie niet echt duidelijk is',
+    },
     sabotage: [
       'Leg de mond net verkeerd, zodat het gezicht een andere emotie krijgt.',
       'Haal een voorwerp dat net te klein is, zodat het onderdeel bijna niet opvalt.',
@@ -2807,6 +2911,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Het hulpje gaat even weg, zodat het niets ziet, en de groep kiest in het geheim een Leider. De Leider doet bewegingen (klappen, op je hoofd tikken, wiebelen) en verandert af en toe; iedereen doet het meteen na. Het hulpje komt terug, gaat in het midden staan en mag {kansen} keer raden wie de Leider is. Raadt het hulpje het niet voor de tijd om is? Dan is het gelukt!',
     vars: { kansen: { makkelijk: [2], normaal: [3], pittig: [4] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'het hulpje de Leider niet raadde, met {kansen} keer raden',
+      bijna: 'het hulpje de Leider pas raadde bij de allerlaatste kans',
+    },
     sabotage: [
       'Kijk af en toe net iets te lang naar de Leider.',
       'Doe een nieuwe beweging als laatste, heel traag.',
@@ -2843,6 +2951,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       'Estafette op handen en knieën! Kruip om de beurt door het hele parcours, zonder iets om te stoten of het laken te laten vallen. Terug? Tik de volgende aan. Gaat er iets mis? Dan doe je dat stuk opnieuw. Is iedereen {rondes} keer door het parcours geweest voor de tijd om is?',
     vars: { rondes: { makkelijk: [1], normaal: [1], pittig: [2] }, tijd: { makkelijk: [180], normaal: [120], pittig: [210] } },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'iedereen {rondes} keer door het hele parcours kroop voor de tijd om was',
+      bijna: 'er nog maar één kruiper onderweg was toen de tijd om was',
+    },
     sabotage: [
       'Kruip extra traag door de tunnel en "blijf haken".',
       'Tik de volgende net iets te laat aan.',
@@ -2950,6 +3062,10 @@ export const TASKS_BINNEN: TaskDef[] = [
       streak: true,
     },
     scoring: { type: 'gelukt' },
+    judge: {
+      gelukt: 'de teller {doel} bevelen op een rij haalde voor de tijd om was',
+      bijna: 'het doel op hoogstens drie bevelen na gehaald werd',
+    },
     sabotage: [
       'Doe een bevel zonder "Windy zegt" "per ongeluk" mee, maar niet meteen.',
       'Begin een heel klein beetje te bewegen, zodat anderen twijfelen.',

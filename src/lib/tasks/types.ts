@@ -109,6 +109,11 @@ export interface TaskDef {
   /** Maximum aantal edelstenen (standaard 10). */
   gems?: number;
   /**
+   * Bij gelukt/bijna/mislukt: wanneer is het gelukt (10 edelstenen) en wanneer bijna (5)? Al de rest is
+   * mislukt. Staat op het resultaatscherm, zodat het hulpje niets moet verzinnen.
+   */
+  judge?: { gelukt: string; bijna: string };
+  /**
    * Sabotagetips voor 't Duvelke. Elke tip past binnen de regels van deze opdracht,
    * valt niet op als je hem een paar keer doet, en is haalbaar voor een kind van 10.
    */

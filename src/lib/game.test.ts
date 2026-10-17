@@ -20,6 +20,7 @@ import {
   saboteurCount,
   skipCurrent,
   startTasks,
+  streakNext,
   testSkip,
   useJoker,
 } from './game';
@@ -456,5 +457,16 @@ describe('een meespelend hulpje dat de opdracht leidt', () => {
     } finally {
       setExtraTasks([]);
     }
+  });
+});
+
+describe('reeks "na elkaar zonder fout"', () => {
+  it('onthoudt de beste reeks, ook na een fout', () => {
+    const program: ProgramItem[] = [{ uid: 's1', taskId: 'b-windy-zegt', location: 'binnen', vars: { doel: 10 }, list: ['a', 'b'] }];
+    const game = createGame(players(4), defaultSettings(), null, null, program, seeded(3));
+    startTasks(game);
+    for (const ok of [true, true, true, false, true]) streakNext(game, ok);
+    expect(game.current!.cards.guessed).toBe(1);
+    expect(game.current!.cards.best).toBe(3);
   });
 });

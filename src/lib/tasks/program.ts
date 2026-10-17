@@ -57,6 +57,18 @@ export function fillVars(text: string, vars: Record<string, VarValue>): string {
   return text.replace(/\{(\w+)\}/g, (match, key: string) => (key in vars ? String(vars[key]) : match));
 }
 
+/**
+ * De uitleg zoals Windy ze voorleest: met de variabelen ingevuld, en bij een opdracht met een teller ook
+ * het doel, als dat er nog niet in staat ("Doel: 6 vakjes."). Zo weet iedereen vooraf waarvoor ze gaan.
+ */
+export function explainWithGoal(task: TaskDef, item: ProgramItem): string {
+  const text = fillVars(task.explain, item.vars);
+  if (task.scoring.type !== 'aantal') return text;
+  const target = Number(fillVars(String(task.scoring.target), item.vars));
+  if (!target || new RegExp(`\\b${target}\\b`).test(text)) return text;
+  return `${text.trimEnd()} Doel: ${target} ${task.scoring.unit}.`;
+}
+
 function optionsFor<T>(opts: { makkelijk?: T[]; normaal: T[]; pittig?: T[] }, difficulty: Difficulty): T[] {
   const chosen = opts[difficulty];
   return chosen && chosen.length > 0 ? chosen : opts.normaal;

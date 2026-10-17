@@ -471,6 +471,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'jullie de schat opgraven voor de tijd om is', bijna: 'jullie het juiste aantal stappen hadden maar net naast de schat groeven, of hem net te laat vonden' },
     sabotage: [
       'Tel de stappen luidop mee en tel er stiekem één bij.',
       'Zet net iets kleinere stappen als jij de stappen mag zetten.',
@@ -508,9 +509,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Bouw samen een tipi van takjes die al op de grond liggen. Hij moet vanzelf blijven staan en {hoogte} reiken. Niemand mag hem vasthouden terwijl de spelleider tot tien telt! Na de foto leggen jullie de takjes weer netjes terug.',
+      'Bouw samen een tipi van takjes die al op de grond liggen. Hij moet vanzelf blijven staan en {hoogte} reiken. Niemand mag hem vasthouden terwijl de spelleider tot tien telt! Blijft hij tien tellen staan en is hij hoog genoeg, dan is het gelukt. Na de foto leggen jullie de takjes weer netjes terug.',
     vars: { hoogte: { makkelijk: ['tot aan je knie'], normaal: ['tot aan je heup'], pittig: ['tot aan je schouder'] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de tipi {hoogte} reikt en tien tellen blijft staan zonder dat iemand hem aanraakt', bijna: 'de tipi tien tellen bleef staan maar net te laag was, of pas na acht tellen omviel' },
     sabotage: [
       'Zet jouw takje net iets te recht, zodat het wiebelt.',
       'Stel voor om er nog een dikke tak bovenop te leggen, "voor de stevigheid".',
@@ -546,6 +548,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het hulpje bij het openen van de ogen meteen een {vorm} ziet, met alle hoeken en lijnen op hun plek', bijna: 'de {vorm} te herkennen is, maar één hoek of lijn duidelijk scheef of verkeerd ligt' },
     sabotage: [
       'Trek zachtjes een hoek net de verkeerde kant op.',
       'Zeg "bij mij is het perfect" als jouw stuk scheef is.',
@@ -605,6 +608,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Maak een grote zandhoop en zet er een lege emmer bij, net zo ver dat jullie er allemaal in een rij tussen passen, telkens één grote stap uit elkaar. Geef het zand door van hand tot hand, enkel met je handen als schepje: niemand mag lopen met zand! Is de emmer {vulling} voor de tijd om is?',
     vars: { vulling: { makkelijk: ['voor een kwart vol'], normaal: ['halfvol'], pittig: ['voor driekwart vol'] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de emmer {vulling} is voor de tijd om is, zonder dat iemand met zand liep', bijna: 'er nog maar een paar handjes zand ontbraken' },
     sabotage: [
       'Hou je handen een beetje open, zodat het zand ertussen glijdt.',
       'Geef het zand een beetje te haastig door, zodat er wat naast valt.',
@@ -632,6 +636,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Wandel samen van de start naar de finish, {afstand} grote stappen verder over zacht, droog zand. Er mag maar één spoor voetstappen komen: iedereen stapt precies in de voetstappen van de eerste. Ziet het hulpje daarna extra afdrukken? Dan is het mislukt!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [25] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'er van start tot finish maar één spoor ligt, zonder één extra afdruk', bijna: 'er hoogstens twee extra afdrukken naast het spoor staan' },
     sabotage: [
       'Zet één keer je voet net een klein beetje naast de voetstap.',
       'Ben jij de eerste? Zet stappen die net iets te groot zijn voor de kleinsten. Anders: zet je voet bij een grote stap net op de rand van de afdruk.',
@@ -754,7 +759,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verzamel van elke soort een paar exemplaren die op de grond liggen: dennenappels, blaadjes, steentjes, takjes en eikels.',
     explain:
-      'De spelleider legt een ketting van {lengte} natuurdingen op een rij, bijvoorbeeld steen, blad, blad, takje. Jullie kijken 20 tellen, dan draait iedereen zich om en haalt de spelleider de ketting weg. Leg de ketting samen precies na! We doen 3 rondes.',
+      'De spelleider legt een ketting van {lengte} natuurdingen op een rij, bijvoorbeeld steen, blad, blad, takje. Jullie kijken 20 tellen, dan draait iedereen zich om en haalt de spelleider de ketting weg. Leg de ketting samen precies na! We doen 3 rondes, en elke ronde waarin de hele ketting klopt, telt.',
     vars: { lengte: { makkelijk: [5], normaal: [7], pittig: [10] } },
     scoring: { type: 'aantal', target: 3, unit: 'juiste rondes' },
     sabotage: [
@@ -825,7 +830,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De spelleider tekent met een stok een geheime tekening in het zand. Jullie mogen {seconden} seconden kijken, dan wist de spelleider alles uit. Teken de tekening samen zo precies mogelijk na in het zand: lijkt het, dan is het gelukt!',
+      'De spelleider tekent met een stok een geheime tekening in het zand. Jullie mogen {seconden} seconden kijken, dan wist de spelleider alles uit. Teken de tekening samen zo precies mogelijk na in het zand: staan alle onderdelen erin, op ongeveer de juiste plek, dan is het gelukt!',
     vars: { seconden: { makkelijk: [30], normaal: [20], pittig: [10] } },
     list: {
       title: 'Wat tekent de spelleider?',
@@ -838,6 +843,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       secret: true,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'alle onderdelen van de geheime tekening erin staan, op ongeveer de juiste plek', bijna: 'er maar één onderdeel ontbreekt of op de verkeerde plek staat' },
     sabotage: [
       'Teken jouw stukje net iets groter of kleiner.',
       'Zeg dat er "zeker nog een wolk bij was".',
@@ -930,9 +936,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Bouw samen een torentje van {aantal} steentjes, stukjes schors of dennenappels. Elk ding ligt óp het vorige, niet ernaast! Blijft het 10 tellen staan, dan is het gelukt. Daarna leggen jullie alles terug waar het lag.',
+      'Bouw samen een torentje van {aantal} steentjes, stukjes schors of dennenappels. Elk ding ligt óp het vorige, niet ernaast! Hoeveel dingen telt het hoogste torentje dat 10 tellen blijft staan zonder dat iemand het vasthoudt? Daarna leggen jullie alles terug waar het lag.',
     vars: { aantal: { makkelijk: [5], normaal: [7], pittig: [10] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'dingen op elkaar' },
     sabotage: [
       'Leg jouw stuk net een beetje schuin.',
       'Stel voor om een ronde dennenappel in het midden te gebruiken.',
@@ -1017,9 +1023,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen een groot rond kunstwerk op de grond met wat er in het bos ligt: een hartje in het midden en daarrond ringen. Elke ring is van een ander materiaal, zoals dennenappels, blaadjes, takjes of steentjes. Jullie mandala moet minstens {ringen} ringen hebben!',
+      'Maak samen een groot rond kunstwerk op de grond met wat er in het bos ligt: een hartje in het midden en daarrond ringen. Elke ring is van een ander materiaal, zoals dennenappels, blaadjes, takjes of steentjes. Elke ring die helemaal rond is en uit één materiaal bestaat, telt. Halen jullie {ringen} ringen?',
     vars: { ringen: { makkelijk: [3], normaal: [5], pittig: [7] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{ringen}', unit: 'volledige ringen' },
     sabotage: [
       'Leg één ding van een ander materiaal in een ring, alsof je het niet zag.',
       'Maak jouw stuk van de ring net iets te breed of te smal.',
@@ -1044,7 +1050,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen op de grond een bosmonster van alles wat er ligt: dennenappels als ogen, takjes als haar, blaadjes als tanden... Het monster moet {delen} hebben. Bedenk ook een naam en vertel de spelleider waarom het monster ’t Duvelke zo graag helpt!',
+      'Maak samen op de grond een bosmonster van alles wat er ligt: dennenappels als ogen, takjes als haar, blaadjes als tanden... Het monster moet {delen} hebben. Bedenk ook een naam en vertel de spelleider waarom het monster ’t Duvelke zo graag helpt! Zijn alle onderdelen er en heeft het monster een naam, dan is het gelukt.',
     vars: {
       delen: {
         makkelijk: ['twee ogen, een mond en armen'],
@@ -1053,6 +1059,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het monster {delen} heeft en jullie een naam en een reden vertelden', bijna: 'er maar één onderdeel ontbreekt, of de naam nog niet klaar was' },
     sabotage: [
       'Vergeet "per ongeluk" één verplicht onderdeel.',
       'Kom bij de naam nog met een paar extra ideeën, zodat het lang duurt.',
@@ -1077,7 +1084,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Onzen Kenzo gelooft heilig in boskabouters, dus die hebben een huisje nodig! Bouw samen een kabouterhuisje aan de voet van een boom, met enkel takjes, schors, blaadjes en dennenappels die al op de grond liggen. Het huisje moet {onderdelen} hebben.',
+      'Onzen Kenzo gelooft heilig in boskabouters, dus die hebben een huisje nodig! Bouw samen een kabouterhuisje aan de voet van een boom, met enkel takjes, schors, blaadjes en dennenappels die al op de grond liggen. Het huisje moet {onderdelen} hebben. Is elk onderdeel af voor de tijd om is, dan is het gelukt.',
     vars: {
       onderdelen: {
         makkelijk: ['een dak en een deur'],
@@ -1086,6 +1093,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het huisje {onderdelen} heeft en elk onderdeel af is', bijna: 'er nog maar één onderdeel ontbreekt of niet af is' },
     sabotage: [
       'Bouw jouw muurtje zo dat het dak er net niet op past.',
       'Neem lang de tijd om "het perfecte takje" te zoeken.',
@@ -1110,7 +1118,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 540,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Boetseer samen een {dier} uit zand, zo groot dat jullie er allemaal omheen kunnen staan. Versier hem met schelpen, veertjes en stukjes hout. De spelleider moet meteen zien wat het is!',
+      'Boetseer samen een {dier} uit zand, zo groot dat jullie er allemaal omheen kunnen staan. Versier hem met schelpen, veertjes en stukjes hout. Ziet de spelleider meteen welk dier het is, zonder dat jullie iets zeggen? Dan is het gelukt!',
     vars: {
       dier: {
         makkelijk: ['schildpad', 'vis'],
@@ -1119,6 +1127,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de spelleider meteen ziet dat het een {dier} is, groot genoeg om er met iedereen omheen te staan', bijna: 'de spelleider het pas na één hint of na twee keer raden ziet, of het dier net te klein is' },
     sabotage: [
       'Maak jouw stuk van het dier een beetje raar, zodat het op iets anders lijkt.',
       'Leg de schelpen "per ongeluk" op de verkeerde plaats.',
@@ -1143,12 +1152,13 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Strijk een stuk zand glad als een schilderdoek en maak er samen een schilderij op met enkel schelpen, steentjes en veertjes. Het thema is "{thema}". Gebruik minstens {aantal} schelpen!',
+      'Strijk een stuk zand glad als een schilderdoek en maak er samen een schilderij op met enkel schelpen, steentjes en veertjes. Het thema is "{thema}". Gebruik minstens {aantal} schelpen! Is het thema meteen te herkennen en liggen er genoeg schelpen, dan is het gelukt.',
     vars: {
       thema: { normaal: ['een vuurtoren', 'een zeemeermin', 'Windy op vakantie', 'een piratenschip', 'een regenboog'] },
       aantal: { makkelijk: [20], normaal: [40], pittig: [60] },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het thema meteen te herkennen is en er minstens {aantal} schelpen liggen', bijna: 'het thema te herkennen is maar er net te weinig schelpen liggen, of het thema pas na uitleg te zien is' },
     sabotage: [
       'Leg een paar schelpen zo dat het thema minder goed te zien is.',
       'Tel luidop een paar schelpen te veel als jullie ze tellen.',
@@ -1515,7 +1525,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'In het bos zijn we stil als uilen. Ga op een rij staan in de volgorde van {volgorde}, maar zonder één woord te zeggen! Jullie mogen enkel "oehoe" roepen, wijzen en gebaren maken. Klopt de rij, dan is het gelukt.',
+      'In het bos zijn we stil als uilen. Ga op een rij staan in de volgorde van {volgorde}, maar zonder één woord te zeggen! Jullie mogen enkel "oehoe" roepen, wijzen en gebaren maken. Staat iedereen op de juiste plek in de rij, dan is het gelukt.',
     vars: {
       volgorde: {
         makkelijk: ['lengte, van klein naar groot', 'schoenmaat, van klein naar groot'],
@@ -1524,6 +1534,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen op de juiste plek in de rij staat en niemand een woord zei', bijna: 'er maar twee kinderen van plaats moeten wisselen, of er één keer per ongeluk een woord gezegd werd' },
     sabotage: [
       'Ga zelf net op de verkeerde plaats staan en hou vol met je gebaren.',
       'Maak verwarrende gebaren: steek drie vingers op als je vier bedoelt.',
@@ -1548,7 +1559,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verzamel een paar natuurdingen die op de grond liggen: een dennenappel, een eikel, een veer, een blad, een stukje schors, een glad steentje.',
     explain:
-      'De Voeler doet de ogen dicht en krijgt van de spelleider een schat van het bos in de handen. De Voeler vertelt enkel hoe het voelt, zonder te zeggen wat het is. De rest zoekt op de grond precies zo’n ding! We doen {rondes} rondes, telkens met een nieuwe Voeler.',
+      'De Voeler doet de ogen dicht en krijgt van de spelleider een schat van het bos in de handen. De Voeler vertelt enkel hoe het voelt, zonder te zeggen wat het is. De rest zoekt op de grond precies zo’n ding! We doen {rondes} rondes, telkens met een nieuwe Voeler. Elke ronde waarin jullie zo’n ding vinden, telt.',
     vars: { rondes: { makkelijk: [3], normaal: [4], pittig: [5] } },
     roles: [{ name: 'Voeler', count: 1, hint: 'Doe je ogen dicht en steek je handen uit.' }],
     scoring: { type: 'aantal', target: '{rondes}', unit: 'rondes' },
@@ -1582,7 +1593,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 7,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga achter elkaar op een rij staan in het zand. De Eerste staat achteraan, bekijkt stiekem een tekening en tekent die met één vinger op de rug van wie ervoor staat. Zo gaat de tekening de rij door, en wie vooraan staat, tekent in het zand wat hij of zij voelde. We doen 3 tekeningen: lijken ze op het origineel?',
+      'Ga achter elkaar op een rij staan in het zand. De Eerste staat achteraan, bekijkt stiekem een tekening en tekent die met één vinger op de rug van wie ervoor staat. Zo gaat de tekening de rij door, en wie vooraan staat, tekent in het zand wat hij of zij voelde. We doen 3 tekeningen: elke zandtekening die duidelijk op het origineel lijkt, telt.',
     roles: [{ name: 'Eerste', count: 1, hint: 'Bekijk de tekening stiekem op de tablet.' }],
     list: {
       title: 'Rugtekeningen',
@@ -1619,7 +1630,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     minutes: 8,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De Denker leest stiekem een geheim ding van het strand op de tablet. De rest mag enkel vragen stellen waarop de Denker "ja" of "nee" antwoordt. Raden jullie het binnen {vragen} vragen? We doen 3 rondes.',
+      'De Denker leest stiekem een geheim ding van het strand op de tablet. De rest mag enkel vragen stellen waarop de Denker "ja" of "nee" antwoordt. Raden jullie het binnen {vragen} vragen? We doen 3 rondes, en elk geraden ding telt.',
     vars: { vragen: { makkelijk: [20], normaal: [15], pittig: [10] } },
     roles: [{ name: 'Denker', count: 1, hint: 'Lees stiekem het geheime strandding op de tablet.' }],
     list: {
@@ -1661,9 +1672,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak voor de tijd om is een slang op de grond van dingen die al in het bos liggen: dennenappels, takjes, blaadjes en steentjes, allemaal tegen elkaar aan. De slang moet minstens {lengte} grote stappen lang zijn, met een kop en twee ogen!',
+      'Maak voor de tijd om is een slang op de grond van dingen die al in het bos liggen: dennenappels, takjes, blaadjes en steentjes, allemaal tegen elkaar aan, met een kop en twee ogen. Als de tijd om is, meet het hulpje de slang met grote stappen, van de kop tot het laatste stukje zonder gat. Hoeveel grote stappen lang is jullie slang?',
     vars: { lengte: { makkelijk: [5], normaal: [7], pittig: [10] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{lengte}', unit: 'grote stappen slang' },
     sabotage: [
       'Laat bij jouw stuk een klein gaatje open tussen twee dingen.',
       'Stel voor om de slang veel te laten kronkelen, zodat ze minder ver reikt.',
@@ -1688,7 +1699,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 120,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Leg met vier takjes een vierkant op de grond van {grootte}. Bedek het vierkant voor de tijd om is helemaal met blaadjes die al op de grond liggen: er mag geen stukje grond meer te zien zijn!',
+      'Leg met vier takjes een vierkant op de grond van {grootte}. Bedek het vierkant voor de tijd om is helemaal met blaadjes die al op de grond liggen: is er geen stukje grond meer te zien, dan is het gelukt!',
     vars: {
       grootte: {
         makkelijk: ['twee bij twee voeten'],
@@ -1697,6 +1708,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'er binnen het vierkant nergens nog grond te zien is', bijna: 'er nog hoogstens twee kleine plekjes grond te zien zijn, zo klein als een muntstuk' },
     sabotage: [
       'Leg de blaadjes zo dat er net een gaatje open blijft.',
       'Schuif "per ongeluk" een takje van het vierkant naar buiten, zodat het groter wordt.',
@@ -1780,9 +1792,9 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Alarm! Windy heeft gehoord dat de vloed komt (dat is maar spel: we blijven ver weg van het water). Bouw voor de tijd om is samen een dijk van zand, {lengte} grote stappen lang en een handbreedte hoog. Gebruik de emmers om zand aan te dragen en de schepjes om het aan te kloppen. Staat de dijk nog overeind als de tijd om is?',
+      'Alarm! Windy heeft gehoord dat de vloed komt (dat is maar spel: we blijven ver weg van het water). Bouw voor de tijd om is samen een dijk van zand, {lengte} grote stappen lang en een handbreedte hoog. Gebruik de emmers om zand aan te dragen en de schepjes om het aan te kloppen. Als de tijd om is, meet het hulpje: hoeveel grote stappen dijk staan er, overal minstens een handbreedte hoog?',
     vars: { lengte: { makkelijk: [3], normaal: [5], pittig: [7] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{lengte}', unit: 'grote stappen dijk' },
     sabotage: [
       'Neem je zand van vlak naast de dijk, zodat die kant afbrokkelt.',
       'Maak jouw stuk van de dijk net iets lager.',
@@ -1809,7 +1821,7 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verzamel een grote hoop van ongeveer {aantal} schelpen en steentjes door elkaar. Zorg dat er van elk groepje een paar in zitten: {soorten}.',
     explain:
-      'Windy’s schelpenwinkel is een puinhoop! Sorteer de hele hoop voor de tijd om is in groepjes: {soorten}. Daarna kijkt de spelleider na: meer dan 2 schelpen op de verkeerde plaats, en het is mislukt!',
+      'Windy’s schelpenwinkel is een puinhoop! Sorteer de hele hoop voor de tijd om is in groepjes: {soorten}. Daarna kijkt de spelleider na: is de hele hoop gesorteerd en liggen er hoogstens 2 schelpen op de verkeerde plaats, dan is het gelukt!',
     vars: {
       aantal: { makkelijk: [30], normaal: [40], pittig: [50] },
       soorten: {
@@ -1819,6 +1831,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de hele hoop gesorteerd is met hoogstens 2 schelpen op de verkeerde plaats', bijna: 'er 3 tot 5 schelpen verkeerd liggen, of er nog een handje ongesorteerd ligt' },
     sabotage: [
       'Leg een schelp "per ongeluk" in het verkeerde groepje.',
       'Zeg bij een twijfelschelp dat hij zeker bij het andere groepje hoort.',
@@ -1845,9 +1858,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Leg langs een pad van ongeveer {meter} meter tekens van takjes of steentjes: een pijl betekent deze kant op, een kruis betekent niet deze weg, en een cirkel met een steen erin betekent einde. Verstop bij het einde een zakje verpakte snoepjes.',
     explain:
-      'Echte speurders lezen tekens! Een pijl betekent "deze kant op", een kruis betekent "niet deze weg" en een cirkel met een steen erin betekent "einde". Volg het spoor van de spelleider en blijf altijd op het pad. Vinden jullie de verrassing?',
+      'Echte speurders lezen tekens! Een pijl betekent "deze kant op", een kruis betekent "niet deze weg" en een cirkel met een steen erin betekent "einde". Volg het spoor van de spelleider en blijf altijd op het pad. Vinden jullie de verrassing voor de tijd om is, dan is het gelukt!',
     vars: { meter: { makkelijk: [100], normaal: [200], pittig: [300] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'jullie de verrassing vinden voor de tijd om is', bijna: 'jullie tot bij het laatste teken kwamen maar de verrassing net niet of net te laat vonden' },
     sabotage: [
       'Wijs naar een takje dat toevallig op een pijl lijkt.',
       'Wandel vooraan net iets te snel, zodat de anderen een pijl missen.',
@@ -1882,9 +1896,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     difficulties: [...ALLE_NIVEAUS],
     prep: 'Verstop een zakje verpakte snoepjes. Bedenk vanaf een startpunt {aantal} kompasopdrachten die er naartoe leiden, zoals "10 stappen naar het noorden", en schrijf ze op papier. Stap de route zelf af met kleine stappen, zo groot als de grote stappen van een kind. Blijf op of vlak naast het pad.',
     explain:
-      'Het hulpje leest één voor één kompasopdrachten voor, zoals "10 stappen naar het noorden". Eén iemand houdt het kompas, de rest telt de stappen, en na elke opdracht wissel je van kompasdrager. Zet telkens gewone grote stappen, allemaal even groot. Kloppen alle stappen? Dan staan jullie bij de verrassing!',
+      'Het hulpje leest één voor één kompasopdrachten voor, zoals "10 stappen naar het noorden". Eén iemand houdt het kompas, de rest telt de stappen, en na elke opdracht wissel je van kompasdrager. Zet telkens gewone grote stappen, allemaal even groot. Kloppen alle stappen? Dan staan jullie bij de verrassing! Vinden jullie ze voor de tijd om is, dan is het gelukt.',
     vars: { aantal: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'jullie na de laatste opdracht de verrassing vinden voor de tijd om is', bijna: 'jullie na de laatste opdracht op drie tot vijf stappen van de verrassing uitkwamen, of ze net te laat vonden' },
     sabotage: [
       'Hou het kompas "per ongeluk" vlak bij iets van metaal, zoals een rits of een sleutel.',
       'Tel de stappen luidop mee en tel er stiekem eentje bij.',
@@ -2072,12 +2087,12 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 480,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak samen een stripverhaal zonder woorden, in {fotos} foto’s. Het verhaal gaat over "{verhaal}". Bedenk eerst wat er gebeurt, speel dan elke scène en laat het hulpje telkens een foto maken. Toont elke foto duidelijk een stukje van het verhaal, en zit er een begin, een probleem en een einde in? Dan is het gelukt!',
+      'Maak samen een stripverhaal zonder woorden, in {fotos} foto’s. Het verhaal gaat over "{verhaal}". Bedenk eerst wat er gebeurt, met een begin, een probleem en een einde, speel dan elke scène en laat het hulpje telkens een foto maken. Elke foto die duidelijk een stukje van het verhaal toont, telt. Hoeveel duidelijke verhaalfoto’s maken jullie?',
     vars: {
       fotos: { makkelijk: [3], normaal: [4], pittig: [6] },
       verhaal: { normaal: ['verdwaald in het bos', 'de kabouter die zijn muts kwijt is', 'Windy ontmoet een beer', '’t Duvelke steelt de dennenappels', 'het geheim van de oude boom'] },
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{fotos}', unit: 'duidelijke verhaalfoto’s' },
     sabotage: [
       'Kom met een nieuw idee net als het verhaal bijna vastligt.',
       'Sta één keer net verkeerd of met je rug naar de camera.',
@@ -2158,6 +2173,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het hulpje op de foto meteen een {figuur} ziet, gemaakt met enkel voetstappen', bijna: 'de {figuur} pas na even kijken te herkennen is, of er één stuk ontbreekt of vertrapt is' },
     sabotage: [
       'Stap "per ongeluk" dwars door een stuk van de tekening.',
       'Maak jouw stuk net iets te groot, zodat de rest niet meer klopt.',
@@ -2191,6 +2207,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de figuur op de foto meteen herkenbaar is als een {figuur}', bijna: 'de {figuur} pas na even kijken te herkennen is, of er één stuk ontbreekt of wazig is' },
     sabotage: [
       'Sta net naast de figuur, zodat jouw schaduw een raar bultje maakt.',
       'Beweeg op het moment dat de foto genomen wordt.',
@@ -2220,6 +2237,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       'Het hulpje is een slapende uil en zit met de ogen dicht op het pad, {afstand} grote stappen verder. Sluip samen over het pad tot bij de uil, zonder een takje te laten kraken. Hoort de uil iets, dan wijst het hulpje in die richting: wie aangewezen wordt, gaat terug naar de start. Tikt iemand de uil zachtjes op de schouder voor de tijd om is, dan is het gelukt!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iemand de uil op de schouder tikt voor de tijd om is', bijna: 'iemand op één grote stap van de uil was toen de tijd om was of toen het hulpje hem aanwees' },
     sabotage: [
       'Stap één keer "per ongeluk" op een droog takje.',
       'Giechel zachtjes als iemand bijna bij de uil is.',
@@ -2277,6 +2295,7 @@ export const TASKS_NATUUR: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen samen over de finish kwam voor de tijd om was, telkens als het juiste dier', bijna: 'iedereen over de finish kwam maar één iemand een paar stappen achterbleef, of jullie net te laat waren' },
     sabotage: [
       'Doe het dier net iets trager na, maar wel netjes.',
       'Doe "per ongeluk" nog even het vorige dier.',
@@ -2301,9 +2320,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Bouw samen een parcours met {hindernissen} hindernissen uit wat er op de grond ligt: slalom tussen dennenappels, over een lijn van takjes springen, rond een boom lopen... Geen bomen beklimmen en niets afbreken! Daarna loopt iedereen het parcours één keer. Komt iedereen erdoor voor de tijd om is, zonder een hindernis om te stoten?',
+      'Bouw samen een parcours met {hindernissen} hindernissen uit wat er op de grond ligt: slalom tussen dennenappels, over een lijn van takjes springen, rond een boom lopen... Geen bomen beklimmen en niets afbreken! Daarna loopt iedereen het parcours één keer. Komt iedereen erdoor voor de tijd om is, zonder een hindernis om te stoten? Dan is het gelukt!',
     vars: { hindernissen: { makkelijk: [3], normaal: [5], pittig: [7] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het parcours {hindernissen} hindernissen heeft en iedereen erdoor kwam voor de tijd om was, zonder iets om te stoten', bijna: 'er maar één keer iets omgestoten werd, of één iemand net niet op tijd door het parcours kwam' },
     sabotage: [
       'Bouw een hindernis die net iets te moeilijk is.',
       'Stoot "per ongeluk" een dennenappel van de slalom om.',
@@ -2328,9 +2348,10 @@ export const TASKS_NATUUR: TaskDef[] = [
     timer: 120,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Een krab loopt zijwaarts! Ga naast elkaar op een rij staan en loop als een krabbenleger zijwaarts naar de finish, {afstand} grote stappen verder. Elke krab draagt een schelp op de rug van zijn hand. Valt er een schelp, dan wacht het hele leger tot ze terug ligt. Komt het hele leger over de finish voor de tijd om is?',
+      'Een krab loopt zijwaarts! Ga naast elkaar op een rij staan en loop als een krabbenleger zijwaarts naar de finish, {afstand} grote stappen verder. Elke krab draagt een schelp op de rug van zijn hand. Valt er een schelp, dan wacht het hele leger tot ze terug ligt. Komt het hele leger over de finish voor de tijd om is? Dan is het gelukt!',
     vars: { afstand: { makkelijk: [10], normaal: [15], pittig: [20] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het hele leger zijwaarts over de finish kwam voor de tijd om was, met elke schelp nog op de hand', bijna: 'het leger op een paar stappen van de finish stond toen de tijd om was' },
     sabotage: [
       'Loop net iets sneller of trager dan je buren, zodat de rij scheef wordt.',
       'Laat je schelp "per ongeluk" vallen, maar niet te vaak.',

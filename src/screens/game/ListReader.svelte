@@ -142,7 +142,8 @@
 
     {#if mode === 'roepen' && streak}
       <p class="q">{item}</p>
-      <p class="streak">🔥 {cards.guessed} op een rij{goal ? ` · doel ${goal}` : ''}{goal && cards.guessed >= goal ? ' · 🎉 Doel gehaald!' : ''}</p>
+      <p class="streak">🔥 {cards.guessed} op een rij{goal ? ` · doel ${goal}` : ''}{goal && (cards.best ?? 0) >= goal ? ' · 🎉 Doel gehaald!' : ''}</p>
+      {#if (cards.best ?? 0) > cards.guessed}<p class="best">Beste reeks tot nu: {cards.best}</p>{/if}
       <div class="row">
         <BigButton variant="ghost" onclick={() => say(item)}>🔊 Nog eens</BigButton>
         <BigButton variant="secondary" onclick={() => streakTap(true)}>✓ Goed</BigButton>
@@ -234,6 +235,13 @@
     font-weight: 800;
     font-size: 1.3rem;
     color: var(--gold);
+  }
+
+  .best {
+    margin: -6px 0 0;
+    text-align: center;
+    color: var(--text-dim);
+    font-weight: 700;
   }
 
   .q.hidden {

@@ -41,7 +41,7 @@ export interface CurrentTask {
   /** Komt er na deze opdracht een dilemma (schat of Kijk-joker)? */
   dilemma: boolean;
   /** Kaartjes-opdracht: welk kaartje aan de beurt is en hoeveel er geraden zijn. */
-  cards: { index: number; guessed: number };
+  cards: { index: number; guessed: number; best?: number };
 }
 
 export interface GamePlayer {
@@ -488,6 +488,7 @@ function normalizeCurrent(raw: unknown, game: Game): CurrentTask | null {
     cards: {
       index: Math.max(0, Math.round(num(isRecord(raw.cards) ? raw.cards.index : null) ?? 0)),
       guessed: Math.max(0, Math.round(num(isRecord(raw.cards) ? raw.cards.guessed : null) ?? 0)),
+      ...(isRecord(raw.cards) && typeof raw.cards.best === 'number' ? { best: Math.max(0, Math.round(raw.cards.best)) } : {}),
     },
   };
 }
@@ -498,6 +499,8 @@ export function streakNext(game: Game, ok: boolean): void {
   const c = game.current?.cards;
   if (!c) return;
   c.guessed = ok ? c.guessed + 1 : 0;
+  // De beste reeks onthouden: na een fout is de teller weg, maar het resultaat hangt ervan af.
+  c.best = Math.max(c.best ?? 0, c.guessed);
   c.index += 1;
 }
 

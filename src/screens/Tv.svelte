@@ -206,6 +206,12 @@
           {/if}
           {#if s.note}<p class="note">{s.note}</p>{/if}
           {#if s.waiting}<p class="note">{s.waiting}</p>{/if}
+          {#if s.judge}
+            <div class="judge">
+              <p>🎉 <strong>Gelukt</strong> als {s.judge.gelukt}</p>
+              <p>😅 <strong>Bijna</strong> als {s.judge.bijna}</p>
+            </div>
+          {/if}
         </div>
       {:else if s.kind === 'schat'}
         <div class="center">
@@ -605,6 +611,19 @@
     max-height: 78dvh;
     border-radius: 18px;
     animation: fade 0.6s;
+  }
+
+  .judge {
+    display: grid;
+    gap: 8px;
+    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+  }
+
+  .judge p {
+    margin: 0;
+    background: var(--bg-raised);
+    border-radius: 14px;
+    padding: 10px 16px;
   }
 
   .badge {

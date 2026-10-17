@@ -168,9 +168,12 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 600,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Zoek alle letters van het alfabet in de juiste volgorde, op borden, straatnamen, gevels en affiches: eerst een A, dan een B... Halen jullie letter {letter} voor de tijd om is? De Q, X en Y mogen jullie overslaan. Blijf wel altijd samen met de volwassene op de stoep!',
-    vars: { letter: { makkelijk: ['J'], normaal: ['P'], pittig: ['Z'] } },
-    scoring: { type: 'gelukt' },
+      'Zoek alle letters van het alfabet in de juiste volgorde, op borden, straatnamen, gevels en affiches: eerst een A, dan een B... De Q, X en Y mogen jullie overslaan. Elke letter die jullie op tijd vinden, telt: geraken jullie tot letter {letter}, dat zijn {doel} letters? Blijf wel altijd samen met de volwassene op de stoep!',
+    vars: {
+      letter: { makkelijk: ['J'], normaal: ['P'], pittig: ['Z'] },
+      doel: { makkelijk: [10], normaal: [16], pittig: [23] },
+    },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'gevonden letters' },
     sabotage: [
       'Wijs een letter aan die "bijna" de goede is, zoals een P in plaats van een R.',
       'Noem één keer een letter die jullie al gehad hebben, alsof je even in de war bent.',
@@ -514,8 +517,10 @@ export const TASKS_OVERAL: TaskDef[] = [
       tot: { normaal: ['de volgende hoek', 'het einde van de straat', 'de verste boom die je ziet'] },
       dingen: { normaal: ['ramen', 'geparkeerde auto’s', 'brievenbussen', 'bloempotten', 'lantaarnpalen'] },
       marge: { makkelijk: [5], normaal: [3], pittig: [1] },
+      bijnamarge: { makkelijk: [10], normaal: [6], pittig: [2] },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'het getelde aantal hoogstens {marge} verschilt van jullie getal', bijna: 'het getelde aantal hoogstens {bijnamarge} verschilt van jullie getal' },
     sabotage: [
       'Stel een getal voor dat net iets te hoog of te laag is, en klink er redelijk zeker van.',
       'Tel tijdens het wandelen één keer luidop net verkeerd mee.',
@@ -540,7 +545,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga zonder één woord te zeggen in een rij staan, {volgorde}. Praten, fluisteren en schrijven mag niet: enkel gebaren en vingers! Is iets bij twee mensen gelijk? Dan mogen die naast elkaar staan, in eender welke volgorde. Denken jullie dat de rij klopt? Dan zegt iedereen van links naar rechts zijn antwoord luidop.',
+      'Ga zonder één woord te zeggen in een rij staan, {volgorde}. Praten, fluisteren en schrijven mag niet: enkel gebaren en vingers! Is iets bij twee mensen gelijk? Dan mogen die naast elkaar staan, in eender welke volgorde. Denken jullie dat de rij klopt? Dan zegt iedereen van links naar rechts zijn antwoord luidop. Klopt de hele rij en heeft niemand gepraat? Gelukt!',
     vars: {
       volgorde: {
         makkelijk: ['volgens het aantal letters van je voornaam: de kortste naam vooraan'],
@@ -549,6 +554,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de hele rij klopt en niemand gepraat of gefluisterd heeft', bijna: 'er maar twee mensen van plaats moeten wisselen om de rij te laten kloppen' },
     sabotage: [
       'Toon met je vingers "per ongeluk" een verkeerd getal, zoals een maand of een aantal letters dat net niet klopt.',
       'Ga op een plek staan die net niet klopt, en blijf daar rustig staan.',
@@ -669,12 +675,12 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 240,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga in een kring staan en tel om de beurt, één getal per persoon. Bij elk getal met een {cijfer} erin, of uit de tafel van {cijfer}, roep je "Duvel!" in plaats van het getal. Vergist iemand zich? Dan begint iedereen opnieuw bij 1. Halen jullie samen {doel}?',
+      'Ga in een kring staan en tel om de beurt, één getal per persoon. Bij elk getal met een {cijfer} erin, of uit de tafel van {cijfer}, roep je "Duvel!" in plaats van het getal. Vergist iemand zich? Dan begint iedereen opnieuw bij 1. Het hoogste getal dat jullie zonder fout halen, telt. Halen jullie samen {doel}?',
     vars: {
       cijfer: { makkelijk: [5], normaal: [3], pittig: [7] },
       doel: { makkelijk: [20], normaal: [25], pittig: [35] },
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'getallen' },
     sabotage: [
       'Zeg één keer gewoon het getal in plaats van "Duvel!".',
       'Roep "Duvel!" bij een gewoon getal en kijk heel zeker.',
@@ -756,9 +762,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     minutes: 15,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'De volwassene wandelt voorop een stukje door de buurt, met {bochten} bochten, en jullie volgen over de stoep. Onthoud goed de weg en wat er bij elke bocht te zien is! Daarna wijzen jullie samen de weg terug naar de start en noemen jullie bij elke bocht het herkenningspunt. De volwassene blijft er altijd bij en beslist waar en wanneer er overgestoken wordt.',
+      'De volwassene wandelt voorop een stukje door de buurt, met {bochten} bochten, en jullie volgen over de stoep. Onthoud goed de weg en wat er bij elke bocht te zien is! Daarna wijzen jullie samen de weg terug naar de start en noemen jullie bij elke bocht het herkenningspunt. Elke bocht met de juiste richting én het juiste herkenningspunt telt. De volwassene blijft er altijd bij en beslist waar en wanneer er overgestoken wordt.',
     vars: { bochten: { makkelijk: [2], normaal: [3], pittig: [5] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{bochten}', unit: 'juiste bochten' },
     sabotage: [
       'Zeg één keer heel zeker dat jullie links moeten, terwijl het rechts is.',
       'Verzin een herkenningspunt dat er niet was: "hier stond toch een rode auto?".',
@@ -985,6 +991,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Teken samen met stoepkrijt een hinkelbaan van {vakken} vakken op de stoep, nooit op de rijweg! Dan hinkelt iedereen om de beurt heen en terug, zonder op een lijn te staan en zonder je andere voet neer te zetten. Mislukt? Gewoon opnieuw. Lukt het iedereen voor de tijd om is?',
     vars: { vakken: { makkelijk: [6], normaal: [8], pittig: [10] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen voor de tijd om was heen en terug gehinkeld heeft, zonder lijn en zonder tweede voet', bijna: 'het op één speler na iedereen lukte' },
     sabotage: [
       'Teken één vak net iets te klein of te ver weg.',
       'Zet bij je eigen beurt één keer "per ongeluk" een voet op een lijn.',
@@ -1009,9 +1016,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga in een kring staan, leg je handen op de schouders van je buren en til allemaal één been op. Het hulpje telt luidop tot {seconden}, en al die tijd zet niemand zijn voet neer! Zet iemand toch zijn voet neer? Dan begint het hulpje opnieuw bij één. Lukt het voor de timer afloopt?',
+      'Ga in een kring staan, leg je handen op de schouders van je buren en til allemaal één been op. Het hulpje telt luidop tot {seconden}, en al die tijd zet niemand zijn voet neer! Zet iemand toch zijn voet neer? Dan begint het hulpje opnieuw bij één. Tot hoever geraakt het hulpje bij jullie beste poging, voor de timer afloopt? Dat getal telt.',
     vars: { seconden: { makkelijk: [15], normaal: [30], pittig: [45] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{seconden}', unit: 'tellen' },
     sabotage: [
       'Zet één keer "per ongeluk" je voet neer, net als het hulpje bijna klaar is met tellen.',
       'Vertel een mop net als het spannend wordt.',
@@ -1045,9 +1052,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 180,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Pak met je rechterhand je neus en met je linkerhand je rechteroor. Klap één keer in je handen en wissel: nu pak je met je linkerhand je neus en met je rechterhand je linkeroor. Lukt het de hele groep om {doel} keer na elkaar zonder fout te wisselen, op het tempo van de spelleider?',
+      'Pak met je rechterhand je neus en met je linkerhand je rechteroor. Klap één keer in je handen en wissel: nu pak je met je linkerhand je neus en met je rechterhand je linkeroor. Hoeveel keer na elkaar wisselt de hele groep zonder fout, op het tempo van de spelleider? Maakt iemand een fout, dan begint het tellen opnieuw, en jullie beste reeks telt. Doel: {doel} keer.',
     vars: { doel: { makkelijk: [5], normaal: [8], pittig: [12] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{doel}', unit: 'wissels na elkaar' },
     sabotage: [
       'Wissel één of twee keer net fout, alsof je echt in de knoop zit.',
       'Klap net iets te vroeg, zodat de anderen uit het ritme raken.',
@@ -1082,6 +1089,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Jullie zijn circusartiesten op een onzichtbaar koord! Kies een rechte lijn: een voeg tussen de tegels, een rand, of een streep die jullie afspreken (op straat enkel op de stoep). Iedereen stapt om de beurt {stappen} stapjes hiel-tegen-teen over de lijn, armen wijd, zonder ernaast te stappen. Iedereen mag één keer herbeginnen: halen jullie het allemaal?',
     vars: { stappen: { makkelijk: [8], normaal: [12], pittig: [16] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen {stappen} stapjes op de lijn gezet heeft, met hoogstens één keer herbeginnen', bijna: 'het op één speler na iedereen lukte' },
     sabotage: [
       'Stap bij je eigen beurt één keer "per ongeluk" net naast de lijn.',
       'Stel een "handige" lijn voor die eigenlijk scheef loopt.',
@@ -1108,9 +1116,10 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 360,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy vindt de naam van deze straat saai. Verzin samen een nieuwe, grappige straatnaam, een slogan voor op het bord en een kort liedje van {regels} zinnen over jullie nieuwe straat. Voer alles op voor de spelleider, op de stoep en niet te luid: de buren moeten niet meezingen!',
+      'Windy vindt de naam van deze straat saai. Verzin samen een nieuwe, grappige straatnaam, een slogan voor op het bord en een kort liedje van {regels} zinnen over jullie nieuwe straat. Voer alles op voor de spelleider, op de stoep en niet te luid: de buren moeten niet meezingen! Zijn de naam, de slogan en het liedje er alle drie? Gelukt!',
     vars: { regels: { makkelijk: [2], normaal: [4], pittig: [6] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'jullie een straatnaam, een slogan en een liedje van {regels} zinnen opgevoerd hebben', bijna: 'er één ding ontbrak, of het liedje net te kort was' },
     sabotage: [
       'Stel net als er bijna gekozen is nog één "betere" naam voor.',
       'Vergeet je zin op het moment van optreden.',
@@ -1147,6 +1156,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       secret: false,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'alle drie de dingen in het verhaal zaten en het een echt einde had voor de tijd om was', bijna: 'er één ding ontbrak, of het einde net niet af was' },
     sabotage: [
       'Kies af en toe een woord dat het verhaal net een andere kant op stuurt, zodat het einde verder weg raakt.',
       'Twijfel één keer heel lang over je woord, zodat de tijd wegtikt.',
@@ -1179,6 +1189,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen meedoet en de machine tot twintig blijft draaien zonder dat iemand stopt', bijna: 'er één keer iemand heel even stilviel, of de machine net voor twintig stopte' },
     sabotage: [
       'Stop "per ongeluk" heel even met je beweging.',
       'Maak je geluid net iets te grappig, zodat anderen beginnen te lachen.',
@@ -1204,7 +1215,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 300,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy heeft een nieuw, heel raar product uitgevonden en jullie moeten het verkopen! Bedenk samen een reclamespot van ongeveer 30 seconden, met een slogan en een liedje of dansje. Iedereen speelt mee. Overtuigt de reclame de spelleider?',
+      'Windy heeft een nieuw, heel raar product uitgevonden en jullie moeten het verkopen! Bedenk samen een reclamespot van ongeveer 30 seconden, met een slogan en een liedje of dansje. Zit de slogan erin, een liedje of dansje, en speelt iedereen mee? Gelukt!',
     list: {
       title: 'Het product',
       items: {
@@ -1214,6 +1225,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       secret: false,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'de reclame een slogan en een liedje of dansje had en iedereen meespeelde', bijna: 'er één ding ontbrak: de slogan, het liedje of dansje, of één speler' },
     sabotage: [
       'Vergeet de slogan op het moment zelf.',
       'Kom nog met extra ideeën als de reclame al klaar is, zodat de tijd wegtikt.',
@@ -1248,6 +1260,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       secret: false,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'hoogstens {fouten} geluiden vergeten werden of bij het verkeerde woord vielen', bijna: 'er maar één of twee geluiden meer misliepen' },
     sabotage: [
       'Maak je geluid net te laat.',
       'Maak "per ongeluk" je geluid bij het woord van iemand anders.',
@@ -1899,7 +1912,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 60,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga in een kring staan: één iemand klapt, dan zijn buur, dan de volgende, zodat de klap als een golf rondgaat. Windy roept op onverwachte momenten "Duvel!", en dan keert de golf om! Laat de golf {rondes} keer helemaal rondgaan zonder fout voor de timer afloopt. Klapt iemand te vroeg, dubbel of niet? Dan begint het tellen opnieuw.',
+      'Ga in een kring staan: één iemand klapt, dan zijn buur, dan de volgende, zodat de klap als een golf rondgaat. Windy roept op onverwachte momenten "Duvel!", en dan keert de golf om! Laat de golf {rondes} keer helemaal rondgaan zonder fout voor de timer afloopt. Klapt iemand te vroeg, dubbel of niet? Dan begint het tellen opnieuw. Hoeveel rondes zonder fout halen jullie na elkaar? Jullie beste reeks telt.',
     vars: { rondes: { makkelijk: [3], normaal: [5], pittig: [8] } },
     list: {
       title: 'Windy roept',
@@ -1908,7 +1921,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       secret: false,
       read: 'willekeurig',
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{rondes}', unit: 'rondes' },
     sabotage: [
       'Klap net iets te vroeg, zodat het lijkt alsof je buur te laat was.',
       'Klap de verkeerde kant op na een "Duvel!".',
@@ -2156,9 +2169,12 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 600,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Maak een foto van elke letter van het woord "{woord}", gevonden in de straat: op borden, gevels, affiches of vuilnisbakken. Elke letter moet van een andere plek komen! Geen foto’s van mensen of van binnen in iemands huis, en blijf samen op de stoep.',
-    vars: { woord: { makkelijk: ['kat', 'feest'], normaal: ['Windy', 'Kenzo'], pittig: ['Duvelke', 'speurneus'] } },
-    scoring: { type: 'gelukt' },
+      'Maak een foto van elke letter van het woord "{woord}", gevonden in de straat: op borden, gevels, affiches of vuilnisbakken. Elke letter moet van een andere plek komen! Elke scherpe foto van een letter van het woord telt. Geen foto’s van mensen of van binnen in iemands huis, en blijf samen op de stoep.',
+    vars: {
+      woord: { makkelijk: ['kat', 'bal'], normaal: ['Windy', 'Kenzo'], pittig: ['Duvelke', 'kasteel'] },
+      letters: { makkelijk: [3], normaal: [5], pittig: [7] },
+    },
+    scoring: { type: 'aantal', target: '{letters}', unit: 'letterfoto’s' },
     sabotage: [
       'Heb jij de tablet? Fotografeer dan een letter op een plek die al gebruikt was en doe alsof het een nieuwe is. Anders: stel heel enthousiast een plek voor die al gebruikt was.',
       'Zeg dat een letter "niet scherp genoeg" is, zodat jullie opnieuw moeten zoeken.',
@@ -2282,7 +2298,7 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Windy wil een postkaart van jullie buurt. Kies samen de mooiste plek op de stoep en maak één perfecte groepsfoto, zonder vreemden erop, met: {elementen}. Bedenk er ook een titel bij, zoals "Groeten uit...". Pas als de hele groep tevreden is, telt de foto!',
+      'Windy wil een postkaart van jullie buurt. Kies samen de mooiste plek op de stoep en maak één perfecte groepsfoto, zonder vreemden erop, met: {elementen}. Bedenk er ook een titel bij, zoals "Groeten uit...". Staat alles erop, is er een titel en is de hele groep tevreden? Gelukt!',
     vars: {
       elementen: {
         makkelijk: ['iedereen die zwaait en iets groens'],
@@ -2291,6 +2307,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'er één foto is met iedereen en alles uit de opdracht erop, zonder vreemden, en met een titel', bijna: 'er op de beste foto net één ding ontbreekt, of de titel nog niet bedacht is' },
     sabotage: [
       'Vind één goede foto toch "net niet goed genoeg", zodat jullie opnieuw moeten.',
       'Ga net voor het huisnummer of het bord staan.',
@@ -2315,12 +2332,12 @@ export const TASKS_OVERAL: TaskDef[] = [
     timer: 420,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Vertel samen een verhaal in precies {aantal} foto’s, zonder één woord tekst. Het verhaal gaat over {onderwerp}. Speel elke scène na en laat de spelleider een foto maken; daarna vertellen jullie het verhaal met de foto’s erbij.',
+      'Vertel samen een verhaal in precies {aantal} foto’s, zonder één woord tekst. Het verhaal gaat over {onderwerp}. Speel elke scène na en laat de spelleider een foto maken; daarna vertellen jullie het verhaal met de foto’s erbij. Elke foto die duidelijk een stuk van het verhaal toont, telt.',
     vars: {
       aantal: { makkelijk: [3], normaal: [4], pittig: [6] },
       onderwerp: { normaal: ['Windy die haar pruik verliest', 'Kenzo die te laat wakker wordt', 'een geheime schat', '’t Duvelke dat betrapt wordt', 'een huisdier dat ontsnapt'] },
     },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'duidelijke foto’s' },
     sabotage: [
       'Stel een scène voor die niet in het verhaal past.',
       'Kijk op de foto’s net de verkeerde kant op.',
@@ -2369,6 +2386,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       read: 'roepen',
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen samen aankwam en bij elk dier meedeed', bijna: 'er één speler achterbleef of één keer het verkeerde dier deed' },
     sabotage: [
       'Doe één keer heel even nog het vorige dier, alsof je het nieuwe niet hoorde.',
       'Blijf net een beetje achter, zodat de groep niet samen aankomt.',
@@ -2395,6 +2413,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       'Wandel in een rij achter elkaar over de stoep, met de volwassene erbij. De eerste in de rij is Kenzo en doet een gekke manier van wandelen voor, en iedereen erachter doet het precies na. Bij elke {wissel} gaat Kenzo achteraan staan en wordt de volgende Kenzo. Komt iedereen aan de beurt zonder dat iemand uit de pas valt?',
     vars: { wissel: { makkelijk: ['boom'], normaal: ['lantaarnpaal', 'boom'], pittig: ['brievenbus', 'lantaarnpaal'] } },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen één keer Kenzo was en de rij elke beweging goed nadeed', bijna: 'er maar één keer iemand uit de pas viel' },
     sabotage: [
       'Doe de beweging net iets anders na.',
       'Kies als Kenzo een beweging die heel moeilijk na te doen is (maar blijf veilig op de stoep!).',
@@ -2418,12 +2437,13 @@ export const TASKS_OVERAL: TaskDef[] = [
     minutes: 6,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Kies samen met de volwassene een doel op de stoep, ongeveer {afstand} stappen verder. De hele groep wandelt ernaartoe in superslowmotion, en iedereen moet op precies hetzelfde moment aankomen. Jullie moeten er minstens {seconden} seconden over doen, en niemand mag stilstaan!',
+      'Kies samen met de volwassene een doel op de stoep, ongeveer {afstand} stappen verder. De hele groep wandelt ernaartoe in superslowmotion, en iedereen moet op precies hetzelfde moment aankomen. Jullie moeten er minstens {seconden} seconden over doen, en niemand mag stilstaan! Het hulpje telt stil de seconden.',
     vars: {
       afstand: { makkelijk: [10], normaal: [15], pittig: [20] },
       seconden: { makkelijk: [45], normaal: [60], pittig: [90] },
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'iedereen op hetzelfde moment aankwam, niemand stilstond en het minstens {seconden} seconden duurde', bijna: 'er maar één ding misliep: iemand kwam net te vroeg, stond even stil, of het ging net te snel' },
     sabotage: [
       'Wandel net iets te snel en trek anderen mee.',
       'Sta heel even stil en doe alsof je nog beweegt.',
@@ -2481,6 +2501,7 @@ export const TASKS_OVERAL: TaskDef[] = [
       streak: true,
     },
     scoring: { type: 'gelukt' },
+    judge: { gelukt: 'jullie {doel} bevelen na elkaar zonder fout haalden', bijna: 'jullie beste reeks maar één of twee bevelen te kort was' },
     sabotage: [
       'Beweeg een klein beetje bij een bevel zonder "Windy zegt".',
       'Doe één keer groot en overtuigd een bevel dat niet mag, zodat anderen meedoen.',
@@ -2504,9 +2525,9 @@ export const TASKS_OVERAL: TaskDef[] = [
     minutes: 7,
     difficulties: [...ALLE_NIVEAUS],
     explain:
-      'Ga in een kring staan, elk op je eigen plekje. De eerste doet één dansbeweging voor, de volgende doet die na en voegt er een eigen beweging aan toe, en zo gaat het verder de kring rond tot de dans {aantal} bewegingen heeft. Aan het einde danst de hele groep de volledige dans tegelijk, zonder fouten!',
+      'Ga in een kring staan, elk op je eigen plekje. De eerste doet één dansbeweging voor, de volgende doet die na en voegt er een eigen beweging aan toe, en zo gaat het verder de kring rond tot de dans {aantal} bewegingen heeft. Aan het einde danst de hele groep de volledige dans tegelijk. Hoeveel bewegingen danst de groep in één keer goed, samen en in de juiste volgorde?',
     vars: { aantal: { makkelijk: [4], normaal: [6], pittig: [8] } },
-    scoring: { type: 'gelukt' },
+    scoring: { type: 'aantal', target: '{aantal}', unit: 'juiste bewegingen' },
     sabotage: [
       'Voeg een beweging toe die heel erg lijkt op een vorige, zodat het verwarrend wordt.',
       'Doe twee bewegingen in de verkeerde volgorde.',

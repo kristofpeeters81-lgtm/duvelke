@@ -14,7 +14,7 @@
   import { prefetch, speechBusy } from '../../lib/speech';
   import { app, recordTaskPlayed, windySays } from '../../lib/store.svelte';
   import { CATEGORY_LABELS } from '../../lib/tasks/labels';
-  import { fillVars } from '../../lib/tasks/program';
+  import { explainWithGoal, fillVars } from '../../lib/tasks/program';
   import { hostWording } from '../../lib/tasks/wording';
   import { getTask } from '../../lib/tasks/registry';
   import Briefing from './Briefing.svelte';
@@ -35,13 +35,14 @@
   const item = $derived(game ? game.program[game.taskIndex] : undefined);
   const task = $derived(item ? getTask(item.taskId) : undefined);
   const location = $derived(LOCATIONS.find((l) => l.id === item?.location));
-  const explain = $derived(task && item ? hostWording(fillVars(task.explain, item.vars), task, app.settings.hostName) : '');
+  const explain = $derived(task && item ? hostWording(explainWithGoal(task, item), task, app.settings.hostName) : '');
   const target = $derived(task && item ? targetFor(task, item) : null);
   /** "de spelleider" wordt "het hulpje" (of Windy, als zij voorleest), ook in rolhints en lijstjes. */
   function w(text: string): string {
     return task ? hostWording(text, task, app.settings.hostName) : text;
   }
   const shownList = $derived(item ? item.list.map(w) : []);
+  const judge = $derived(task?.judge && item ? { gelukt: w(fillVars(task.judge.gelukt, item.vars)), bijna: w(fillVars(task.judge.bijna, item.vars)) } : null);
   const total = $derived(game ? treasure(game.program, game.results, getTask) : { gems: 0, max: 0 });
 
   function name(id: string): string {
@@ -346,7 +347,7 @@
       {/if}
     </div>
   {:else if current.step === 'resultaat'}
-    <ResultPicker {task} {target} initial={task.list?.turns || answersList || (listMode && listMode !== 'roepen' && listMode !== 'willekeurig') ? current.cards.guessed : null} onpick={setResult} />
+    <ResultPicker {task} {target} judge={judge} streak={task.list?.streak ? { best: current.cards.best ?? 0, goal: streakGoal } : null} initial={task.list?.turns || answersList || (listMode && listMode !== 'roepen' && listMode !== 'willekeurig') ? current.cards.guessed : null} onpick={setResult} />
   {:else if current.step === 'schat' && current.pending}
     <div class="stack center">
       <div class="gain" class:none={current.pending.gems === 0}>
