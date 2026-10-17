@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import BigButton from '../../components/BigButton.svelte';
-  import HoldToReveal from '../../components/HoldToReveal.svelte';
+  import SecretList from '../../components/SecretList.svelte';
   import TreasureChest from '../../components/TreasureChest.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { LOCATIONS } from '../../lib/data/locations';
@@ -151,9 +151,12 @@
   let selfRead = $state(false);
   /** Proefronde: waarom de opdracht niet goed was (niet verplicht). */
   let proefNote = $state('');
+  /** Welk item van de geheime lijst het hulpje bekijkt (één per keer). */
+  let secretIndex = $state(0);
   $effect(() => {
     void item?.uid;
     selfRead = false;
+    secretIndex = 0;
   });
   const windyReads = $derived(!!task?.list?.secret && answersList && !selfRead);
   /** De app leest een lijst zelf voor (roepen, onthouden, hints), tenzij het hulpje het toch zelf doet. */
@@ -173,20 +176,17 @@
   });
 </script>
 
-<!-- Geheime lijst (hou ingedrukt): op het uitlegscherm én tijdens de timer, want wie ze nodig heeft, moet ze kunnen herlezen. -->
+<!--
+  Geheime lijst (hou ingedrukt): op het uitlegscherm én tijdens de timer, want wie ze nodig heeft, moet ze kunnen herlezen.
+  Eén item per keer, zodat alles op het scherm past: scrollen kan niet terwijl je vasthoudt.
+-->
 {#snippet secretList()}
   {#if task?.list}
     <div class="card">
       <h3>🤫 {w(task.list.title)}</h3>
       <p class="hint small">Enkel voor {listOwner ?? 'het hulpje'}! Hou ingedrukt om te lezen.</p>
       <div class="secret">
-        <HoldToReveal label="Hou ingedrukt">
-          <div class="secret-list">
-            <ol>
-              {#each shownList as entry, i (i)}<li>{entry}</li>{/each}
-            </ol>
-          </div>
-        </HoldToReveal>
+        <SecretList items={shownList} bind:index={secretIndex} />
       </div>
     </div>
   {/if}
@@ -489,24 +489,6 @@
 
   .secret :global(.hold) {
     min-height: 220px;
-  }
-
-  .secret-list {
-    min-height: 100%;
-    border-radius: var(--radius);
-    background: #fff8e8;
-    color: #2a1454;
-    border: 4px solid #7a5222;
-    padding: 16px 20px;
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
-
-  .secret-list ol {
-    margin: 0;
-    padding-left: 24px;
-    display: grid;
-    gap: 6px;
   }
 
   .open-list {

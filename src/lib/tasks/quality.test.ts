@@ -3,6 +3,7 @@
  * die het spel niet laten crashen, maar het wel onspeelbaar of verwarrend maken.
  */
 import { describe, expect, it } from 'vitest';
+import { splitSecret } from '../../components/SecretList.svelte';
 import { splitHints } from '../../screens/game/ListReader.svelte';
 import { hasAnswers } from '../../screens/game/ReadAloud.svelte';
 import { QUIZ } from './quiz';
@@ -13,6 +14,18 @@ const LEVELS = ['makkelijk', 'normaal', 'pittig'] as const;
 const cases = ALL_BUILTIN.map((t) => [t.id, t] as const);
 
 describe('opdrachten: kwaliteit', () => {
+  it.each(cases)('%s: een oplossing staat apart van wat het hulpje vertelt', (_id, t) => {
+    if (!t.list?.secret) return;
+    for (const item of Object.values(t.list.items).flat()) {
+      if (!/Oplossing:/.test(item)) continue;
+      const s = splitSecret(item);
+      expect(s.label, item).toBe('Oplossing');
+      expect(s.text.length, item).toBeGreaterThan(10);
+      expect(s.text, item).not.toMatch(/Oplossing/);
+      expect(s.answer?.length ?? 0, item).toBeGreaterThan(2);
+    }
+  });
+
   it.each(cases)('%s: voorlezen of geheim lijstje, op elk niveau hetzelfde', (_id, t) => {
     if (!t.list || t.list.turns || t.list.read) return;
     for (const level of LEVELS) {
@@ -90,5 +103,13 @@ describe('quiz', () => {
       expect(new Set(q.options).size, q.q).toBe(q.options.length);
       expect([q.q, ...q.options].join(' '), q.q).not.toMatch(/[=+×→%&✓✗]|\bkm\b/);
     }
+  });
+});
+
+describe('geheime lijst splitsen', () => {
+  it('haalt de oplossing, het antwoord tussen haakjes of niets eruit', () => {
+    expect(splitSecret('Hoe kan dat? Oplossing: ze viel van de onderste sport.')).toEqual({ text: 'Hoe kan dat?', answer: 'ze viel van de onderste sport.', label: 'Oplossing' });
+    expect(splitSecret('Ik hou je voeten warm. (een sok)')).toEqual({ text: 'Ik hou je voeten warm.', answer: 'een sok', label: 'Antwoord' });
+    expect(splitSecret('TAART: 20-1-1-18-20')).toEqual({ text: 'TAART: 20-1-1-18-20', answer: null, label: '' });
   });
 });

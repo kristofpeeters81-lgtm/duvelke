@@ -104,6 +104,11 @@ Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en
 |---|---|---|
 | 38 | Opdrachten kunnen overslaan tijdens het spel als het te lang dreigt te duren | Gekozen: resterende tijd tonen, latere opdrachten schrappen en een geplande eindtijd. **Eindtijd** (`settings.endTime`, een spelinstelling, ook in voorbereidingen) bij Nieuw spel en in het menu van het hulpje. **Resterende tijd** (`remainingMinutes`, dezelfde schattingen als het programma; de huidige opdracht telt half na de uitleg) in het menu en bij het programma (`TimeLeft.svelte`): "Nog ±X min · klaar rond HH:MM", met een waarschuwing als dat na de eindtijd valt. **Latere opdrachten** overslaan of terugzetten in 📋 Programma (`skipLater`: een resultaat 'overgeslagen' op voorhand, de app springt erover). De briefing om de 2 onthoudt nu welke opdrachten hun tip al kregen (`game.covered`) i.p.v. even/oneven, zodat "Daarna" altijd de opdracht is die echt volgt. Ook rechtgezet: in het programma kregen gespeelde opdrachten per ongeluk grote tekst (stijl `.done` dubbel gebruikt). |
 
+### Ronde 15 (17/10) ✅ 17/10
+| # | Vraag | Oplossing |
+|---|---|---|
+| 39 | Mysteries: het hulpje moet ingedrukt houden, maar kan dan niet scrollen en ziet niet alles | Gekozen: beide en de oplossing apart. Een geheime lijst (`SecretList.svelte`) toont nu één item per keer onder het vasthouden, met ◀ Vorige / Volgende ▶ ernaast; het item blijft bewaard tussen uitleg en timer. De oplossing ("Oplossing: ..." of "(antwoord)") staat in een apart vak (`splitSecret`, getest op alle mysteries). Met "Hele lijst open laten staan" blijft alles zichtbaar en kan je scrollen (🙈 Verbergen). Geldt voor alle geheime lijsten, ook als het hulpje kiest om vragen zelf stiekem te lezen. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.
