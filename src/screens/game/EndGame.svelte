@@ -6,7 +6,7 @@
   import TreasureChest from '../../components/TreasureChest.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { physicalShare, ranking } from '../../lib/finale';
-  import { finaleStep } from '../../lib/game';
+  import { finaleStep, multipleSaboteursPossible } from '../../lib/game';
   import { treasure } from '../../lib/gameplay';
   import { gossipSentence } from '../../lib/secrets';
   import { sfx } from '../../lib/sfx';
@@ -118,6 +118,9 @@
       {#if intro}{#key intro.id}<WindyBubble text={intro.text} lineId={intro.id} mood="geschokt" size={190} />{/key}{/if}
       <div class="card">
         <p><strong>Alle opdrachten zijn gespeeld!</strong> Nu volgt De Test: {f.questions.length} vragen over {sab}.</p>
+        {#if game.gossipLog.length === 0 && multipleSaboteursPossible(game.players.length)}
+          <p><strong>Opgelet:</strong> er kan meer dan één {sab} zijn. Of niet...</p>
+        {/if}
         <p class="hint">Iedereen antwoordt apart. Wie het meest juist heeft, wint. Bij een gelijke stand wint wie {sab} juist had, en daarna wie het snelst was.</p>
       </div>
       <BigButton variant="gold" size="large" full onclick={() => start('test')}>📝 Start De Test</BigButton>

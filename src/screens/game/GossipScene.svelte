@@ -13,7 +13,16 @@
   const gossip = $derived(game?.current?.gossip ?? null);
   const multiple = $derived(game ? game.players.filter((p) => p.role === 'saboteur').length > 1 || multipleSaboteursPossible(game.players.length) : false);
 
-  let stage = $state<'intro' | 'roddel'>('intro');
+  let stage = $state<'intro' | 'nieuws' | 'roddel'>('intro');
+  /**
+   * In een spel waar er meer dan één Duvelke kan zijn, brengt Windy dat nieuws bij de eerste roddel.
+   * Ook als er maar één is: anders zou het nieuws zelf iets verklappen.
+   */
+  const news = $derived(
+    game && game.gossipLog.length === 0 && multipleSaboteursPossible(game.players.length)
+      ? `Maar eerst groot nieuws! Ik heb horen fluisteren dat er misschien meer dan één ${game.settings.saboteurName} tussen jullie zit... Of misschien ook niet! Hou jullie ogen goed open.`
+      : null,
+  );
   const intro = untrack(() => windySays('roddel'));
 
   const sentence = $derived(gossip && game ? gossipSentence(gossip, game.settings.saboteurName, multiple) : '');
@@ -31,8 +40,12 @@
   $effect(() => {
     if (!gossip || !game) return;
     const fromWindy = gossip.source === 'windy';
+    if (stage === 'nieuws' && news) {
+      tvUi.gossip = { stage: 'roddel', badge: '📰 Groot nieuws!', tone: 'warn', speaker: 'windy', text: news };
+      return;
+    }
     tvUi.gossip = {
-      stage,
+      stage: stage === 'nieuws' ? 'intro' : stage,
       badge: fromWindy
         ? machine
           ? `🤖 ${machineName} heeft het opgenomen: dit klopt altijd!`
@@ -51,7 +64,11 @@
     <h2 class="title">🤫 Roddeltijd!</h2>
     {#if stage === 'intro'}
       {#if intro}{#key intro.id}<WindyBubble text={intro.text} lineId={intro.id} mood="stiekem" size={180} />{/key}{/if}
-      <BigButton variant="gold" size="large" full onclick={() => (stage = 'roddel')}>Vertel! ▶</BigButton>
+      <BigButton variant="gold" size="large" full onclick={() => (stage = news ? 'nieuws' : 'roddel')}>Vertel! ▶</BigButton>
+    {:else if stage === 'nieuws' && news}
+      <div class="badge warn">📰 Groot nieuws!</div>
+      <WindyBubble text={news} mood="geschokt" size={180} />
+      <BigButton variant="gold" size="large" full onclick={() => (stage = 'roddel')}>En de roddel? ▶</BigButton>
     {:else if gossip.source === 'windy'}
       {#if machine}
         <div class="badge ok">🤖 {machineName} heeft het opgenomen: dit klopt altijd!</div>

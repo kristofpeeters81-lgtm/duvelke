@@ -5,7 +5,7 @@
  * Een pure functie, zodat een test kan nagaan dat er niets geheims in zit.
  */
 import { ranking, type Score } from '../finale';
-import type { Game, GamePlayer } from '../game';
+import { multipleSaboteursPossible, type Game, type GamePlayer } from '../game';
 import { quizOrder, targetFor, treasure } from '../gameplay';
 import { LOCATIONS } from '../data/locations';
 import { CATEGORY_LABELS } from '../tasks/labels';
@@ -211,7 +211,11 @@ function finaleState(game: Game): TvState {
   const name = (id: string): string => game.players.find((p) => p.playerId === id)?.name ?? '?';
   switch (f.step) {
     case 'intro':
-      return wait('🏁', 'Het moment van de waarheid', `Alle opdrachten zijn gespeeld! Nu volgt De Test: ${f.questions.length} vragen over ${sab}.`);
+      return wait(
+        '🏁',
+        'Het moment van de waarheid',
+        `Alle opdrachten zijn gespeeld! Nu volgt De Test: ${f.questions.length} vragen over ${sab}.${game.gossipLog.length === 0 && multipleSaboteursPossible(game.players.length) ? ` Opgelet: er kan meer dan één ${sab} zijn. Of niet...` : ''}`,
+      );
     case 'test': {
       const who = f.order[f.index];
       return wait('📝', 'De Test', `Iedereen antwoordt apart op de tablet.${who ? ` Nu: ${name(who)}.` : ''}`);

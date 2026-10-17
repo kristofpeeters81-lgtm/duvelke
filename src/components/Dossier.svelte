@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { multipleSaboteursPossible, type GamePlayer } from '../lib/game';
+  import type { GamePlayer } from '../lib/game';
   import type { Settings } from '../lib/types';
 
   interface Props {
@@ -48,9 +48,7 @@
     </p>
   {/if}
 
-  {#if multipleSaboteursPossible(playerCount)}
-    <p class="note">Opgelet: er kan meer dan één {sab} zijn. Of niet...</p>
-  {/if}
+  <!-- Of er meer dan één Duvelke kan zijn, hoort iedereen pas later, in de eerste roddel (zie GossipScene). -->
   <p class="note">Vertel dit aan niemand!</p>
 </article>
 
