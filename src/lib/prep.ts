@@ -23,7 +23,7 @@ export interface Prep {
 }
 
 /** De instellingen die bij één spel horen. Namen, stem en spullen blijven de standaard van het toestel. */
-export const GAME_FIELDS = ['durationMinutes', 'difficulty', 'locations', 'treasureMode', 'treasureItems', 'speurneusEnabled', 'bemoeialEnabled', 'neighbourGossip', 'briefingEvery'] as const;
+export const GAME_FIELDS = ['durationMinutes', 'difficulty', 'locations', 'treasureMode', 'treasureItems', 'speurneusEnabled', 'bemoeialEnabled', 'neighbourGossip', 'briefingEvery', 'endTime'] as const;
 
 /** De standaardinstellingen, met de spelinstellingen van een voorbereiding erover. */
 export function withGameFields(base: Settings, game: Settings): Settings {

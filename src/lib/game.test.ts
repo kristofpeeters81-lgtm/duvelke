@@ -13,6 +13,8 @@ import {
   finishCurrent,
   JOKER_COST,
   newCurrent,
+  remainingMinutes,
+  skipLater,
   nextCard,
   nextTestPlayer,
   normalizeGame,
@@ -228,6 +230,10 @@ describe('briefing, jokers, roddels en dilemma', () => {
   it('slaat de briefing over als die om de 2 opdrachten komt', () => {
     const game = started();
     game.settings.briefingEvery = 2;
+    // Bij de eerste opdracht een briefing, met de tip voor de tweede erbij...
+    afterAnnouncement(game);
+    expect(game.current!.step).toBe('briefing');
+    // ...dus bij de tweede opdracht geen briefing meer.
     game.taskIndex = 1;
     game.current = newCurrent(game);
     afterGossip(game);
@@ -489,6 +495,43 @@ describe('briefing om de 2 opdrachten', () => {
     }
     const sab = game.players.find((p) => p.role === 'saboteur')!.playerId;
     expect(game.sabotageLog.filter((s) => s.playerId === sab).map((s) => s.taskUid)).toEqual(['b1', 'b2']);
+    skipCurrent(game);
+    afterGossip(game);
+    afterAnnouncement(game);
+    expect(game.current!.step).toBe('uitleg');
+  });
+});
+
+describe('latere opdrachten overslaan', () => {
+  const program: ProgramItem[] = [
+    { uid: 'k1', taskId: 'bekertoren', location: 'binnen', vars: { lagen: 4 }, list: [] },
+    { uid: 'k2', taskId: 'blinde-piloot', location: 'binnen', vars: {}, list: [] },
+    { uid: 'k3', taskId: 'mensenknoop', location: 'binnen', vars: {}, list: [] },
+  ];
+
+  it('slaat een latere opdracht over, kan ze terugzetten, en de resterende tijd past zich aan', () => {
+    const game = createGame(players(5), defaultSettings(), null, null, program, seeded(11));
+    startTasks(game);
+    const before = remainingMinutes(game);
+    skipLater(game, 'k2', true);
+    expect(remainingMinutes(game)).toBeLessThan(before);
+    skipLater(game, 'k2', false);
+    expect(remainingMinutes(game)).toBe(before);
+    skipLater(game, 'k2', true);
+    skipCurrent(game);
+    expect(game.program[game.taskIndex]!.uid).toBe('k3');
+    // De huidige of een al gespeelde opdracht kan je zo niet overslaan.
+    skipLater(game, 'k1', false);
+    expect(game.results.find((r) => r.uid === 'k1')?.outcome).toBe('overgeslagen');
+  });
+
+  it('briefing om de 2 springt over een overgeslagen opdracht heen', () => {
+    const game = createGame(players(5), { ...defaultSettings(), briefingEvery: 2 }, null, null, program, seeded(12));
+    startTasks(game);
+    skipLater(game, 'k2', true);
+    afterAnnouncement(game);
+    const card = Object.values(game.current!.briefing!.cards)[0]!;
+    expect(card.next?.taskId).toBe('mensenknoop');
     skipCurrent(game);
     afterGossip(game);
     afterAnnouncement(game);

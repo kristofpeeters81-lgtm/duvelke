@@ -7,7 +7,8 @@
   import QrScan from '../../components/QrScan.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
   import { acceptAnswer, disconnect, startLocal, startQr, tv } from '../../lib/tv/host.svelte';
-  import { skipCurrent, type GamePlayer } from '../../lib/game';
+  import { skipCurrent, skipLater, type GamePlayer } from '../../lib/game';
+  import TimeLeft from '../../components/TimeLeft.svelte';
   import { getTask } from '../../lib/tasks/registry';
   import { app, go, lineContext, showToast } from '../../lib/store.svelte';
   import { pickLine, rememberLine } from '../../lib/windy';
@@ -91,6 +92,7 @@
       </div>
       {/if}
 
+      {#if game.phase === 'opdrachten' || game.phase === 'rollen' || game.phase === 'intro'}<TimeLeft {game} editable />{/if}
       <div class="actions">
         {#if onclose}<BigButton variant="gold" full onclick={onclose}>▶ Terug naar het spel</BigButton>{/if}
         <BigButton variant="secondary" full onclick={() => (view = 'kies')}>🆘 Toon mijn rol opnieuw</BigButton>
@@ -222,16 +224,26 @@
   {:else if view === 'programma'}
     <div class="panel">
       <h2>📋 Programma</h2>
+      {#if game.phase !== 'einde'}<TimeLeft {game} />{/if}
       <ol class="prog">
         {#each game.program as item, i (item.uid)}
           {@const task = getTask(item.taskId)}
           {@const result = game.results.find((r) => r.uid === item.uid)}
-          <li class:now={game.phase === 'opdrachten' && i === game.taskIndex} class:done={!!result}>
+          {@const later = game.phase !== 'einde' && (i > game.taskIndex || game.phase !== 'opdrachten')}
+          <li class:now={game.phase === 'opdrachten' && i === game.taskIndex} class:played={!!result}>
             <span>{task?.emoji} {task?.title}</span>
-            <span class="st">{result ? (result.outcome === 'overgeslagen' ? '⏭ overgeslagen' : `💎 ${result.gems}/${result.maxGems}`) : i === game.taskIndex ? '▶ nu' : ''}</span>
+            <span class="st">
+              {result ? (result.outcome === 'overgeslagen' ? '⏭ overgeslagen' : `💎 ${result.gems}/${result.maxGems}`) : game.phase === 'opdrachten' && i === game.taskIndex ? '▶ nu' : ''}
+              {#if later && !result}
+                <button type="button" class="skip" onclick={() => skipLater(game, item.uid, true)}>⏭ Overslaan</button>
+              {:else if later && result?.outcome === 'overgeslagen'}
+                <button type="button" class="skip" onclick={() => skipLater(game, item.uid, false)}>↩ Terugzetten</button>
+              {/if}
+            </span>
           </li>
         {/each}
       </ol>
+      {#if game.phase === 'opdrachten'}<p class="hint">De opdracht die nu bezig is, sla je over met ⏭ in het menu zelf.</p>{/if}
       <BigButton variant="primary" full onclick={back}>Sluiten</BigButton>
     </div>
   {:else if view === 'stoppen'}
@@ -298,6 +310,8 @@
 
   .prog li {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
     gap: 10px;
     padding: 10px 14px;
@@ -310,13 +324,26 @@
     border: 2px solid var(--gold);
   }
 
-  .prog li.done {
+  .prog li.played {
     opacity: 0.7;
   }
 
   .st {
     color: var(--text-dim);
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skip {
+    border: 2px solid var(--line);
+    background: rgba(255, 255, 255, 0.08);
+    color: inherit;
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-weight: 800;
+    cursor: pointer;
   }
 
   .center {

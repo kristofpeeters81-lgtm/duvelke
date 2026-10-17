@@ -100,6 +100,8 @@ export interface Game {
   roleViews: Record<string, number>;
   /** Een proefronde van één opdracht uit een voorbereiding (index in het programma). Wordt nooit bewaard. */
   test?: { index: number };
+  /** Opdrachten (uid) waarvan de tips al op een vorig briefingkaartje stonden (briefing om de 2). */
+  covered?: string[];
 }
 
 export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'terugblik' | 'fotos';
@@ -211,6 +213,7 @@ export function createGame(
     sabotageLog: [],
     finale: null,
     absent: [],
+    covered: [],
     roleViews: {},
   };
 }
@@ -299,6 +302,7 @@ export function normalizeGame(raw: unknown): Game | null {
       : [],
     finale: null,
     absent: Array.isArray(raw.absent) ? [...new Set(raw.absent.filter((id): id is string => typeof id === 'string' && ids.has(id)))] : [],
+    covered: Array.isArray(raw.covered) ? raw.covered.filter((x): x is string => typeof x === 'string') : [],
     roleViews: normalizeCounts(raw.roleViews, ids),
   };
   // Eerst de opdrachten (die kunnen naar het einde doorschuiven), daarna pas de finale.
@@ -381,7 +385,9 @@ export function startTasks(game: Game): void {
 function enterTask(game: Game, rng: Rng = Math.random): void {
   while (game.taskIndex < game.program.length) {
     const item = game.program[game.taskIndex];
-    if (item && getTask(item.taskId)) {
+    // Op voorhand overgeslagen (te weinig tijd)? Dan meteen door naar de volgende.
+    const skipped = item && game.results.some((r) => r.uid === item.uid && r.outcome === 'overgeslagen');
+    if (item && getTask(item.taskId) && !skipped) {
       game.current = newCurrent(game, rng);
       return;
     }
@@ -526,13 +532,15 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
   const task = item ? getTask(item.taskId) : undefined;
   if (!current || !task) return;
   // Een proefronde heeft geen geheime briefing.
-  if (game.test || game.taskIndex % game.settings.briefingEvery !== 0) {
+  // Om de 2 opdrachten: stonden de tips voor deze opdracht al op het vorige kaartje, dan geen briefing.
+  if (game.test || (game.settings.briefingEvery === 2 && (game.covered ?? []).includes(current.uid))) {
     current.step = 'uitleg';
     return;
   }
   const cards = makeBriefing(game.players, task, { speurneusTurn: game.briefingCount % 2 === 0, known: game.known, hostId: game.gameMasterId }, rng);
   // Om de 2 opdrachten: de volgende opdracht krijgt geen eigen briefing, dus de tip ervoor komt nu al mee.
-  const nextItem = game.settings.briefingEvery === 2 ? game.program[game.taskIndex + 1] : undefined;
+  const nextItem = game.settings.briefingEvery === 2 ? nextPlayable(game, game.taskIndex + 1) : undefined;
+  if (nextItem) game.covered = [...(game.covered ?? []), nextItem.uid];
   const nextTask = nextItem ? getTask(nextItem.taskId) : undefined;
   const nextCards = nextTask ? makeBriefing(game.players, nextTask, { speurneusTurn: false, known: game.known, hostId: game.gameMasterId }, rng) : null;
   const withJokers: BriefingState['cards'] = {};
@@ -553,6 +561,54 @@ export function afterAnnouncement(game: Game, rng: Rng = Math.random): void {
   }
   current.briefing = { order, index: 0, stage: 'geef', cards: withJokers };
   current.step = 'briefing';
+}
+
+/** De eerstvolgende opdracht vanaf index die nog gespeeld wordt (niet overgeslagen, bestaat nog). */
+function nextPlayable(game: Game, from: number): ProgramItem | undefined {
+  for (let i = from; i < game.program.length; i++) {
+    const item = game.program[i];
+    if (item && getTask(item.taskId) && !game.results.some((r) => r.uid === item.uid)) return item;
+  }
+  return undefined;
+}
+
+/** Een latere opdracht op voorhand overslaan (of weer terugzetten), bv. als het spel te lang dreigt te duren. */
+export function skipLater(game: Game, uid: string, skip: boolean): void {
+  const index = game.program.findIndex((p) => p.uid === uid);
+  const item = game.program[index];
+  if (!item || index <= game.taskIndex) return;
+  game.results = game.results.filter((r) => r.uid !== uid);
+  if (skip) game.results = [...game.results, { uid, taskId: item.taskId, outcome: 'overgeslagen', score: null, target: null, gems: 0, maxGems: 0, roles: {}, rating: 0 }];
+}
+
+/**
+ * Hoeveel minuten het spel nog ongeveer duurt: de opdrachten die nog komen (de huidige half als ze al
+ * bezig is), en De Test met de onthulling. Dezelfde schattingen als bij het programma.
+ */
+export function remainingMinutes(game: Game): number {
+  const n = game.players.length;
+  const test = 6 + n * 1.2;
+  if (game.phase === 'einde') {
+    const f = game.finale;
+    if (!f || f.step !== 'intro' && f.step !== 'test') return 5;
+    const left = f.step === 'test' ? Math.max(0, f.order.length - f.index) : n;
+    return Math.round(4 + left * 1.2);
+  }
+  let total = test;
+  if (game.phase === 'intro') total += 3 + 2 + n;
+  if (game.phase === 'rollen') total += 2 + Math.max(0, game.revealOrder.length - game.revealIndex);
+  const done = new Set(game.results.map((r) => r.uid));
+  game.program.forEach((item, i) => {
+    if (done.has(item.uid) || i < game.taskIndex) return;
+    const task = getTask(item.taskId);
+    if (!task) return;
+    const briefing = (n * 0.3) / game.settings.briefingEvery;
+    const full = task.minutes + briefing + 2;
+    // De opdracht die nu bezig is: na de uitleg is ongeveer de helft al voorbij.
+    const step = i === game.taskIndex ? game.current?.step : undefined;
+    total += step === 'bezig' || step === 'resultaat' || step === 'schat' || step === 'dilemma' || step === 'duim' ? full / 2 : full;
+  });
+  return Math.round(total);
 }
 
 /** Een Kijk-joker inzetten tijdens de briefing: je ziet één naam die zeker onschuldig is. */

@@ -174,6 +174,11 @@
       <li><span>📍</span> {locationText}</li>
       <li><span>💎</span> {s.treasureMode === 'virtueel' ? 'Virtuele schat' : 'Echte schat'}</li>
     </ul>
+    <label class="endtime">
+      🕕 Geplande eindtijd <span class="hint">(niet verplicht)</span>
+      <input class="text-input" type="time" bind:value={gameSettings.endTime} />
+    </label>
+    <p class="hint small">Tijdens het spel toont het menu van het hulpje of jullie op tijd klaar zijn, en kan je latere opdrachten overslaan.</p>
     <details class="adjust">
       <summary>⚙️ Instellingen voor dit spel aanpassen</summary>
       <p class="hint">Enkel voor dit spel{prep ? ' (en deze voorbereiding)' : ''}: de standaardinstellingen blijven zoals ze zijn.</p>
@@ -307,6 +312,24 @@
   .summary span {
     display: inline-block;
     width: 30px;
+  }
+
+  .endtime {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-weight: 800;
+    margin-top: 10px;
+  }
+
+  .endtime input {
+    max-width: 140px;
+  }
+
+  .small {
+    font-size: 0.85rem;
+    margin: 4px 0 0;
   }
 
   .adjust {

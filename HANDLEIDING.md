@@ -44,6 +44,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 1. **▶ Nieuw spel**:
    - vink aan wie meespeelt (3 tot 16);
    - kies **het hulpje van Windy**. Windy leidt het spel (uitleggen, voorlezen, uitslagen); het hulpje doet wat Windy niet kan: klaarleggen, verstoppen, resultaten aanduiden en foto's nemen. Speelt het hulpje niet mee, dan kan je een pincode instellen.
+   - vul eventueel de **geplande eindtijd** in (bv. 17:30, zodat er nog tijd is voor taart). Tijdens het spel zie je dan of jullie op tijd klaar zijn.
    - **Speelt het hulpje mee?** Dan kan het ook 't Duvelke zijn. Sommige opdrachten leidt het hulpje zelf, omdat het het antwoord kent, iets verstopt heeft of de bevelen geeft. Daar krijgt het geen rol. Is het hulpje 't Duvelke, dan kiest het zelf: eerlijk spelen om niet op te vallen, of iets kleins saboteren. De speurders krijgen dan soms een tip om ook op het hulpje te letten. Het programma kiest hoogstens 3 van zulke opdrachten (🎬 het hulpje leidt).
 2. **Het programma**: de app stelt opdrachten voor die passen bij de plek, de spullen, de moeilijkheid en de tijd. Onder ⏱️ *Waar gaat de tijd naartoe?* zie je hoeveel tijd naar de opdrachten, de briefings, de dossiers en De Test gaat; met **Briefing om de 2** win je tijd voor een extra opdracht.
    - 🔄 wisselt een opdracht, ✕ schrapt ze, ▲▼ verandert de volgorde, en je kan er toevoegen.
@@ -67,9 +68,10 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 | **Duimpje** | 👍 of 👎: leuke opdrachten komen vaker terug. |
 
 **☰ rechtsboven** is het menu van het hulpje:
+- ⏱️ hoeveel tijd het spel nog ongeveer duurt en hoe laat jullie klaar zijn; met een geplande eindtijd (ook hier in te vullen of aan te passen) waarschuwt het als het later dreigt te worden;
 - rol opnieuw tonen;
-- programma bekijken;
-- opdracht overslaan;
+- programma bekijken: daar sla je met **⏭ Overslaan** een latere opdracht over als de tijd dringt (en zet je ze met **↩ Terugzetten** terug). De tijdsschatting past zich meteen aan. Bij een briefing om de 2 schuift de tip "Daarna" mee naar de opdracht die echt volgt;
+- de opdracht die nu bezig is overslaan;
 - rollenoverzicht (met pincode);
 - stoppen.
 

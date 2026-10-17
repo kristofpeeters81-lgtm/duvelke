@@ -78,6 +78,7 @@ export function defaultSettings(): Settings {
     bemoeialEnabled: false,
     neighbourGossip: true,
     briefingEvery: 1,
+    endTime: '',
     supplies: [],
     customSupplies: [],
   };
@@ -179,6 +180,7 @@ export function normalizeSettings(raw: unknown): Settings {
     bemoeialEnabled: typeof raw.bemoeialEnabled === 'boolean' ? raw.bemoeialEnabled : d.bemoeialEnabled,
     neighbourGossip: typeof raw.neighbourGossip === 'boolean' ? raw.neighbourGossip : d.neighbourGossip,
     briefingEvery: raw.briefingEvery === 2 ? 2 : 1,
+    endTime: typeof raw.endTime === 'string' && /^([01]\d|2[0-3]):[0-5]\d$/.test(raw.endTime) ? raw.endTime : '',
     supplies,
     customSupplies,
   };

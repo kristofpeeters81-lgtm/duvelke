@@ -77,6 +77,8 @@ export interface Settings {
   bemoeialEnabled: boolean;
   neighbourGossip: boolean;
   briefingEvery: 1 | 2;
+  /** Geplande eindtijd van het spel ("18:00"), of leeg. De app waarschuwt als het later dreigt te worden. */
+  endTime: string;
   /** Ids van de benodigdheden die beschikbaar zijn (zie data/supplies.ts en customSupplies). */
   supplies: string[];
   customSupplies: CustomSupply[];
