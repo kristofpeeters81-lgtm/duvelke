@@ -230,6 +230,16 @@ export interface PotShare {
   lucky: string[];
   /** Het totaal per speler. */
   perPlayer: Record<string, number>;
+  /** Moest er herverdeeld worden omdat iemand meer dan anderhalve keer een gewoon deel zou krijgen? */
+  capped: boolean;
+}
+
+/** Niemand krijgt meer dan zoveel keer wat een gewoon kind krijgt. */
+export const MAX_RATIO = 1.5;
+
+/** Het maximum voor één kind: anderhalve keer een gewoon deel, maar altijd minstens één meer (anders is een prijs niets waard). */
+function capFor(base: number): number {
+  return Math.max(base + 1, Math.floor(base * MAX_RATIO));
 }
 
 /**
@@ -239,13 +249,15 @@ export interface PotShare {
  *    deel per persoon, de winnaar het dubbele);
  * 3. wat dan nog over is, gaat weer gelijk naar iedereen;
  * 4. de laatste restjes gaan eerst naar prijzen die nog niets kregen, en daarna als geluksmuntjes naar
- *    wie geen prijs heeft (en zijn er nog meer, dan om de beurt naar de prijswinnaars).
+ *    wie geen prijs heeft (en zijn er nog meer, dan om de beurt naar de prijswinnaars);
+ * 5. krijgt iemand dan meer dan anderhalve keer een gewoon deel (bv. twee prijzen, weinig kinderen of veel
+ *    snoep), dan wordt het teveel automatisch herverdeeld over iedereen.
  */
 export function potShare(item: TreasureItem, fraction: number, playerIds: readonly string[], prizes: readonly Prize[], rng: Rng): PotShare {
   const n = playerIds.length;
   const perPlayer: Record<string, number> = Object.fromEntries(playerIds.map((id) => [id, 0]));
   const earned = Math.round(item.quantity * Math.min(1, Math.max(0, fraction)));
-  if (n === 0) return { name: item.name, total: item.quantity, earned, base: 0, prizes: [], lucky: [], perPlayer };
+  if (n === 0) return { name: item.name, total: item.quantity, earned, base: 0, prizes: [], lucky: [], perPlayer, capped: false };
   const valid = prizes.filter((p) => playerIds.includes(p.playerId));
   let base = Math.floor(earned / n);
   let pool = item.quantity - base * n;
@@ -280,7 +292,41 @@ export function potShare(item: TreasureItem, fraction: number, playerIds: readon
     .sort((a, b) => b.amount - a.amount);
   for (let i = 0; pool > 0 && biggest.length > 0; i++, pool--) (biggest[i % biggest.length] as (typeof won)[number]).amount += 1;
 
-  for (const id of playerIds) perPlayer[id] = base + (lucky.includes(id) ? 1 : 0);
-  for (const p of won) perPlayer[p.playerId] = (perPlayer[p.playerId] ?? 0) + p.amount;
-  return { name: item.name, total: item.quantity, earned, base, prizes: won, lucky, perPlayer };
+  const total = (id: string): number => base + lucky.filter((x) => x === id).length + won.filter((p) => p.playerId === id).reduce((s, p) => s + p.amount, 0);
+  /** Wat een gewoon kind (zonder prijs) minstens krijgt: daartegen meet het maximum. */
+  const regular = (): number => (others.length > 0 ? Math.min(...others.map(total)) : base);
+
+  // Te groot verschil? Afknippen tot het maximum (eerst van de laatste prijzen) en het teveel herverdelen.
+  let excess = 0;
+  const cap = capFor(regular());
+  for (const id of winners) {
+    let cut = total(id) - cap;
+    for (const p of [...won].reverse()) {
+      if (cut <= 0) break;
+      if (p.playerId !== id) continue;
+      const take = Math.min(cut, p.amount);
+      p.amount -= take;
+      cut -= take;
+      excess += take;
+    }
+  }
+  const capped = excess > 0;
+  if (capped) {
+    // Gelijk over iedereen: het maximum stijgt mee (anderhalve keer), dus niemand gaat er weer over.
+    const more = Math.floor(excess / n);
+    base += more;
+    excess -= more * n;
+    // De laatste restjes, één voor één naar wie op dat moment het minst heeft (eerst gewone kinderen, in de
+    // vaste lotingsvolgorde): zo blijft het verschil zo klein mogelijk.
+    for (; excess > 0; excess--) {
+      const order = [...others, ...winners];
+      const low = order.reduce((a, b) => (total(b) < total(a) ? b : a));
+      const p = won.find((x) => x.playerId === low);
+      if (p) p.amount += 1;
+      else lucky.push(low);
+    }
+  }
+
+  for (const id of playerIds) perPlayer[id] = total(id);
+  return { name: item.name, total: item.quantity, earned, base, prizes: won, lucky, perPlayer, capped };
 }

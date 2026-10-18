@@ -114,20 +114,39 @@ describe('de pot verdelen', () => {
     expect(sum(s.perPlayer)).toBe(89);
     expect(s.earned).toBe(62);
     expect(s.base).toBe(6);
-    expect(s.perPlayer.k0).toBe(10);
-    expect(s.perPlayer.k1).toBe(10);
+    // Winnaar en Duvelke zouden 10 krijgen: meer dan anderhalve keer 6, dus herverdeeld naar 9.
+    expect(s.capped).toBe(true);
+    expect(s.perPlayer.k0).toBe(9);
+    expect(s.perPlayer.k1).toBe(9);
     expect(s.perPlayer.k2).toBe(8);
     expect(s.perPlayer.k3).toBe(8);
-    expect(s.lucky).toHaveLength(5);
     for (const id of s.lucky) expect(['k0', 'k1', 'k2', 'k3']).not.toContain(id);
   });
 
   it('weinig prijzen: de rest gaat over iedereen, niet naar één kind', () => {
     const s = potShare(coins, 0.7, kids, all.slice(0, 2), seeded(2));
     expect(sum(s.perPlayer)).toBe(89);
-    expect(s.perPlayer.k0).toBe(11);
+    expect(s.perPlayer.k0).toBe(10);
     expect(s.perPlayer.k1).toBe(8);
-    expect(Math.max(...Object.values(s.perPlayer))).toBeLessThanOrEqual(11);
+    expect(Math.min(...kids.slice(2).map((id) => s.perPlayer[id] ?? 0))).toBe(7);
+  });
+
+  it('niemand krijgt meer dan anderhalve keer een gewoon kind, en alles wordt verdeeld', () => {
+    const twoPrizes: Prize[] = [{ kind: 'winnaar', playerId: 'k3' }, { kind: 'afleider', playerId: 'k3' }, { kind: 'loon', playerId: 'k1' }, { kind: 'verborgen', playerId: 'k1' }];
+    for (const n of [4, 6, 8, 12, 16])
+      for (const q of [10, 30, 89, 150, 300])
+        for (const f of [0, 0.3, 0.6, 0.9, 1])
+          for (const prizes of [all, all.slice(0, 2), twoPrizes]) {
+            const ids = kids.slice(0, n);
+            const s = potShare({ id: 'x', name: 'x', quantity: q }, f, ids, prizes, seeded(n * 1000 + q));
+            const label = `${n} kinderen, ${q} stuks, ${f}`;
+            expect(sum(s.perPlayer), label).toBe(q);
+            const won = new Set(prizes.map((p) => p.playerId));
+            const regular = ids.filter((id) => !won.has(id)).map((id) => s.perPlayer[id] ?? 0);
+            if (regular.length === 0) continue;
+            const low = Math.min(...regular);
+            expect(Math.max(...Object.values(s.perPlayer)), label).toBeLessThanOrEqual(Math.max(low + 1, Math.floor(low * 1.5)));
+          }
   });
 
   it('alles gehaald: kleine prijzen uit de restjes', () => {

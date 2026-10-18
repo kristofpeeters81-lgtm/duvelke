@@ -87,6 +87,7 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
    - Het verdiende deel gaat gelijk naar iedereen, ook naar 't Duvelke.
    - Uit wat er gemist werd, komen de prijzen: 👑 winnaar van De Test (dubbel), 😈 sabotageloon voor 't Duvelke (altijd), 🕶️ niet ontmaskerd (minder dan de helft van de speurders had 't Duvelke juist, of de groep haalde minder dan 50%), 🔍 Speurneus-medaille (had 't Duvelke juist) en 🙋 beste afleider (minstens 2 speurders dachten dat de Bemoeial 't Duvelke was). Een prijs is klein: ongeveer een kwart van een gemiddeld deel (bij 89 munten en 12 kinderen +2, de winnaar +4), zodat het binnen proporties blijft.
    - Wat dan nog over is, gaat weer gelijk naar iedereen; de laatste restjes zijn 🍀 geluksmuntjes voor kinderen zonder prijs.
+   - ⚖️ Niemand krijgt meer dan anderhalve keer wat een gewoon kind krijgt (bv. wie twee prijzen wint, of bij weinig kinderen en veel snoep). Wordt het meer, dan herverdeelt de app het teveel automatisch over iedereen, en dat staat er ook bij. Bij 89 munten en 12 kinderen: gewoon 6 à 7, winnaar en 't Duvelke 9, Speurneus en Bemoeial 8.
 6. **Terugblik**: welke sabotagetips 't Duvelke kreeg en welke roddels gelogen waren.
 7. **Bewijsfoto's**: diavoorstelling, met een knop om ze in de galerij te bewaren. Foto's ouder dan 60 dagen worden automatisch opgeruimd, dus bewaar ze tijdig.
 

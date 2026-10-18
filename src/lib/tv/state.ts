@@ -76,6 +76,8 @@ export type TvState =
 /** De verdeling van de echte schat, zoals ze op het eindscherm en op de tv staat (na de ontmaskering). */
 export interface PotView {
   items: { name: string; total: number; earned: number; base: number }[];
+  /** Werd er automatisch herverdeeld, omdat iemand meer dan anderhalve keer een gewoon deel zou krijgen? */
+  capped: boolean;
   prizes: { emoji: string; label: string; why: string; player: TvPlayer; amount: string }[];
   /** Per soort: wie een geluksmuntje kreeg. */
   lucky: { item: string; names: string[] }[];
@@ -181,13 +183,31 @@ export function potView(game: Game): PotView | null {
         return `${v} speurders dachten dat dit ${sab} was`;
     }
   };
+  // Wat op het scherm staat, volgt uit wat elk kind echt krijgt: het gewone deel is wat een kind zonder
+  // prijs minstens krijgt; een prijswinnaar krijgt het verschil daarbovenop (alle prijzen samen).
+  const prized = [...new Set(prizes.map((p) => p.playerId))];
+  const regularIds = ids.filter((id) => !prized.includes(id));
+  const regular = (s: (typeof shares)[number]): number => (regularIds.length > 0 ? Math.min(...regularIds.map((id) => s.perPlayer[id] ?? 0)) : s.base);
   return {
-    items: shares.map((s) => ({ name: s.name, total: s.total, earned: s.earned, base: s.base })),
-    prizes: prizes.flatMap((p, i) => {
-      const who = player(p.playerId);
-      return who ? [{ ...PRIZE_LABEL[p.kind], why: why(p.kind, p.playerId), player: tvPlayer(who), amount: amount((s) => s.prizes[i]?.amount ?? 0) }] : [];
+    items: shares.map((s) => ({ name: s.name, total: s.total, earned: s.earned, base: regular(s) })),
+    capped: shares.some((s) => s.capped),
+    prizes: prized.flatMap((id) => {
+      const who = player(id);
+      const mine = prizes.filter((p) => p.playerId === id);
+      if (!who) return [];
+      return [
+        {
+          emoji: mine.map((p) => PRIZE_LABEL[p.kind].emoji).join(''),
+          label: mine.map((p) => PRIZE_LABEL[p.kind].label).join(' + '),
+          why: mine.map((p) => why(p.kind, id)).join(' · '),
+          player: tvPlayer(who),
+          amount: amount((s) => (s.perPlayer[id] ?? 0) - regular(s)),
+        },
+      ];
     }),
-    lucky: shares.filter((s) => s.lucky.length > 0).map((s) => ({ item: s.name, names: s.lucky.map((id) => player(id)?.name ?? '?') })),
+    lucky: shares
+      .map((s) => ({ item: s.name, names: regularIds.filter((id) => (s.perPlayer[id] ?? 0) > regular(s)).map((id) => player(id)?.name ?? '?') }))
+      .filter((l) => l.names.length > 0),
     rows: [...game.players]
       .sort((a, b) => a.name.localeCompare(b.name, 'nl'))
       .map((p) => ({ ...tvPlayer(p), amount: amount((s) => s.perPlayer[p.playerId] ?? 0) || '0' })),

@@ -16,6 +16,9 @@
     {#each pot.items as it (it.name)}
       <p>De groep verdiende <strong>{it.earned} van de {it.total} {it.name}</strong>. Alles wordt verdeeld: iedereen krijgt er <strong>{it.base}</strong>, en wie een prijs wint, krijgt wat extra.</p>
     {/each}
+    {#if pot.capped}
+      <p class="fair">⚖️ Herverdeeld: niemand krijgt meer dan anderhalve keer wat een gewoon kind krijgt. Het teveel ging naar iedereen.</p>
+    {/if}
   </div>
 
   {#if pot.prizes.length > 0}
@@ -60,6 +63,11 @@
 
   .card p {
     margin: 4px 0;
+  }
+
+  .fair {
+    font-size: 0.9rem;
+    color: var(--text-dim);
   }
 
   h3 {

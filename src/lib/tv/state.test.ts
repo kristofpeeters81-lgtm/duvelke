@@ -131,7 +131,14 @@ describe('tv-scherm: de pot verdelen', () => {
     expect(s.pot.rows).toHaveLength(players.length);
     expect(s.pot.rows.reduce((sum, r) => sum + Number.parseInt(r.amount, 10), 0)).toBe(89);
     // Sabotageloon voor elk Duvelke, en dat mag nu op de tv: iedereen weet het al.
-    expect(s.pot.prizes.filter((p) => p.label === 'Sabotageloon')).toHaveLength(game.players.filter((p) => p.role === 'saboteur').length);
+    expect(s.pot.prizes.filter((p) => p.label.includes('Sabotageloon'))).toHaveLength(game.players.filter((p) => p.role === 'saboteur').length);
+    // Wat er staat, klopt met wat elk kind krijgt: gewoon deel + prijs, of gewoon deel + geluksmuntje.
+    const base = s.pot.items[0]!.base;
+    const amountOf = (name: string): number => Number.parseInt(s.pot.rows.find((r) => r.name === name)!.amount, 10);
+    for (const p of s.pot.prizes) expect(amountOf(p.player.name)).toBe(base + (Number.parseInt(p.amount, 10) || 0));
+    for (const name of s.pot.lucky.flatMap((l) => l.names)) expect(amountOf(name)).toBe(base + 1);
+    const prized = new Set([...s.pot.prizes.map((p) => p.player.name), ...s.pot.lucky.flatMap((l) => l.names)]);
+    for (const r of s.pot.rows) if (!prized.has(r.name)) expect(Number.parseInt(r.amount, 10)).toBe(base);
   });
 
   it('zonder echte schat geen pot', () => {
