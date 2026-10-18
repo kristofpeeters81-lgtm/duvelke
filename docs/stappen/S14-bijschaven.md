@@ -109,6 +109,11 @@ Bewust anders dan in de review voorgesteld: de timers bij Het ja-nee-mysterie en
 |---|---|---|
 | 39 | Mysteries: het hulpje moet ingedrukt houden, maar kan dan niet scrollen en ziet niet alles | Gekozen: beide en de oplossing apart. Een geheime lijst (`SecretList.svelte`) toont nu één item per keer onder het vasthouden, met ◀ Vorige / Volgende ▶ ernaast; het item blijft bewaard tussen uitleg en timer. De oplossing ("Oplossing: ..." of "(antwoord)") staat in een apart vak (`splitSecret`, getest op alle mysteries). Met "Hele lijst open laten staan" blijft alles zichtbaar en kan je scrollen (🙈 Verbergen). Geldt voor alle geheime lijsten, ook als het hulpje kiest om vragen zelf stiekem te lezen. |
 
+### Ronde 16 (18/10) ✅ 18/10
+| # | Vraag | Oplossing |
+|---|---|---|
+| 40 | Iets voor de Speurneus en de Bemoeial bij de prijsuitreiking? Hoe de pot (89 chocolademunten, 12 kinderen) verdelen? | Vroeger: de Speurneus kreeg een medaille zonder snoep, de Bemoeial werd nooit onthuld, en de schat werd vóór de ontmaskering verdeeld (dus geen rollen te belonen; bij verlies "aan het hulpje"). Nu (gekozen: alles verdelen, het gemiste deel naar de rollen, binnen proporties, restjes als geluksmuntjes): nieuwe finalestap **🍫 De pot verdelen** na de uitslag (`potView` in `tv/state.ts`, `PotBoard.svelte`, ook op de tv). Rekenregel `potShare` in `finale.ts`: verdiend deel gelijk over iedereen (ook 't Duvelke); uit het gemiste deel de prijzen (`potPrizes`: winnaar ×2, sabotageloon altijd, niet ontmaskerd, Speurneus juist, Bemoeial ≥ 2 stemmen; stemmen van 't Duvelke tellen niet), elk hoogstens een kwart van een gemiddeld deel; de rest weer gelijk; restjes als geluksmuntjes (vaste loting per spel). Bij 89/12 en 70%: anderen 6–7, winnaar 10, Duvelke 10, Speurneus en Bemoeial 8. De Bemoeial wordt nu onthuld bij de uitslag. |
+
 ### Kenzo zijn machien
 - Een kartonnen robotje dat Kenzo "zelf gemaakt heeft" (`Machine.svelte`). Het leest alles wat Windy niet zelf ingesproken heeft, met de AI-stem door een robot-effect (`robot.ts`: ringmodulatie, filter, bliepje vooraf, gelijk volume). De onvolmaakte AI-stem past zo bij het personage.
 - Doet enkel mee als **eigen opnames** aan staan **én** er minstens één uitspraak van Windy ingesproken is (namen tellen niet mee). Anders blijft de AI-stem gewoon Windy.

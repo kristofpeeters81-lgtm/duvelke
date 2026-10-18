@@ -5,6 +5,7 @@
   import Duvelke from '../components/Duvelke.svelte';
   import Machine from '../components/Machine.svelte';
   import Neighbour from '../components/Neighbour.svelte';
+  import PotBoard from '../components/PotBoard.svelte';
   import QrCode from '../components/QrCode.svelte';
   import QrScan from '../components/QrScan.svelte';
   import TreasureChest from '../components/TreasureChest.svelte';
@@ -256,6 +257,11 @@
           </ol>
           {#if s.noTest.length > 0}<p>Deden De Test niet mee: {s.noTest.join(', ')}.</p>{/if}
           {#if s.done}<Confetti count={90} />{/if}
+        </div>
+      {:else if s.kind === 'pot'}
+        <div class="task">
+          <h2>🍫 De pot verdelen</h2>
+          <PotBoard pot={s.pot} />
         </div>
       {:else if s.kind === 'terugblik'}
         <div class="task">

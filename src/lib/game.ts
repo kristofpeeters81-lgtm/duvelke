@@ -104,7 +104,7 @@ export interface Game {
   covered?: string[];
 }
 
-export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'terugblik' | 'fotos';
+export type FinaleStep = 'intro' | 'test' | 'schat' | 'ontmaskering' | 'ranking' | 'pot' | 'terugblik' | 'fotos';
 
 export interface FinaleState {
   step: FinaleStep;
@@ -819,7 +819,7 @@ export function finaleStep(game: Game, step: FinaleStep): void {
 
 function normalizeFinale(raw: unknown, game: Game): FinaleState | null {
   if (!isRecord(raw) || !Array.isArray(raw.questions) || !Array.isArray(raw.order)) return null;
-  const steps: FinaleStep[] = ['intro', 'test', 'schat', 'ontmaskering', 'ranking', 'terugblik', 'fotos'];
+  const steps: FinaleStep[] = ['intro', 'test', 'schat', 'ontmaskering', 'ranking', 'pot', 'terugblik', 'fotos'];
   if (!steps.includes(raw.step as FinaleStep)) return null;
   const ids = new Set(game.players.map((p) => p.playerId));
   const order = [...new Set(raw.order.filter((id): id is string => typeof id === 'string' && ids.has(id)))];

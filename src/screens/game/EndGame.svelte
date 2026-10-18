@@ -5,7 +5,8 @@
   import Duvelke from '../../components/Duvelke.svelte';
   import TreasureChest from '../../components/TreasureChest.svelte';
   import WindyBubble from '../../components/WindyBubble.svelte';
-  import { physicalShare, ranking } from '../../lib/finale';
+  import PotBoard from '../../components/PotBoard.svelte';
+  import { DECOY_VOTES, ranking } from '../../lib/finale';
   import { finaleStep, multipleSaboteursPossible } from '../../lib/game';
   import { treasure } from '../../lib/gameplay';
   import { gossipSentence } from '../../lib/secrets';
@@ -13,7 +14,7 @@
   import { speak } from '../../lib/speech';
   import { app, go, windySays } from '../../lib/store.svelte';
   import { getTask } from '../../lib/tasks/registry';
-  import { unmaskOrder } from '../../lib/tv/state';
+  import { gameVotes, potView, unmaskOrder } from '../../lib/tv/state';
   import { hostWording } from '../../lib/tasks/wording';
   import FinalTest from './FinalTest.svelte';
   import Slideshow from './Slideshow.svelte';
@@ -108,7 +109,10 @@
   }
 
   const unmasked = $derived(f ? f.reveal >= innocents.length : false);
-  const shares = $derived(game && game.settings.treasureMode === 'fysiek' ? physicalShare(game.settings.treasureItems, total.gems, total.max, game.players.length) : []);
+  /** De echte schat verdelen (enkel bij een echte schat): na de uitslag, als iedereen alles weet. */
+  const pot = $derived(game ? potView(game) : null);
+  const bemoeial = $derived(game?.players.find((p) => p.bemoeial));
+  const bemoeialVotes = $derived(game && bemoeial ? (gameVotes(game).votes[bemoeial.playerId] ?? 0) : 0);
 </script>
 
 {#if game && f}
@@ -140,16 +144,13 @@
       {:else}
         <div class="verdict bad">😈 Minder dan de helft... {sab} wint de schat! Wie was het toch?</div>
       {/if}
-      {#if shares.length > 0}
+      {#if pot}
         <div class="card">
-          <h3>🍬 De echte schat</h3>
-          {#if groupWins}
-            {#each shares as s (s.name)}
-              <p><strong>{s.earned} van de {s.total} {s.name}</strong>: dat is {s.perPerson} per persoon{s.rest > 0 ? `, en ${s.rest} extra voor de winnaar van De Test` : ''}.</p>
-            {/each}
-          {:else}
-            <p>De groep verdiende {pct}% van de schat: {shares.map((s) => `${s.earned} ${s.name}`).join(', ')}. Het is aan het hulpje of {sab} de rest krijgt...</p>
-          {/if}
+          <h3>🍫 De echte schat</h3>
+          {#each pot.items as it (it.name)}
+            <p>De groep verdiende <strong>{it.earned} van de {it.total} {it.name}</strong>.</p>
+          {/each}
+          <p class="hint">Na de uitslag verdelen we de pot: iedereen krijgt een deel, en wie een prijs wint, krijgt wat extra.</p>
         </div>
       {/if}
       {#if narration}{#key narration.id}<WindyBubble text={narration.text} lineId={narration.id} playerId={narration.playerId} mood="geschokt" size={130} />{/key}{/if}
@@ -221,8 +222,31 @@
             </p>
           </div>
         {/if}
-        <BigButton variant="primary" size="large" full onclick={() => start('terugblik')}>Wat deed {sab} allemaal? ▶</BigButton>
+        {#if bemoeial}
+          <div class="card">
+            <h3>🙋 De Bemoeial</h3>
+            <p>
+              {bemoeial.name} was stiekem de Bemoeial: die moest zich overal mee bemoeien, maar was géén {sab}.
+              {bemoeialVotes >= DECOY_VOTES
+                ? `${bemoeialVotes} speurders dachten dat ${bemoeial.name} ${sab} was: beste afleider! 🎭`
+                : bemoeialVotes === 1
+                  ? `Eén speurder trapte erin. Net niet genoeg voor de prijs!`
+                  : `Niemand trapte erin!`}
+            </p>
+          </div>
+        {/if}
+        {#if pot}
+          <BigButton variant="gold" size="large" full onclick={() => start('pot')}>🍫 De pot verdelen ▶</BigButton>
+        {:else}
+          <BigButton variant="primary" size="large" full onclick={() => start('terugblik')}>Wat deed {sab} allemaal? ▶</BigButton>
+        {/if}
       {/if}
+    </div>
+  {:else if f.step === 'pot'}
+    <div class="stack center">
+      <h2 class="title">🍫 De pot verdelen</h2>
+      {#if pot}<PotBoard {pot} />{/if}
+      <BigButton variant="primary" size="large" full onclick={() => start('terugblik')}>Wat deed {sab} allemaal? ▶</BigButton>
     </div>
   {:else if f.step === 'terugblik'}
     <div class="stack">

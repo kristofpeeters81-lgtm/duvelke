@@ -4,7 +4,7 @@
  * vóór ze onthuld zijn, de pincode) kunnen er dus niet per ongeluk in terechtkomen.
  * Een pure functie, zodat een test kan nagaan dat er niets geheims in zit.
  */
-import { ranking, type Score } from '../finale';
+import { potPrizes, potShare, ranking, suspectVotes, type PrizeKind, type Score } from '../finale';
 import { multipleSaboteursPossible, type Game, type GamePlayer } from '../game';
 import { quizOrder, targetFor, treasure } from '../gameplay';
 import { LOCATIONS } from '../data/locations';
@@ -13,6 +13,7 @@ import { explainWithGoal, fillVars } from '../tasks/program';
 import { QUIZ } from '../tasks/quiz';
 import { getTask } from '../tasks/registry';
 import { hostWording, windyReadsList } from '../tasks/wording';
+import { seededRng } from '../util';
 
 export interface TvPlayer {
   name: string;
@@ -68,8 +69,19 @@ export type TvState =
   | { kind: 'eindschat'; pct: number; groupWins: boolean; saboteurName: string }
   | { kind: 'ontmaskering'; players: (TvPlayer & { cleared: boolean; saboteur: boolean })[]; unmasked: boolean; saboteurs: string[]; saboteurName: string }
   | { kind: 'uitslag'; rows: (TvPlayer & { place: number; shown: boolean; score: string; found: boolean })[]; done: boolean; noTest: string[] }
+  | { kind: 'pot'; pot: PotView }
   | { kind: 'terugblik'; saboteurName: string; items: { emoji: string; title: string; who: string | null; tip: string }[] }
   | { kind: 'fotos' };
+
+/** De verdeling van de echte schat, zoals ze op het eindscherm en op de tv staat (na de ontmaskering). */
+export interface PotView {
+  items: { name: string; total: number; earned: number; base: number }[];
+  prizes: { emoji: string; label: string; why: string; player: TvPlayer; amount: string }[];
+  /** Per soort: wie een geluksmuntje kreeg. */
+  lucky: { item: string; names: string[] }[];
+  /** Iedereen, op naam, met wat die krijgt. */
+  rows: (TvPlayer & { amount: string })[];
+}
 
 export interface TvScreen {
   state: TvState;
@@ -105,6 +117,81 @@ export function mainRanking(game: Game): Score[] {
   if (!f) return [];
   const speurneus = game.players.find((p) => p.speurneus)?.playerId;
   return ranking(game.players, f.questions, f.answers).filter((r) => r.playerId !== speurneus);
+}
+
+const PRIZE_LABEL: Record<PrizeKind, { emoji: string; label: string }> = {
+  winnaar: { emoji: '👑', label: 'Winnaar van De Test' },
+  loon: { emoji: '😈', label: 'Sabotageloon' },
+  verborgen: { emoji: '🕶️', label: 'Niet ontmaskerd' },
+  speurneus: { emoji: '🔍', label: 'Speurneus-medaille' },
+  afleider: { emoji: '🙋', label: 'Beste afleider' },
+};
+
+/** Wie hoeveel stemmen kreeg bij "Wie is 't Duvelke?" (zonder die van 't Duvelke zelf). */
+export function gameVotes(game: Game): { votes: Record<string, number>; voters: number } {
+  return game.finale ? suspectVotes(game.players, game.finale.questions, game.finale.answers) : { votes: {}, voters: 0 };
+}
+
+/**
+ * De pot verdelen: enkel bij een echte schat, na de uitslag. Alles wordt verdeeld: het verdiende deel
+ * gelijk over iedereen, het gemiste deel als (begrensde) prijzen, de restjes als geluksmuntjes.
+ */
+export function potView(game: Game): PotView | null {
+  const f = game.finale;
+  const items = game.settings.treasureItems.filter((i) => i.quantity > 0);
+  if (!f || game.settings.treasureMode !== 'fysiek' || items.length === 0) return null;
+  const sab = game.settings.saboteurName;
+  const t = treasure(game.program, game.results, getTask);
+  const fraction = t.max > 0 ? t.gems / t.max : 0;
+  const groupWins = t.max > 0 && Math.round(fraction * 100) >= 50;
+  const { votes, voters } = gameVotes(game);
+  const speurneus = game.players.find((p) => p.speurneus);
+  const speurneusScore = speurneus ? ranking(game.players, f.questions, f.answers).find((r) => r.playerId === speurneus.playerId) : undefined;
+  const prizes = potPrizes({
+    winnerId: mainRanking(game)[0]?.playerId ?? null,
+    saboteurIds: game.players.filter((p) => p.role === 'saboteur').map((p) => p.playerId),
+    votes,
+    voters,
+    groupWins,
+    speurneus: speurneus && speurneusScore ? { playerId: speurneus.playerId, found: speurneusScore.foundSaboteur } : null,
+    bemoeialId: game.players.find((p) => p.bemoeial)?.playerId ?? null,
+  });
+  const ids = game.players.map((p) => p.playerId);
+  const shares = items.map((it) => potShare(it, fraction, ids, prizes, seededRng(`${game.id}:pot:${it.id}`)));
+  const amount = (get: (s: (typeof shares)[number]) => number): string =>
+    shares
+      .map((s) => [get(s), s.name] as const)
+      .filter(([n]) => n > 0)
+      // Eén soort: enkel het getal (de naam staat in de titel).
+      .map(([n, name]) => (shares.length > 1 ? `${n} ${name}` : String(n)))
+      .join(', ');
+  const player = (id: string): GamePlayer | undefined => game.players.find((p) => p.playerId === id);
+  const why = (kind: PrizeKind, id: string): string => {
+    const v = votes[id] ?? 0;
+    switch (kind) {
+      case 'winnaar':
+        return 'De beste speurder van vandaag';
+      case 'loon':
+        return 'Voor al dat stiekeme saboteren';
+      case 'verborgen':
+        return !groupWins ? 'De groep haalde minder dan de helft van de schat' : v === 0 ? `Niemand had ${sab} juist` : `Maar ${v} van de ${voters} speurders had het juist`;
+      case 'speurneus':
+        return `Had ${sab} juist`;
+      case 'afleider':
+        return `${v} speurders dachten dat dit ${sab} was`;
+    }
+  };
+  return {
+    items: shares.map((s) => ({ name: s.name, total: s.total, earned: s.earned, base: s.base })),
+    prizes: prizes.flatMap((p, i) => {
+      const who = player(p.playerId);
+      return who ? [{ ...PRIZE_LABEL[p.kind], why: why(p.kind, p.playerId), player: tvPlayer(who), amount: amount((s) => s.prizes[i]?.amount ?? 0) }] : [];
+    }),
+    lucky: shares.filter((s) => s.lucky.length > 0).map((s) => ({ item: s.name, names: s.lucky.map((id) => player(id)?.name ?? '?') })),
+    rows: [...game.players]
+      .sort((a, b) => a.name.localeCompare(b.name, 'nl'))
+      .map((p) => ({ ...tvPlayer(p), amount: amount((s) => s.perPlayer[p.playerId] ?? 0) || '0' })),
+  };
 }
 
 function wait(emoji: string, title: string, text = ''): TvState {
@@ -255,6 +342,10 @@ function finaleState(game: Game): TvState {
         done: f.reveal >= ranks.length,
         noTest: f.reveal >= ranks.length ? game.players.filter((p) => p.role !== 'saboteur' && !f.answers[p.playerId]).map((p) => p.name) : [],
       };
+    }
+    case 'pot': {
+      const pot = potView(game);
+      return pot ? { kind: 'pot', pot } : wait('🍫', 'De pot verdelen');
     }
     case 'terugblik': {
       const multiple = game.players.filter((p) => p.role === 'saboteur').length > 1;

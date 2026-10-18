@@ -80,11 +80,15 @@ De app werkt **zonder internet** zodra ze één keer met wifi geopend is. Alles 
 ## 4. De finale
 
 1. **De Test**: iedereen beantwoordt apart dezelfde vragen over 't Duvelke. Per ongeluk verkeerd getikt? Met **◀ Vorige vraag** ga je terug, zolang je de tablet nog niet doorgegeven hebt. Bij een gelijke stand wint wie 't Duvelke juist had, en daarna wie het snelst was. Doet iemand de test niet mee, tik dan op *doet de test niet mee*: die staat onderaan de uitslag, maar komt wel in de ontmaskering.
-2. **De schat**: minstens 50%, dan wint de groep. Anders wint 't Duvelke. Bij een echte schat zegt de app hoeveel iedereen krijgt.
+2. **De schat**: minstens 50%, dan wint de groep. Anders wint 't Duvelke. Bij een echte schat zie je hier enkel hoeveel de groep verdiende; verdelen gebeurt na de uitslag, als iedereen alles weet.
 3. **De ontmaskering**: de onschuldigen vallen één voor één weg, iedereen komt aan de beurt, en 't Duvelke blijft als laatste over.
-4. **De uitslag**, met de Speurneus-medaille als die rol meedeed.
-5. **Terugblik**: welke sabotagetips 't Duvelke kreeg en welke roddels gelogen waren.
-6. **Bewijsfoto's**: diavoorstelling, met een knop om ze in de galerij te bewaren. Foto's ouder dan 60 dagen worden automatisch opgeruimd, dus bewaar ze tijdig.
+4. **De uitslag**, met de Speurneus-medaille en de onthulling van de Bemoeial als die rollen meededen.
+5. **🍫 De pot verdelen** (enkel bij een echte schat): alles wordt verdeeld, en per kind staat er hoeveel het krijgt, zodat het hulpje kan uitdelen.
+   - Het verdiende deel gaat gelijk naar iedereen, ook naar 't Duvelke.
+   - Uit wat er gemist werd, komen de prijzen: 👑 winnaar van De Test (dubbel), 😈 sabotageloon voor 't Duvelke (altijd), 🕶️ niet ontmaskerd (minder dan de helft van de speurders had 't Duvelke juist, of de groep haalde minder dan 50%), 🔍 Speurneus-medaille (had 't Duvelke juist) en 🙋 beste afleider (minstens 2 speurders dachten dat de Bemoeial 't Duvelke was). Een prijs is klein: ongeveer een kwart van een gemiddeld deel (bij 89 munten en 12 kinderen +2, de winnaar +4), zodat het binnen proporties blijft.
+   - Wat dan nog over is, gaat weer gelijk naar iedereen; de laatste restjes zijn 🍀 geluksmuntjes voor kinderen zonder prijs.
+6. **Terugblik**: welke sabotagetips 't Duvelke kreeg en welke roddels gelogen waren.
+7. **Bewijsfoto's**: diavoorstelling, met een knop om ze in de galerij te bewaren. Foto's ouder dan 60 dagen worden automatisch opgeruimd, dus bewaar ze tijdig.
 
 ## 4b. Tv-scherm (extraatje)
 

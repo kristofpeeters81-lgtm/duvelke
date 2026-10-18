@@ -117,3 +117,27 @@ describe('tv-scherm: nooit iets geheims', () => {
     expect(json).not.toMatch(/saboteur|speurneus|bemoeial/i);
   });
 });
+
+describe('tv-scherm: de pot verdelen', () => {
+  it('toont na de uitslag wie wat krijgt, en alles is verdeeld', () => {
+    const settings = { ...defaultSettings(), treasureMode: 'fysiek' as const, treasureItems: [{ id: 'm', name: 'chocolademunten', quantity: 89 }] };
+    const task = ALL_BUILTIN.find((t) => t.id === 'wasknijper-jacht')!;
+    const game = createGame(players, settings, null, null, [itemFor(task, 'u1')], seeded(8));
+    startTasks(game);
+    skipCurrent(game);
+    finaleStep(game, 'pot');
+    const s = publicState(game).state;
+    if (s.kind !== 'pot') throw new Error(s.kind);
+    expect(s.pot.rows).toHaveLength(players.length);
+    expect(s.pot.rows.reduce((sum, r) => sum + Number.parseInt(r.amount, 10), 0)).toBe(89);
+    // Sabotageloon voor elk Duvelke, en dat mag nu op de tv: iedereen weet het al.
+    expect(s.pot.prizes.filter((p) => p.label === 'Sabotageloon')).toHaveLength(game.players.filter((p) => p.role === 'saboteur').length);
+  });
+
+  it('zonder echte schat geen pot', () => {
+    const game = gameWith(ALL_BUILTIN.find((t) => t.id === 'wasknijper-jacht')!, 9);
+    skipCurrent(game);
+    finaleStep(game, 'pot');
+    expect(publicState(game).state.kind).toBe('wacht');
+  });
+});

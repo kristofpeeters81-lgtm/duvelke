@@ -155,20 +155,123 @@ export function ranking(players: readonly TestPlayer[], questions: readonly Test
     .sort((a, b) => b.correct - a.correct || Number(b.foundSaboteur) - Number(a.foundSaboteur) || a.ms - b.ms);
 }
 
-export interface Share {
-  name: string;
-  total: number;
-  earned: number;
-  perPerson: number;
-  rest: number;
+// --- De pot verdelen (echte schat), na de ontmaskering -----------------------------
+
+/**
+ * De prijzen bij de pot: winnaar van De Test, sabotageloon en "niet ontmaskerd" voor elk Duvelke,
+ * de Speurneus-medaille en de Bemoeial als beste afleider.
+ */
+export type PrizeKind = 'winnaar' | 'loon' | 'verborgen' | 'speurneus' | 'afleider';
+
+export interface Prize {
+  kind: PrizeKind;
+  playerId: string;
 }
 
-/** Hoeveel van de echte schat verdiend is, en hoe je dat eerlijk verdeelt. */
-export function physicalShare(items: readonly TreasureItem[], gems: number, max: number, people: number): Share[] {
-  const fraction = max > 0 ? Math.min(1, gems / max) : 0;
-  return items.map((it) => {
-    const earned = Math.round(it.quantity * fraction);
-    const perPerson = people > 0 ? Math.floor(earned / people) : 0;
-    return { name: it.name, total: it.quantity, earned, perPerson, rest: earned - perPerson * people };
-  });
+/** De winnaar van De Test krijgt een dubbel prijsdeel, de rest een enkel. */
+export const PRIZE_WEIGHT: Record<PrizeKind, number> = { winnaar: 2, loon: 1, verborgen: 1, speurneus: 1, afleider: 1 };
+
+/** Zoveel speurders moeten de Bemoeial aanduiden als 't Duvelke om beste afleider te zijn. */
+export const DECOY_VOTES = 2;
+
+export interface PrizeInput {
+  /** De winnaar van De Test (zonder de Speurneus), of null als niemand De Test deed. */
+  winnerId: string | null;
+  saboteurIds: readonly string[];
+  /** Hoeveel speurders wie aanduidden bij "Wie is 't Duvelke?". */
+  votes: Readonly<Record<string, number>>;
+  /** Hoeveel speurders die vraag beantwoordden. */
+  voters: number;
+  /** Haalde de groep minstens de helft van de schat? */
+  groupWins: boolean;
+  speurneus: { playerId: string; found: boolean } | null;
+  bemoeialId: string | null;
+}
+
+/** Wie welke prijs verdiend heeft. */
+export function potPrizes(i: PrizeInput): Prize[] {
+  const out: Prize[] = [];
+  if (i.winnerId) out.push({ kind: 'winnaar', playerId: i.winnerId });
+  for (const id of i.saboteurIds) {
+    // Sabotageloon altijd; extra als minder dan de helft het juist had, of als de groep de schat niet won.
+    out.push({ kind: 'loon', playerId: id });
+    if (!i.groupWins || (i.votes[id] ?? 0) * 2 < i.voters) out.push({ kind: 'verborgen', playerId: id });
+  }
+  if (i.speurneus?.found) out.push({ kind: 'speurneus', playerId: i.speurneus.playerId });
+  if (i.bemoeialId && (i.votes[i.bemoeialId] ?? 0) >= DECOY_VOTES) out.push({ kind: 'afleider', playerId: i.bemoeialId });
+  return out;
+}
+
+/** Wie de speurders aanduidden als 't Duvelke (de antwoorden van 't Duvelke zelf tellen niet: die zijn voor de schijn). */
+export function suspectVotes(players: readonly TestPlayer[], questions: readonly TestQuestion[], all: Record<string, TestAnswers>): { votes: Record<string, number>; voters: number } {
+  const wie = questions.findIndex((q) => q.kind === 'wie');
+  const votes: Record<string, number> = {};
+  let voters = 0;
+  if (wie < 0) return { votes, voters };
+  for (const p of players) {
+    const a = p.role === 'saboteur' ? null : all[p.playerId]?.answers[wie];
+    if (!a) continue;
+    voters++;
+    votes[a] = (votes[a] ?? 0) + 1;
+  }
+  return { votes, voters };
+}
+
+export interface PotShare {
+  name: string;
+  total: number;
+  /** Wat de groep met de opdrachten verdiende. */
+  earned: number;
+  /** Wat iedereen krijgt. */
+  base: number;
+  /** De prijzen met hun aantal (0 als er niets meer over was). */
+  prizes: (Prize & { amount: number })[];
+  /** Wie een geluksmuntje kreeg (één extra). */
+  lucky: string[];
+  /** Het totaal per speler. */
+  perPlayer: Record<string, number>;
+}
+
+/**
+ * Verdeelt één soort van de echte schat, zodat alles verdeeld wordt en de verschillen klein blijven:
+ * 1. het verdiende deel gaat gelijk naar iedereen, ook naar 't Duvelke;
+ * 2. uit het gemiste deel komen de prijzen, elk hoogstens een vast stukje (een kwart van een gemiddeld
+ *    deel per persoon, de winnaar het dubbele);
+ * 3. wat dan nog over is, gaat weer gelijk naar iedereen;
+ * 4. de laatste restjes zijn geluksmuntjes voor wie geen prijs heeft (en zijn er meer, dan om de beurt
+ *    voor de prijswinnaars).
+ */
+export function potShare(item: TreasureItem, fraction: number, playerIds: readonly string[], prizes: readonly Prize[], rng: Rng): PotShare {
+  const n = playerIds.length;
+  const perPlayer: Record<string, number> = Object.fromEntries(playerIds.map((id) => [id, 0]));
+  const earned = Math.round(item.quantity * Math.min(1, Math.max(0, fraction)));
+  if (n === 0) return { name: item.name, total: item.quantity, earned, base: 0, prizes: [], lucky: [], perPlayer };
+  const valid = prizes.filter((p) => playerIds.includes(p.playerId));
+  let base = Math.floor(earned / n);
+  let pool = item.quantity - base * n;
+
+  const unit = Math.max(1, Math.round(item.quantity / n / 4));
+  const weight = valid.reduce((s, p) => s + PRIZE_WEIGHT[p.kind], 0);
+  const part = weight > 0 ? Math.min(Math.floor(pool / weight), unit) : 0;
+  const won = valid.map((p) => ({ ...p, amount: part * PRIZE_WEIGHT[p.kind] }));
+  pool -= part * weight;
+
+  const extra = Math.floor(pool / n);
+  base += extra;
+  pool -= extra * n;
+
+  const winners = [...new Set(won.map((p) => p.playerId))];
+  const others = shuffle(playerIds.filter((id) => !winners.includes(id)), rng);
+  const lucky = others.slice(0, Math.min(pool, others.length));
+  pool -= lucky.length;
+  // Nog restjes over? Om de beurt bij de grootste prijs van elke prijswinnaar.
+  const biggest = winners
+    .map((id) => won.filter((p) => p.playerId === id).sort((a, b) => b.amount - a.amount)[0])
+    .filter((p): p is (typeof won)[number] => !!p)
+    .sort((a, b) => b.amount - a.amount);
+  for (let i = 0; pool > 0 && biggest.length > 0; i++, pool--) (biggest[i % biggest.length] as (typeof won)[number]).amount += 1;
+
+  for (const id of playerIds) perPlayer[id] = base + (lucky.includes(id) ? 1 : 0);
+  for (const p of won) perPlayer[p.playerId] = (perPlayer[p.playerId] ?? 0) + p.amount;
+  return { name: item.name, total: item.quantity, earned, base, prizes: won, lucky, perPlayer };
 }
