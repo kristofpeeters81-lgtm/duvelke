@@ -238,8 +238,8 @@ export interface PotShare {
  * 2. uit het gemiste deel komen de prijzen, elk hoogstens een vast stukje (een kwart van een gemiddeld
  *    deel per persoon, de winnaar het dubbele);
  * 3. wat dan nog over is, gaat weer gelijk naar iedereen;
- * 4. de laatste restjes zijn geluksmuntjes voor wie geen prijs heeft (en zijn er meer, dan om de beurt
- *    voor de prijswinnaars).
+ * 4. de laatste restjes gaan eerst naar prijzen die nog niets kregen, en daarna als geluksmuntjes naar
+ *    wie geen prijs heeft (en zijn er nog meer, dan om de beurt naar de prijswinnaars).
  */
 export function potShare(item: TreasureItem, fraction: number, playerIds: readonly string[], prizes: readonly Prize[], rng: Rng): PotShare {
   const n = playerIds.length;
@@ -259,6 +259,15 @@ export function potShare(item: TreasureItem, fraction: number, playerIds: readon
   const extra = Math.floor(pool / n);
   base += extra;
   pool -= extra * n;
+
+  // Was er te weinig voor de prijzen (bijna alles verdiend)? Dan gaan de restjes eerst naar de prijzen,
+  // in volgorde (de winnaar eerst, tot zijn gewicht), zodat een prijswinnaar nooit minder heeft dan een geluksvogel.
+  for (const p of won) {
+    if (p.amount > 0) continue;
+    const give = Math.min(PRIZE_WEIGHT[p.kind], pool);
+    p.amount += give;
+    pool -= give;
+  }
 
   const winners = [...new Set(won.map((p) => p.playerId))];
   const others = shuffle(playerIds.filter((id) => !winners.includes(id)), rng);

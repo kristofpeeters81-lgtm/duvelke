@@ -138,6 +138,16 @@ describe('de pot verdelen', () => {
     expect(s.perPlayer.k1).toBe(8);
   });
 
+  it('alles gehaald met alle prijzen: een prijswinnaar heeft nooit minder dan een geluksvogel', () => {
+    const s = potShare(coins, 1, kids, all, seeded(4));
+    expect(sum(s.perPlayer)).toBe(89);
+    expect(s.base).toBe(7);
+    expect(s.perPlayer.k0).toBe(9);
+    expect(s.lucky).toEqual([]);
+    for (const id of ['k0', 'k1', 'k2', 'k3']) expect(s.perPlayer[id]).toBeGreaterThanOrEqual(7);
+    expect(Math.max(...kids.slice(4).map((id) => s.perPlayer[id] ?? 0))).toBe(7);
+  });
+
   it('niets verdiend of weinig munten: toch alles verdeeld', () => {
     for (const [q, f] of [[89, 0], [5, 0.5], [12, 0.3], [200, 0.55]] as const) {
       const s = potShare({ id: 'x', name: 'x', quantity: q }, f, kids, all, seeded(q));
